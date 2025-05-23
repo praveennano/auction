@@ -1,0 +1,50 @@
+.team-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.budget-badge {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+}
+
+.team-players-container {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+}
+
+.team-player-item {
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: #f0f0f0 !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :host ::ng-deep .p-grid > div {
+    width: 100%;
+  }
+}

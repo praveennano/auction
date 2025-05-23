@@ -1,0 +1,163 @@
+.stats-container {
+  padding: 0.5rem;
+}
+
+.stat-item {
+  margin-bottom: 1.5rem;
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.stat-title {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.stat-value {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary-color);
+}
+
+.progress-container {
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+}
+
+.progress-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+  
+  &.sold {
+    background-color: #22c55e; // Green
+  }
+  
+  &.unsold {
+    background-color: #ef4444; // Red
+  }
+  
+  &.pending {
+    background-color: #3b82f6; // Blue
+  }
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat-box {
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.2s;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  
+  &.sold {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-left: 3px solid #22c55e;
+  }
+  
+  &.unsold {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #ef4444;
+  }
+  
+  &.pending {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-left: 3px solid #3b82f6;
+  }
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  
+  .sold & {
+    color: #15803d; // Darker green
+  }
+  
+  .unsold & {
+    color: #b91c1c; // Darker red
+  }
+  
+  .pending & {
+    color: #1d4ed8; // Darker blue
+  }
+}
+
+.stat-percentage {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  font-weight: 600;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.color-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  
+  &.sold {
+    background-color: #22c55e;
+  }
+  
+  &.unsold {
+    background-color: #ef4444;
+  }
+  
+  &.pending {
+    background-color: #3b82f6;
+  }
+}
+
+.legend-text {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+@media screen and (max-width: 576px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .legend {
+    flex-wrap: wrap;
+  }
+}

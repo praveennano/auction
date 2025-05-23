@@ -1,0 +1,60 @@
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="p-3 bg-primary text-white font-bold">
+      Auction Stats
+    </div>
+  </ng-template>
+  
+  <div class="stats-container">
+    <div class="stat-item">
+      <div class="stat-header">
+        <div class="stat-title">Total Players</div>
+        <div class="stat-value">{{ totalPlayers }}</div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-segment sold" [style.width.%]="soldPercentage" title="Sold: {{ soldPercentage }}%"></div>
+          <div class="progress-segment unsold" [style.width.%]="unsoldPercentage" title="Unsold: {{ unsoldPercentage }}%"></div>
+          <div class="progress-segment pending" [style.width.%]="pendingPercentage" title="Pending: {{ pendingPercentage }}%"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="stat-grid">
+      <div class="stat-box sold">
+        <div class="stat-label">Sold</div>
+        <div class="stat-number">{{ soldPlayers.length }}</div>
+        <div class="stat-percentage">{{ soldPercentage }}%</div>
+      </div>
+      
+      <div class="stat-box unsold">
+        <div class="stat-label">Unsold</div>
+        <div class="stat-number">{{ unsoldPlayers.length }}</div>
+        <div class="stat-percentage">{{ unsoldPercentage }}%</div>
+      </div>
+      
+      <div class="stat-box pending">
+        <div class="stat-label">Pending</div>
+        <div class="stat-number">{{ availablePlayers.length }}</div>
+        <div class="stat-percentage">{{ pendingPercentage }}%</div>
+      </div>
+    </div>
+    
+    <div class="mt-3" *ngIf="totalPlayers > 0">
+      <div class="legend">
+        <div class="legend-item">
+          <div class="color-box sold"></div>
+          <div class="legend-text">Sold</div>
+        </div>
+        <div class="legend-item">
+          <div class="color-box unsold"></div>
+          <div class="legend-text">Unsold</div>
+        </div>
+        <div class="legend-item">
+          <div class="color-box pending"></div>
+          <div class="legend-text">Pending</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-card>

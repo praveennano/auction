@@ -1,0 +1,23 @@
+<p-card [styleClass]="'h-full'">
+  <ng-template pTemplate="header">
+    <div [class]="'p-3 font-bold text-white ' + headerClass">
+      {{ title }} ({{ players.length }})
+    </div>
+  </ng-template>
+  
+  <div class="player-list-container">
+    <div *ngFor="let player of players" class="player-item p-3 border-bottom-1 border-200">
+      <div class="font-medium mb-2">{{ player.name }}</div>
+      <div class="flex justify-content-between align-items-center">
+        <p-tag [value]="player.role" [severity]="getRoleTagSeverity(player.role)"></p-tag>
+        <span [class]="'text-sm px-2 py-1 border-round font-semibold ' + priceTagClass">
+          {{ player.soldPrice ? '₹' + player.soldPrice : '₹' + player.basePrice }}
+        </span>
+      </div>
+    </div>
+    
+    <div *ngIf="players.length === 0" class="p-3 text-center text-500">
+      No players available
+    </div>
+  </div>
+</p-card>

@@ -1,0 +1,62 @@
+<p-card styleClass="auction-card">
+  <div class="auction-container">
+    <ng-container *ngIf="currentPlayer && auctionInProgress; else noAuction">
+      <div class="text-center">
+        <h2 class="text-3xl font-bold mb-3 text-primary">{{ currentPlayer.name }}</h2>
+        <p-tag [value]="currentPlayer.role" [severity]="getRoleColor(currentPlayer.role)" styleClass="text-sm mb-4"></p-tag>
+        
+        <div class="bid-section my-4">
+          <span class="text-sm text-500 block">Current Bid</span>
+          <span class="text-4xl font-bold text-green-600 block">₹{{ currentBid }}</span>
+          <span *ngIf="currentTeam" class="mt-2 text-sm block">
+            by <span class="font-medium">{{ currentTeam.name }}</span>
+          </span>
+        </div>
+        
+        <div class="flex justify-content-center gap-3">
+          <p-button 
+            label="SOLD!" 
+            [disabled]="!currentTeam" 
+            styleClass="p-button-success"
+            (click)="sellPlayer()"
+          ></p-button>
+          <p-button 
+            label="UNSOLD" 
+            styleClass="p-button-danger"
+            (click)="markUnsold()"
+          ></p-button>
+        </div>
+      </div>
+    </ng-container>
+    
+    <ng-template #noAuction>
+      <div class="flex flex-column align-items-center justify-content-center h-full">
+        <ng-container *ngIf="availablePlayers.length > 0; else noAvailablePlayers">
+          <p class="text-500 mb-3">Click the button to select next player for auction</p>
+          <p-button 
+            label="START NEXT AUCTION" 
+            icon="pi pi-play" 
+            styleClass="p-button-primary"
+            (click)="startAuction()"
+          ></p-button>
+        </ng-container>
+        
+        <ng-template #noAvailablePlayers>
+          <ng-container *ngIf="unsoldPlayers.length > 0; else auctionComplete">
+            <p class="text-500 mb-3">All players have been through auction once</p>
+            <p-button 
+              label="START NEXT ROUND WITH UNSOLD PLAYERS" 
+              icon="pi pi-refresh" 
+              styleClass="p-button-warning"
+              (click)="startNextRound()"
+            ></p-button>
+          </ng-container>
+          
+          <ng-template #auctionComplete>
+            <h3 class="text-xl font-bold text-500">Auction Complete!</h3>
+          </ng-template>
+        </ng-template>
+      </div>
+    </ng-template>
+  </div>
+</p-card>

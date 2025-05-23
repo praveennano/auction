@@ -1,0 +1,18 @@
+.player-list-container {
+  height: calc(100% - 16px);
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.player-item {
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: var(--surface-100);
+    cursor: pointer;
+  }
+  
+  &:last-child {
+    border-bottom: none !important;
+  }
+}
