@@ -1,8 +1,10 @@
+<!-- Enhanced app.component.html with Team Capacity Limits -->
 <div class="auction-app">
-  <!-- Header with gradient background and reset button -->
+  <!-- Header without Pool Progress -->
   <div class="app-header">
     <div class="header-content">
       <h1 class="app-title">CWF Auction</h1>
+      
       <div class="header-actions">
         <!-- Save Button -->
         <button class="btn-header-action" 
@@ -25,75 +27,56 @@
 
   <div class="main-container">
     <div class="content-grid">
-      <!-- Left Panel - Available Players with Enhanced Stats -->
+      <!-- Left Panel - Available Players (Names Only) -->
       <div class="panel available-players-panel">
         <div class="panel-header">
           <h2 class="panel-title">Available Players ({{availablePlayers.length}})</h2>
         </div>
         
-        <!-- Scrollable area -->
+        <!-- Scrollable Players List (Clean, No Pool Info) -->
         <div class="players-list">
           <div *ngFor="let player of availablePlayers" class="player-card">
-            <!-- Main player info row -->
+            
             <div class="player-main-row">
               <div class="player-info">
                 <div class="player-name">{{player.name}}</div>
-                <!-- <div class="player-role" [ngClass]="getRoleClass(player.role)">
-                  {{player.role}}
-                </div> -->
               </div>
               
-              <!-- <div class="player-price-section">
+              <div class="player-price-section">
                 <div class="player-price">₹{{player.basePrice}}</div>
-                <div class="mvp-badge" *ngIf="player.mvpRanking">
-                  MVP #{{player.mvpRanking}}
-                </div>
-              </div> -->
+              </div>
             </div>
-            
-            <!-- Player Stats Grid -->
-           
-            
-            <!-- Action Button -->
-           <!-- <div class="player-actions">
-           <button class="btn-auction" 
-            (click)="selectPlayerForAuction(player)"
-            [disabled]="auctionInProgress"
-            title="Start auction for {{player.name}}">
-            <i class="pi pi-gavel"></i>
-            Start Auction
-            </button>
-          </div> -->
           </div>
           
           <div *ngIf="availablePlayers.length === 0" class="empty-state">
             <i class="pi pi-users empty-icon"></i>
-            <p>No players available</p>
+            <p>All players have been auctioned!</p>
           </div>
         </div>
       </div>
       
-      <!-- Center Panel - Current Auction with Enhanced Player Display -->
+      <!-- Center Panel - Current Auction (Enhanced with Conditional Stats) -->
       <div class="panel current-auction-panel">
         <div *ngIf="currentPlayer && auctionInProgress" class="auction-active">
+          
           <div class="player-spotlight">
-            <!-- <div class="player-avatar">{{currentPlayer.name.charAt(0)}}</div> -->
             <h2 class="spotlight-player-name">{{currentPlayer.name}}</h2>
-            <!-- <div class="player-role-tag" [ngClass]="getRoleClass(currentPlayer.role)">
+            <div class="player-role-tag" [ngClass]="getRoleClass(currentPlayer.role)">
               {{currentPlayer.role}}
-            </div> -->
+            </div>
             
-            <!-- Enhanced MVP Badge -->
-            <div class="mvp-spotlight" *ngIf="currentPlayer.mvpRanking">
+            <!-- Only show MVP if ranking <= 20 -->
+            <div class="mvp-spotlight" *ngIf="currentPlayer.mvpRanking && currentPlayer.mvpRanking <= 20">
               <i class="pi pi-star-fill mvp-icon"></i>
               <span>MVP Rank #{{currentPlayer.mvpRanking}}</span>
             </div>
           </div>
-          
-          <!-- Player Stats in Spotlight -->
+
+          <!-- Enhanced Player Stats (Hide 0 values) -->
           <div class="spotlight-stats">
             <div class="stats-grid">
-              <div class="spotlight-stat batting">
+              <!-- Only show runs if > 0 -->
+              <div class="spotlight-stat batting" *ngIf="currentPlayer.battingStats.runs > 0">
                 <div class="stat-icon">🏏</div>
                 <div class="stat-info">
                   <div class="stat-number">{{currentPlayer.battingStats.runs | number}}</div>
@@ -101,7 +84,8 @@
                 </div>
               </div>
               
-              <div class="spotlight-stat batting">
+              <!-- Only show strike rate if > 0 -->
+              <div class="spotlight-stat batting" *ngIf="currentPlayer.battingStats.strikeRate > 0">
                 <div class="stat-icon">⚡</div>
                 <div class="stat-info">
                   <div class="stat-number">{{currentPlayer.battingStats.strikeRate | number:'1.1-1'}}</div>
@@ -109,7 +93,8 @@
                 </div>
               </div>
               
-              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats">
+              <!-- Only show wickets if exists and > 0 -->
+              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.wickets > 0">
                 <div class="stat-icon">🎯</div>
                 <div class="stat-info">
                   <div class="stat-number">{{currentPlayer.bowlingStats.wickets}}</div>
@@ -117,7 +102,8 @@
                 </div>
               </div>
               
-              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats">
+              <!-- Only show economy if exists and > 0 -->
+              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.economy > 0">
                 <div class="stat-icon">📊</div>
                 <div class="stat-info">
                   <div class="stat-number">{{currentPlayer.bowlingStats.economy | number:'1.1-2'}}</div>
@@ -136,73 +122,91 @@
           </div>
           
           <div class="auction-actions">
-            <button class="btn-auction-action sold" [disabled]="!currentTeam" (click)="sellPlayer()">
+            <button class="btn-auction-action sold" 
+                    [disabled]="!currentTeam" 
+                    (click)="sellPlayer()">
               SOLD!
             </button>
             <button class="btn-auction-action unsold" 
-             [disabled]="currentTeam !== null && currentBid > currentPlayer.basePrice"
-             (click)="markUnsold()">
+                    [disabled]="currentTeam !== null && currentBid > currentPlayer.basePrice"
+                    (click)="markUnsold()">
               UNSOLD
             </button>
           </div>
         </div>
         
         <div *ngIf="!currentPlayer || !auctionInProgress" class="auction-inactive">
-          <div *ngIf="availablePlayers.length > 0" class="start-auction">
+          <!-- Enhanced: Check team capacity before allowing new auction -->
+          <div *ngIf="availablePlayers.length > 0 && !shouldEndAuction()" class="start-auction">
             <i class="pi pi-gavel auction-icon"></i>
-            <p>Ready to start the next auction</p>
+            <h3>Ready for Next Auction</h3>
+            <p>{{availablePlayers.length}} players remaining</p>
             <button class="btn-start-auction" (click)="startAuction()">
               START NEXT AUCTION
             </button>
           </div>
           
-          <div *ngIf="availablePlayers.length === 0 && unsoldPlayers.length > 0" class="start-round">
+          <!-- NEW: Show when all teams are full -->
+          <div *ngIf="shouldEndAuction()" class="auction-complete">
+            <i class="pi pi-users auction-icon"></i>
+            <h3>🎉 Teams Complete!</h3>
+            <p>All teams have reached maximum capacity (7 players each)</p>
+            <div class="completion-summary">
+              <div class="completion-stat">
+                <span class="completion-number">{{getSoldPlayersCount()}}</span>
+                <span class="completion-label">Players Sold</span>
+              </div>
+              <div class="completion-stat">
+                <span class="completion-number">{{teams.length * 7}}</span>
+                <span class="completion-label">Total Capacity</span>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="availablePlayers.length === 0 && unsoldPlayers.length > 0 && !shouldEndAuction()" class="start-round">
             <i class="pi pi-refresh auction-icon"></i>
-            <p>All players have been through auction once</p>
+            <p>All players completed. Start next round with unsold players?</p>
             <button class="btn-start-round" (click)="startNextRound()">
               START NEXT ROUND
             </button>
           </div>
           
-          <div *ngIf="availablePlayers.length === 0 && unsoldPlayers.length === 0" class="auction-complete">
-            <i class="pi pi-check-circle auction-icon"></i>
-            <h3>Auction Complete!</h3>
+          <div *ngIf="availablePlayers.length === 0 && unsoldPlayers.length === 0 && !shouldEndAuction()" class="auction-complete">
+            <i class="pi pi-trophy auction-icon"></i>
+            <h3>🎉 Auction Complete!</h3>
             <p>All players have been auctioned</p>
+            <div class="completion-summary">
+              <div class="completion-stat">
+                <span class="completion-number">{{getSoldPlayersCount()}}</span>
+                <span class="completion-label">Players Sold</span>
+              </div>
+              <div class="completion-stat">
+                <span class="completion-number">{{teams.length}}</span>
+                <span class="completion-label">Teams</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       
-      <!-- Right Panel - Unsold Players with Stats -->
+      <!-- Right Panel - Unsold Players (Names Only) -->
       <div class="panel unsold-players-panel">
         <div class="panel-header">
           <h2 class="panel-title">Unsold Players ({{unsoldPlayers.length}})</h2>
         </div>
         
-        <!-- Scrollable area -->
         <div class="players-list">
-          <div *ngFor="let player of unsoldPlayers" class="player-card">
-            <!-- Main player info row -->
-            <div class="player-main-row">
-              <div class="player-info">
-                <div class="player-name">{{player.name}}</div>
-              </div>
-              
-              <!-- <div class="player-price-section">
-                <div class="player-price">₹{{player.basePrice}}</div>
-              </div> -->
-            </div>
-            
-            <!-- Compact Stats for Unsold Players -->
-        
+          <div *ngFor="let player of unsoldPlayers" class="player-card-simple unsold">
+            <div class="player-name-only">{{player.name}}</div>
           </div>
           
           <div *ngIf="unsoldPlayers.length === 0" class="empty-state">
-            <i class="pi pi-info-circle empty-icon"></i>
+            <i class="pi pi-check-circle empty-icon"></i>
             <p>No unsold players</p>
           </div>
         </div>
 
-        <!-- Auction Stats -->
+        <!-- Clean Auction Stats (No Pool Info) -->
         <div class="auction-stats">
           <h3 class="stats-title">Auction Stats</h3>
           
@@ -213,9 +217,9 @@
             </div>
             
             <div class="progress-bar">
-              <div class="progress-segment sold" [style.width.%]="soldPercentage" [attr.title]="'Sold: ' + soldPercentage + '%'"></div>
-              <div class="progress-segment unsold" [style.width.%]="unsoldPercentage" [attr.title]="'Unsold: ' + unsoldPercentage + '%'"></div>
-              <div class="progress-segment pending" [style.width.%]="pendingPercentage" [attr.title]="'Pending: ' + pendingPercentage + '%'"></div>
+              <div class="progress-segment sold" [style.width.%]="soldPercentage"></div>
+              <div class="progress-segment unsold" [style.width.%]="unsoldPercentage"></div>
+              <div class="progress-segment pending" [style.width.%]="pendingPercentage"></div>
             </div>
           </div>
           
@@ -242,15 +246,19 @@
       </div>
     </div>
     
-    <!-- Teams Section with Enhanced Player Stats -->
+    <!-- Teams Section (Enhanced with Team Capacity) -->
     <div class="teams-section">
       <h2 class="section-title">Teams</h2>
       
       <div class="teams-grid">
         <div *ngFor="let team of teams" class="team-card" [style.border-color]="team.color">
+          <!-- ENHANCED: Team header with capacity indicator -->
           <div class="team-header" [style.background-color]="team.color + '15'">
             <div class="team-name">{{team.shortName}}</div>
             <div class="team-budget">₹{{team.budget}}</div>
+            <div class="team-capacity" [class.full]="getTeamCapacityInfo(team).full">
+              {{getTeamCapacityInfo(team).current}}/{{getTeamCapacityInfo(team).max}}
+            </div>
           </div>
           
           <div class="team-players">
@@ -260,42 +268,54 @@
                 <span class="player-price">₹{{player.soldPrice}}</span>
               </div>
               
-              <!-- Compact team player stats -->
-              <!-- <div class="team-player-stats">
-                <div class="mini-stat">
-                  <span class="mini-label">MVP</span>
-                  <span class="mini-value">#{{player.mvpRanking}}</span>
-                </div>
-                <div class="mini-stat">
-                  <span class="mini-label">Runs</span>
-                  <span class="mini-value">{{formatNumber(player.battingStats.runs)}}</span>
-                </div>
-                <div class="mini-stat" *ngIf="player.bowlingStats">
-                  <span class="mini-label">Wkts</span>
-                  <span class="mini-value">{{player.bowlingStats.wickets}}</span>
-                </div>
-              </div> -->
+              <!-- Enhanced team player stats (hide 0 values and MVP > 20) -->
+              <div class="team-player-stats-mini" 
+                   *ngIf="(player.mvpRanking && player.mvpRanking <= 20) || 
+                          (player.battingStats.runs > 0) || 
+                          (player.bowlingStats && player.bowlingStats.wickets > 0)">
+                <!-- Only show MVP if <= 20 -->
+                <span class="mini-stat" *ngIf="player.mvpRanking && player.mvpRanking <= 20">
+                  MVP #{{player.mvpRanking}}
+                </span>
+                <!-- Only show runs if > 0 -->
+                <span class="mini-stat" *ngIf="player.battingStats.runs > 0">
+                  {{formatNumber(player.battingStats.runs)}}R
+                </span>
+                <!-- Only show wickets if exists and > 0 -->
+                <span class="mini-stat" *ngIf="player.bowlingStats && player.bowlingStats.wickets > 0">
+                  {{player.bowlingStats.wickets}}W
+                </span>
+              </div>
             </div>
             
             <div *ngIf="team.players.length === 0" class="team-empty">
-              No players
+              No players yet
             </div>
           </div>
           
-          <div *ngIf="auctionInProgress" class="team-action">
-           <button class="btn-bid" 
-            [disabled]="!canTeamAffordNextBid(team)"
-             [style.background-color]="team.color"
-            (click)="placeBid(team.id)">
-              Bid ₹{{getNextBidAmount()}}
+          <!-- ENHANCED: Bidding with capacity and budget checks -->
+          <div *ngIf="auctionInProgress && !shouldEndAuction()" class="team-action">
+            <button class="btn-bid" 
+                    [disabled]="!canTeamAffordNextBid(team)"
+                    [style.background-color]="team.color"
+                    [title]="getTeamCapacityInfo(team).full ? 'Team Full (7/7)' : 
+                             team.budget < getNextBidAmount() ? 'Insufficient Budget' : 
+                             'Bid ₹' + getNextBidAmount()"
+                    (click)="placeBid(team.id)">
+              <span *ngIf="!getTeamCapacityInfo(team).full">Bid ₹{{getNextBidAmount()}}</span>
+              <span *ngIf="getTeamCapacityInfo(team).full" class="team-full-text">FULL</span>
             </button>
+          </div>
+          
+          <!-- NEW: Show when auction ends due to all teams being full -->
+          <div *ngIf="auctionInProgress && shouldEndAuction()" class="all-teams-full">
+            <span class="teams-full-message">All teams at capacity</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<p-confirmDialog></p-confirmDialog>
 
-<!-- Toast Messages -->
+<p-confirmDialog></p-confirmDialog>
 <p-toast></p-toast>

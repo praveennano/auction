@@ -1042,3 +1042,480 @@ html, body {
     font-size: 0.85rem;
   }
 }
+
+/* Pool-Based Auction Additional Styles - Add these to your existing CSS */
+
+/* Pool Progress in Header */
+.pool-progress-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 1rem;
+}
+
+.pool-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+}
+
+.pool-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.pool-counter {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.pool-progress-bar {
+  width: 200px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pool-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #06b6d4);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.pool-overall-progress {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  color: white;
+}
+
+/* Pool Status Overview */
+.pool-overview {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.pool-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.pool-status-card {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.pool-status-card.active {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+.pool-status-card.completed {
+  border-color: #6b7280;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  opacity: 0.7;
+}
+
+.pool-status-card.pending {
+  border-color: #d1d5db;
+  background: white;
+}
+
+.pool-status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.pool-status-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.pool-status-badge {
+  font-size: 0.7rem;
+}
+
+.pool-status-badge.active {
+  color: #10b981;
+}
+
+.pool-status-badge.completed {
+  color: #6b7280;
+}
+
+.pool-status-badge.pending {
+  color: #9ca3af;
+}
+
+.pool-status-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pool-status-count {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.pool-progress-mini {
+  height: 3px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.pool-progress-mini-fill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Player Pool Indicators */
+.pool-indicator-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 0.5rem;
+}
+
+.pool-indicator-badge.premium-pool {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #92400e;
+  box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+}
+
+.pool-indicator-badge.pool-a {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  color: white;
+  box-shadow: 0 2px 4px rgba(6, 182, 212, 0.3);
+}
+
+.pool-indicator-badge.pool-b {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+}
+
+.pool-indicator-badge.pool-c {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.pool-indicator-badge.active {
+  animation: poolPulse 2s ease-in-out infinite;
+}
+
+.pool-indicator-badge.completed {
+  opacity: 0.6;
+  filter: grayscale(0.3);
+}
+
+@keyframes poolPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Player Cards with Pool Context */
+.current-pool-player {
+  border-left: 4px solid #10b981 !important;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+}
+
+.other-pool-player {
+  opacity: 0.7;
+  border-left: 4px solid #d1d5db !important;
+}
+
+.current-pool-player:hover {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+/* Current Pool Banner */
+.current-pool-banner {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.pool-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pool-banner-icon {
+  font-size: 1.5rem;
+  color: #fbbf24;
+}
+
+.pool-banner-text {
+  flex: 1;
+}
+
+.pool-banner-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.pool-banner-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Player Stats Compact */
+.player-stats-compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.stat-compact {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+
+.stat-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.stat-value {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Enhanced Pool Stats */
+.pool-stats-overview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pool-stat-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.pool-stat-card.active {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.pool-stat-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.pool-stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+}
+
+/* Team Pool Distribution */
+.team-pool-distribution {
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  background: #fafbfc;
+}
+
+.pool-distribution-title {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.pool-distribution-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.pool-count {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+}
+
+.pool-count.premium {
+  background: rgba(251, 191, 36, 0.2);
+  color: #92400e;
+}
+
+.pool-count.pool-a {
+  background: rgba(6, 182, 212, 0.2);
+  color: #0e7490;
+}
+
+.pool-count.pool-b {
+  background: rgba(139, 92, 246, 0.2);
+  color: #6d28d9;
+}
+
+.pool-count.pool-c {
+  background: rgba(239, 68, 68, 0.2);
+  color: #b91c1c;
+}
+
+/* Pool Indicator Small (for team players) */
+.pool-indicator-small {
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.25rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.team-player-pool {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.team-player-stats-mini {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.mini-stat {
+  font-size: 0.65rem;
+  color: #6b7280;
+}
+
+/* Completion Summary */
+.completion-summary {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.completion-stat {
+  text-align: center;
+}
+
+.completion-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #10b981;
+  display: block;
+}
+
+.completion-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* Pool Transition State */
+.pool-transition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  color: #6b7280;
+}
+
+.pool-transition .auction-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+  animation: moveForward 2s ease-in-out infinite;
+}
+
+@keyframes moveForward {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
+}
+
+/* Unsold Player Styling */
+.unsold-player {
+  border-left: 4px solid #ef4444 !important;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
+}
+
+.pool-indicator-badge.unsold {
+  background: #ef4444;
+  color: white;
+  opacity: 0.8;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 1024px) {
+  .pool-progress-section {
+    margin: 0.5rem 0;
+  }
+  
+  .pool-progress-bar {
+    width: 150px;
+  }
+  
+  .pool-status-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .pool-stats-overview {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .pool-indicator {
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: center;
+  }
+  
+  .pool-progress-bar {
+    width: 120px;
+  }
+  
+  .player-stats-compact {
+    grid-template-columns: 1fr;
+  }
+  
+  .completion-summary {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pool-distribution-counts {
+    justify-content: center;
+  }
+}
