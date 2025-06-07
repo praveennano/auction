@@ -1,46 +1,39 @@
-<p-card>
-  <ng-template pTemplate="header">
-    <div class="p-3 bg-primary text-white font-bold">
-      Teams
-    </div>
-  </ng-template>
+<!-- Teams Section - Updated to fill available space -->
+<div class="teams-section">
+  <h2 class="section-title">Teams</h2>
   
-  <div class="grid">
-    <div *ngFor="let team of teams">
-      <div class="team-card border-round-lg shadow-2" [style.border-left]="'4px solid ' + team.color">
-        <div class="team-header" [style.background-color]="team.color + '15'">
-          <h3 class="team-name">{{ team.shortName }}</h3>
-          <span class="budget-badge">
-            ₹{{ team.budget }}
-          </span>
+  <div class="teams-grid">
+    <div *ngFor="let team of teams" class="team-card" [style.border-left-color]="team.color">
+      <div class="team-header" [style.background-color]="team.color + '15'">
+        <h3 class="team-name">{{team.shortName}}</h3>
+        <div class="budget-badge">₹{{team.budget}}</div>
+      </div>
+      
+      <!-- Player count indicator -->
+      <div class="player-count">
+        {{getPlayerCountLabel(team.players.length)}}
+      </div>
+      
+      <div class="team-players-container">
+        <div *ngFor="let player of team.players; trackBy: trackByPlayerId" 
+             class="team-player-item">
+          <span class="player-name">{{player.name}}</span>
+          <span class="player-price">₹{{player.soldPrice}}</span>
         </div>
         
-        <div class="player-count">
-          {{ getPlayerCountLabel(team.players.length) }}
+        <div *ngIf="team.players.length === 0" class="team-empty">
+          No players yet
         </div>
-        
-        <div class="team-players-container">
-          <div *ngFor="let player of team.players" class="team-player-item border-round bg-gray-50 text-sm flex justify-content-between align-items-center">
-            <span>{{ player.name }}</span>
-            <span class="text-green-600 font-semibold">₹{{ player.soldPrice }}</span>
-          </div>
-          
-          <div *ngIf="team.players.length === 0" class="team-empty">
-            No players
-          </div>
-        </div>
-        
-        <div *ngIf="auctionInProgress" class="team-action">
-          <p-button
-            [label]="'Bid ₹' + (currentBid + 10)"
-            [disabled]="team.budget < currentBid + 10"
-            [style.background-color]="team.color"
-            [style.border-color]="team.color"
-            styleClass="p-button-sm w-full"
-            (click)="placeBid(team.id, currentBid + 10)">
-          </p-button>
-        </div>
+      </div>
+      
+      <div *ngIf="auctionInProgress" class="team-action">
+        <button class="btn-bid" 
+                [disabled]="team.budget < currentBid + 10"
+                [style.background-color]="team.color"
+                (click)="placeBid(team.id, currentBid + 10)">
+          Bid ₹{{currentBid + 10}}
+        </button>
       </div>
     </div>
   </div>
-</p-card>
+</div>

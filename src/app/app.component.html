@@ -1,33 +1,69 @@
 <div class="auction-app">
-  <!-- Header with gradient background -->
+  <!-- Header with gradient background and reset button -->
   <div class="app-header">
-    <h1 class="app-title">CWF Auction</h1>
+    <div class="header-content">
+      <h1 class="app-title">CWF Auction</h1>
+      <div class="header-actions">
+        <!-- Save Button -->
+        <button class="btn-header-action" 
+                title="Save Auction Data"
+                (click)="saveAuctionData()">
+          <i class="pi pi-save"></i>
+          Save
+        </button>
+        
+        <!-- Reset Button -->
+        <button class="btn-header-action btn-reset" 
+                title="Reset Entire Auction"
+                (click)="resetAuction()">
+          <i class="pi pi-refresh"></i>
+          Reset Auction
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="main-container">
     <div class="content-grid">
-      <!-- Left Panel - Available Players -->
+      <!-- Left Panel - Available Players with Enhanced Stats -->
       <div class="panel available-players-panel">
         <div class="panel-header">
           <h2 class="panel-title">Available Players ({{availablePlayers.length}})</h2>
-          <!-- <div class="panel-actions">
-            <button class="btn-icon" title="Filter Players"><i class="pi pi-filter"></i></button>
-          </div> -->
         </div>
         
         <!-- Scrollable area -->
         <div class="players-list">
           <div *ngFor="let player of availablePlayers" class="player-card">
-            <div class="player-info">
-              <div class="player-name">{{player.name}}</div>
-              <div class="player-role" [ngClass]="getRoleClass(player.role)">
-                {{player.role}}
+            <!-- Main player info row -->
+            <div class="player-main-row">
+              <div class="player-info">
+                <div class="player-name">{{player.name}}</div>
+                <!-- <div class="player-role" [ngClass]="getRoleClass(player.role)">
+                  {{player.role}}
+                </div> -->
               </div>
+              
+              <!-- <div class="player-price-section">
+                <div class="player-price">₹{{player.basePrice}}</div>
+                <div class="mvp-badge" *ngIf="player.mvpRanking">
+                  MVP #{{player.mvpRanking}}
+                </div>
+              </div> -->
             </div>
-            <div class="player-price">₹{{player.basePrice}}</div>
-            <button class="btn-auction" (click)="selectPlayerForAuction(player)">
-              <i class="pi pi-gavel"></i>
+            
+            <!-- Player Stats Grid -->
+           
+            
+            <!-- Action Button -->
+           <!-- <div class="player-actions">
+           <button class="btn-auction" 
+            (click)="selectPlayerForAuction(player)"
+            [disabled]="auctionInProgress"
+            title="Start auction for {{player.name}}">
+            <i class="pi pi-gavel"></i>
+            Start Auction
             </button>
+          </div> -->
           </div>
           
           <div *ngIf="availablePlayers.length === 0" class="empty-state">
@@ -37,14 +73,57 @@
         </div>
       </div>
       
-      <!-- Center Panel - Current Auction -->
+      <!-- Center Panel - Current Auction with Enhanced Player Display -->
       <div class="panel current-auction-panel">
         <div *ngIf="currentPlayer && auctionInProgress" class="auction-active">
           <div class="player-spotlight">
-            <div class="player-avatar">{{currentPlayer.name.charAt(0)}}</div>
-            <h2 class="player-name">{{currentPlayer.name}}</h2>
-            <div class="player-role-tag" [ngClass]="getRoleClass(currentPlayer.role)">
+            <!-- <div class="player-avatar">{{currentPlayer.name.charAt(0)}}</div> -->
+            <h2 class="spotlight-player-name">{{currentPlayer.name}}</h2>
+            <!-- <div class="player-role-tag" [ngClass]="getRoleClass(currentPlayer.role)">
               {{currentPlayer.role}}
+            </div> -->
+            
+            <!-- Enhanced MVP Badge -->
+            <div class="mvp-spotlight" *ngIf="currentPlayer.mvpRanking">
+              <i class="pi pi-star-fill mvp-icon"></i>
+              <span>MVP Rank #{{currentPlayer.mvpRanking}}</span>
+            </div>
+          </div>
+          
+          <!-- Player Stats in Spotlight -->
+          <div class="spotlight-stats">
+            <div class="stats-grid">
+              <div class="spotlight-stat batting">
+                <div class="stat-icon">🏏</div>
+                <div class="stat-info">
+                  <div class="stat-number">{{currentPlayer.battingStats.runs | number}}</div>
+                  <div class="stat-text">Runs</div>
+                </div>
+              </div>
+              
+              <div class="spotlight-stat batting">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-info">
+                  <div class="stat-number">{{currentPlayer.battingStats.strikeRate | number:'1.1-1'}}</div>
+                  <div class="stat-text">Strike Rate</div>
+                </div>
+              </div>
+              
+              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-info">
+                  <div class="stat-number">{{currentPlayer.bowlingStats.wickets}}</div>
+                  <div class="stat-text">Wickets</div>
+                </div>
+              </div>
+              
+              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats">
+                <div class="stat-icon">📊</div>
+                <div class="stat-info">
+                  <div class="stat-number">{{currentPlayer.bowlingStats.economy | number:'1.1-2'}}</div>
+                  <div class="stat-text">Economy</div>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -60,7 +139,9 @@
             <button class="btn-auction-action sold" [disabled]="!currentTeam" (click)="sellPlayer()">
               SOLD!
             </button>
-            <button class="btn-auction-action unsold" (click)="markUnsold()">
+            <button class="btn-auction-action unsold" 
+             [disabled]="currentTeam !== null && currentBid > currentPlayer.basePrice"
+             (click)="markUnsold()">
               UNSOLD
             </button>
           </div>
@@ -89,47 +170,9 @@
             <p>All players have been auctioned</p>
           </div>
         </div>
-        
-        <!-- Auction Stats -->
-        <!-- <div class="auction-stats">
-          <h3 class="stats-title">Auction Stats</h3>
-          
-          <div class="stat-overview">
-            <div class="stat-total">
-              <span class="stat-label">Total Players</span>
-              <span class="stat-value">{{totalPlayers}}</span>
-            </div>
-            
-            <div class="progress-bar">
-              <div class="progress-segment sold" [style.width.%]="soldPercentage" [attr.title]="'Sold: ' + soldPercentage + '%'"></div>
-              <div class="progress-segment unsold" [style.width.%]="unsoldPercentage" [attr.title]="'Unsold: ' + unsoldPercentage + '%'"></div>
-              <div class="progress-segment pending" [style.width.%]="pendingPercentage" [attr.title]="'Pending: ' + pendingPercentage + '%'"></div>
-            </div>
-          </div>
-          
-          <div class="stat-cards">
-            <div class="stat-card sold">
-              <div class="stat-number">{{soldPlayers.length}}</div>
-              <div class="stat-name">Sold</div>
-              <div class="stat-percent">{{soldPercentage}}%</div>
-            </div>
-            
-            <div class="stat-card unsold">
-              <div class="stat-number">{{unsoldPlayers.length}}</div>
-              <div class="stat-name">Unsold</div>
-              <div class="stat-percent">{{unsoldPercentage}}%</div>
-            </div>
-            
-            <div class="stat-card pending">
-              <div class="stat-number">{{availablePlayers.length}}</div>
-              <div class="stat-name">Pending</div>
-              <div class="stat-percent">{{pendingPercentage}}%</div>
-            </div>
-          </div>
-        </div> -->
       </div>
       
-      <!-- Right Panel - Unsold Players -->
+      <!-- Right Panel - Unsold Players with Stats -->
       <div class="panel unsold-players-panel">
         <div class="panel-header">
           <h2 class="panel-title">Unsold Players ({{unsoldPlayers.length}})</h2>
@@ -138,13 +181,19 @@
         <!-- Scrollable area -->
         <div class="players-list">
           <div *ngFor="let player of unsoldPlayers" class="player-card">
-            <div class="player-info">
-              <div class="player-name">{{player.name}}</div>
-              <div class="player-role" [ngClass]="getRoleClass(player.role)">
-                {{player.role}}
+            <!-- Main player info row -->
+            <div class="player-main-row">
+              <div class="player-info">
+                <div class="player-name">{{player.name}}</div>
               </div>
+              
+              <!-- <div class="player-price-section">
+                <div class="player-price">₹{{player.basePrice}}</div>
+              </div> -->
             </div>
-            <div class="player-price">₹{{player.basePrice}}</div>
+            
+            <!-- Compact Stats for Unsold Players -->
+        
           </div>
           
           <div *ngIf="unsoldPlayers.length === 0" class="empty-state">
@@ -153,7 +202,8 @@
           </div>
         </div>
 
-         <div class="auction-stats">
+        <!-- Auction Stats -->
+        <div class="auction-stats">
           <h3 class="stats-title">Auction Stats</h3>
           
           <div class="stat-overview">
@@ -189,32 +239,10 @@
             </div>
           </div>
         </div>
-        
-        <!-- Sold Players Section -->
-        <!-- <div class="sold-players-section">
-          <h3 class="section-title">Sold Players ({{soldPlayers.length}})</h3>
-          
-          <div class="players-list compact">
-            <div *ngFor="let player of soldPlayers" class="player-card sold">
-              <div class="player-info">
-                <div class="player-name">{{player.name}}</div>
-                <div class="player-team" *ngIf="getTeamForPlayer(player)" 
-                     [style.color]="getTeamForPlayer(player)?.color">
-                  {{getTeamForPlayer(player)?.shortName}}
-                </div>
-              </div>
-              <div class="player-price highlight">₹{{player.soldPrice}}</div>
-            </div>
-            
-            <div *ngIf="soldPlayers.length === 0" class="empty-state">
-              <p>No players sold yet</p>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
     
-    <!-- Teams Section -->
+    <!-- Teams Section with Enhanced Player Stats -->
     <div class="teams-section">
       <h2 class="section-title">Teams</h2>
       
@@ -226,9 +254,27 @@
           </div>
           
           <div class="team-players">
-            <div *ngFor="let player of team.players" class="team-player">
-              <span class="player-name">{{player.name}}</span>
-              <span class="player-price">₹{{player.soldPrice}}</span>
+            <div *ngFor="let player of team.players" class="team-player enhanced">
+              <div class="team-player-main">
+                <span class="player-name">{{player.name}}</span> 
+                <span class="player-price">₹{{player.soldPrice}}</span>
+              </div>
+              
+              <!-- Compact team player stats -->
+              <!-- <div class="team-player-stats">
+                <div class="mini-stat">
+                  <span class="mini-label">MVP</span>
+                  <span class="mini-value">#{{player.mvpRanking}}</span>
+                </div>
+                <div class="mini-stat">
+                  <span class="mini-label">Runs</span>
+                  <span class="mini-value">{{formatNumber(player.battingStats.runs)}}</span>
+                </div>
+                <div class="mini-stat" *ngIf="player.bowlingStats">
+                  <span class="mini-label">Wkts</span>
+                  <span class="mini-value">{{player.bowlingStats.wickets}}</span>
+                </div>
+              </div> -->
             </div>
             
             <div *ngIf="team.players.length === 0" class="team-empty">
@@ -237,11 +283,11 @@
           </div>
           
           <div *ngIf="auctionInProgress" class="team-action">
-            <button class="btn-bid" 
-                    [disabled]="team.budget < currentBid + 10"
-                    [style.background-color]="team.color"
-                    (click)="placeBid(team.id, currentBid + 10)">
-              Bid ₹{{currentBid + 10}}
+           <button class="btn-bid" 
+            [disabled]="!canTeamAffordNextBid(team)"
+             [style.background-color]="team.color"
+            (click)="placeBid(team.id)">
+              Bid ₹{{getNextBidAmount()}}
             </button>
           </div>
         </div>
@@ -249,3 +295,7 @@
     </div>
   </div>
 </div>
+<p-confirmDialog></p-confirmDialog>
+
+<!-- Toast Messages -->
+<p-toast></p-toast>

@@ -10,41 +10,161 @@
   }
 }
 
-.budget-badge {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 4px;
-}
+
 
 .team-players-container {
-  max-height: 200px;
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  max-height: 280px; /* Increased height for 8 players */
   overflow-y: auto;
-  scrollbar-width: thin;
   
   &::-webkit-scrollbar {
     width: 6px;
   }
   
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 3px;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 3px;
   }
 }
 
 .team-player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  border-radius: var(--radius-sm);
   transition: background-color 0.2s;
   
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  
   &:hover {
-    background-color: #f0f0f0 !important;
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  
+  .player-name {
+    font-weight: 500;
+    flex: 1;
+  }
+  
+  .player-price {
+    font-weight: 600;
+    color: var(--color-success);
+    font-size: 0.85rem;
   }
 }
 
-@media screen and (max-width: 768px) {
-  :host ::ng-deep .p-grid > div {
-    width: 100%;
+.team-empty {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.team-action {
+  padding: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+  background-color: rgba(0, 0, 0, 0.01);
+}
+
+.btn-bid {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.9rem;
+  
+  &:hover:not(:disabled) {
+    filter: brightness(110%);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
   }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 1400px) {
+  .teams-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .teams-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .team-players-container {
+    max-height: 240px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+    height: auto;
+    margin-bottom: 1.5rem;
+  }
+  
+  .unsold-players-panel {
+    grid-column: span 2;
+  }
+  
+  .teams-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .main-container {
+    height: auto;
+    min-height: calc(100vh - 80px);
+  }
+  
+  .teams-section {
+    flex: none;
+  }
+  
+  .teams-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .team-players-container {
+    max-height: 200px;
+  }
+}
+
+/* Add budget display enhancement */
+.budget-badge {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }

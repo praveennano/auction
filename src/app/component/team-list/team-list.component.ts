@@ -64,6 +64,11 @@ export class TeamListComponent  implements OnInit {
     this.auctionService.placeBid(teamId, amount);
   }
 
+  trackByPlayerId(index: number, player: any): any {
+  return player.id || index;
+}
+
+
   // Helper method to get color class for role tags
   getRoleTagSeverity(role: PlayerRole): string {
     switch (role) {

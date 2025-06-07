@@ -1,62 +1,126 @@
+<!-- Simplified auction component template with essential stats -->
 <p-card styleClass="auction-card">
   <div class="auction-container">
     <ng-container *ngIf="currentPlayer && auctionInProgress; else noAuction">
-      <div class="text-center">
-        <h2 class="text-3xl font-bold mb-3 text-primary">{{ currentPlayer.name }}</h2>
-        <p-tag [value]="currentPlayer.role" [severity]="getRoleColor(currentPlayer.role)" styleClass="text-sm mb-4"></p-tag>
-        
-        <div class="bid-section my-4">
-          <span class="text-sm text-500 block">Current Bid</span>
-          <span class="text-4xl font-bold text-green-600 block">₹{{ currentBid }}</span>
-          <span *ngIf="currentTeam" class="mt-2 text-sm block">
-            by <span class="font-medium">{{ currentTeam.name }}</span>
-          </span>
+      
+      <!-- Player Header -->
+      <div class="player-header">
+        <div class="player-avatar">
+          {{ currentPlayer.name.charAt(0) }}
         </div>
-        
-        <div class="flex justify-content-center gap-3">
-          <p-button 
-            label="SOLD!" 
-            [disabled]="!currentTeam" 
-            styleClass="p-button-success"
-            (click)="sellPlayer()"
-          ></p-button>
-          <p-button 
-            label="UNSOLD" 
-            styleClass="p-button-danger"
-            (click)="markUnsold()"
-          ></p-button>
+        <div class="player-info">
+          <h2 class="player-name">{{ currentPlayer.name }}</h2>
+          <div class="player-meta">
+            <p-tag [value]="currentPlayer.role" [severity]="getRoleColor(currentPlayer.role)" styleClass="role-tag"></p-tag>
+            <div class="mvp-ranking">
+              <i class="pi pi-star"></i>
+              <span>MVP Rank: #{{ currentPlayer.mvpRanking }}</span>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Essential Statistics -->
+      <div class="stats-container">
+        
+        <!-- Batting Stats -->
+        <div class="stat-group batting-stats">
+          <div class="stat-header">
+            <i class="pi pi-chart-line"></i>
+            <span>Batting</span>
+          </div>
+          <div class="stat-items">
+            <div class="stat-item">
+              <span class="stat-value">{{ formatNumber(currentPlayer.battingStats.runs) }}</span>
+              <span class="stat-label">Runs</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ currentPlayer.battingStats.strikeRate | number:'1.1-1' }}</span>
+              <span class="stat-label">Strike Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bowling Stats (if applicable) -->
+        <div class="stat-group bowling-stats" *ngIf="currentPlayer.bowlingStats">
+          <div class="stat-header">
+            <i class="pi pi-target"></i>
+            <span>Bowling</span>
+          </div>
+          <div class="stat-items">
+            <div class="stat-item">
+              <span class="stat-value">{{ currentPlayer.bowlingStats.wickets }}</span>
+              <span class="stat-label">Wickets</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ currentPlayer.bowlingStats.economy | number:'1.1-1' }}</span>
+              <span class="stat-label">Economy</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bidding Section -->
+      <div class="bid-section">
+        <span class="bid-label">Current Bid</span>
+        <span class="bid-amount">₹{{ currentBid }}</span>
+        <span *ngIf="currentTeam" class="bid-team">
+          by <span class="team-name" [style.color]="currentTeam.color">{{ currentTeam.shortName }}</span>
+        </span>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="auction-actions">
+        <p-button 
+          label="SOLD!" 
+          [disabled]="!currentTeam" 
+          styleClass="p-button-success sold-btn"
+          (click)="sellPlayer()">
+        </p-button>
+        <p-button 
+          label="UNSOLD" 
+          styleClass="p-button-danger unsold-btn"
+          (click)="markUnsold()">
+        </p-button>
+      </div>
+      
     </ng-container>
     
+    <!-- No Auction State -->
     <ng-template #noAuction>
-      <div class="flex flex-column align-items-center justify-content-center h-full">
+      <div class="no-auction-state">
         <ng-container *ngIf="availablePlayers.length > 0; else noAvailablePlayers">
-          <p class="text-500 mb-3">Click the button to select next player for auction</p>
+          <i class="pi pi-gavel auction-icon"></i>
+          <p class="auction-message">Ready to start the next auction</p>
           <p-button 
             label="START NEXT AUCTION" 
             icon="pi pi-play" 
-            styleClass="p-button-primary"
-            (click)="startAuction()"
-          ></p-button>
+            styleClass="p-button-primary start-btn"
+            (click)="startAuction()">
+          </p-button>
         </ng-container>
         
         <ng-template #noAvailablePlayers>
           <ng-container *ngIf="unsoldPlayers.length > 0; else auctionComplete">
-            <p class="text-500 mb-3">All players have been through auction once</p>
+            <i class="pi pi-refresh auction-icon"></i>
+            <p class="auction-message">All players have been through auction once</p>
             <p-button 
               label="START NEXT ROUND WITH UNSOLD PLAYERS" 
               icon="pi pi-refresh" 
-              styleClass="p-button-warning"
-              (click)="startNextRound()"
-            ></p-button>
+              styleClass="p-button-warning start-btn"
+              (click)="startNextRound()">
+            </p-button>
           </ng-container>
           
           <ng-template #auctionComplete>
-            <h3 class="text-xl font-bold text-500">Auction Complete!</h3>
+            <i class="pi pi-check-circle auction-icon"></i>
+            <h3 class="complete-title">Auction Complete!</h3>
+            <p class="complete-message">All players have been auctioned</p>
           </ng-template>
         </ng-template>
       </div>
     </ng-template>
+    
   </div>
 </p-card>

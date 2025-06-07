@@ -15,4 +15,15 @@ export interface Player {
   teamId?: number;
   isSold?: boolean;
   isUnsold?: boolean;
+  
+  // Essential auction stats
+  mvpRanking: number;
+  battingStats: {
+    runs: number;
+    strikeRate: number;
+  };
+  bowlingStats?: {
+    wickets: number;
+    economy: number;
+  };
 }
