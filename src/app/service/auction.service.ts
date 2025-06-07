@@ -1,4 +1,4 @@
-// Enhanced auction.service.ts with Manual Pool System
+// Enhanced auction.service.ts with Team Captains as Initial Players
 
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -34,14 +34,78 @@ export class AuctionService {
   private readonly STORAGE_KEY = 'cwf_auction_data';
   private isBrowser: boolean;
 
-  // Your existing initial players array
+  // Team captains as initial players (these will be automatically assigned to teams)
+  private teamCaptains: Player[] = [
+    {
+      id: 101, // Using higher IDs to avoid conflicts
+      name: 'Vishnu',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 120, // Captain gets higher base price
+      mvpRanking: 1,
+      battingStats: { runs: 750, strikeRate: 155.0 },
+      bowlingStats: { wickets: 28, economy: 7.8 },
+      teamId: 1, // Pre-assigned to team 1
+      isSold: true,
+      soldPrice: 120
+    },
+    {
+      id: 102,
+      name: 'Karthikeyan',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 350,
+      mvpRanking: 2,
+      battingStats: { runs: 680, strikeRate: 148.5 },
+      bowlingStats: { wickets: 25, economy: 8.2 },
+      teamId: 2, // Pre-assigned to team 2
+      isSold: true,
+      soldPrice: 350
+    },
+    {
+      id: 103,
+      name: 'Akshay',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 370,
+      mvpRanking: 3,
+      battingStats: { runs: 620, strikeRate: 142.0 },
+      bowlingStats: { wickets: 22, economy: 8.5 },
+      teamId: 3, // Pre-assigned to team 3
+      isSold: true,
+      soldPrice: 370
+    },
+    {
+      id: 104,
+      name: 'Arumugam',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 330,
+      mvpRanking: 4,
+      battingStats: { runs: 590, strikeRate: 138.0 },
+      bowlingStats: { wickets: 20, economy: 8.8 },
+      teamId: 4, // Pre-assigned to team 4
+      isSold: true,
+      soldPrice: 330
+    },
+    {
+      id: 105,
+      name: 'Guna',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 270,
+      mvpRanking: 5,
+      battingStats: { runs: 560, strikeRate: 135.0 },
+      bowlingStats: { wickets: 18, economy: 9.0 },
+      teamId: 5, // Pre-assigned to team 5
+      isSold: true,
+      soldPrice: 270
+    }
+  ];
+
+  // Regular players for auction (original player list)
   private initialPlayers: Player[] = [
     {
       id: 1,
       name: 'Sharan M',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 1,
+      mvpRanking: 6, // Adjusted ranking since captains take top 5
       battingStats: { runs: 601, strikeRate: 168.8 },
       bowlingStats: { wickets: 24, economy: 7.3 }
     },
@@ -50,7 +114,7 @@ export class AuctionService {
       name: 'Sriram MP',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 2,
+      mvpRanking: 7,
       battingStats: { runs: 546, strikeRate: 169.0 },
       bowlingStats: { wickets: 23, economy: 8.9 }
     },
@@ -59,7 +123,7 @@ export class AuctionService {
       name: 'Praveen',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 3,
+      mvpRanking: 8,
       battingStats: { runs: 546, strikeRate: 169.0 },
       bowlingStats: { wickets: 23, economy: 8.9 }
     },
@@ -68,7 +132,7 @@ export class AuctionService {
       name: 'Gopal',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 4,
+      mvpRanking: 9,
       battingStats: { runs: 438, strikeRate: 126.6 },
       bowlingStats: { wickets: 25, economy: 8.5 }
     },
@@ -77,7 +141,7 @@ export class AuctionService {
       name: 'Siddhartha',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 5,
+      mvpRanking: 10,
       battingStats: { runs: 420, strikeRate: 134.2 },
       bowlingStats: { wickets: 20, economy: 10.2 }
     },
@@ -95,7 +159,7 @@ export class AuctionService {
       name: 'Vetri',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 7,
+      mvpRanking: 11,
       battingStats: { runs: 301, strikeRate: 142.0 },
       bowlingStats: { wickets: 15, economy: 9.7 }
     },
@@ -104,7 +168,7 @@ export class AuctionService {
       name: 'S N K',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 8,
+      mvpRanking: 12,
       battingStats: { runs: 259, strikeRate: 122.7 },
       bowlingStats: { wickets: 16, economy: 7.6 }
     },
@@ -113,7 +177,7 @@ export class AuctionService {
       name: 'Nageshwaran',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 9,
+      mvpRanking: 13,
       battingStats: { runs: 249, strikeRate: 134.6 },
       bowlingStats: { wickets: 13, economy: 11.4 }
     },
@@ -122,7 +186,7 @@ export class AuctionService {
       name: 'Pradeep',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 10,
+      mvpRanking: 14,
       battingStats: { runs: 217, strikeRate: 138.2 },
       bowlingStats: { wickets: 12, economy: 9.6 }
     },
@@ -131,7 +195,7 @@ export class AuctionService {
       name: 'Saravanan',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 11,
+      mvpRanking: 15,
       battingStats: { runs: 193, strikeRate: 140.9 },
       bowlingStats: { wickets: 4, economy: 10.1 }
     },
@@ -140,7 +204,7 @@ export class AuctionService {
       name: 'Aravind DG',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 12,
+      mvpRanking: 16,
       battingStats: { runs: 159, strikeRate: 95.8 },
       bowlingStats: { wickets: 10, economy: 9.4 }
     },
@@ -158,7 +222,7 @@ export class AuctionService {
       name: 'Mahesh',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 14,
+      mvpRanking: 17,
       battingStats: { runs: 136, strikeRate: 104.6 },
       bowlingStats: { wickets: 19, economy: 9.5 }
     },
@@ -167,7 +231,7 @@ export class AuctionService {
       name: 'S S Deepak',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 15,
+      mvpRanking: 18,
       battingStats: { runs: 134, strikeRate: 148.9 },
       bowlingStats: { wickets: 4, economy: 7.3 }
     },
@@ -185,7 +249,7 @@ export class AuctionService {
       name: 'Dg',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 17,
+      mvpRanking: 19,
       battingStats: { runs: 125, strikeRate: 105.0 },
       bowlingStats: { wickets: 14, economy: 7.3 }
     },
@@ -194,7 +258,7 @@ export class AuctionService {
       name: 'Arun S',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 18,
+      mvpRanking: 20,
       battingStats: { runs: 111, strikeRate: 104.7 },
       bowlingStats: { wickets: 9, economy: 6.2 }
     },
@@ -203,7 +267,7 @@ export class AuctionService {
       name: 'Ravi',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 19,
+      mvpRanking: 21,
       battingStats: { runs: 97, strikeRate: 78.2 },
       bowlingStats: { wickets: 10, economy: 7.1 }
     },
@@ -221,7 +285,7 @@ export class AuctionService {
       name: 'Suresh K',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 21,
+      mvpRanking: 22,
       battingStats: { runs: 74, strikeRate: 151.0 },
       bowlingStats: { wickets: 6, economy: 6.8 }
     },
@@ -284,7 +348,7 @@ export class AuctionService {
       name: 'Logesh',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 28,
+      mvpRanking: 26,
       battingStats: { runs: 39, strikeRate: 105.4 },
       bowlingStats: { wickets: 5, economy: 11.3 }
     },
@@ -293,7 +357,7 @@ export class AuctionService {
       name: 'Satz',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 29,
+      mvpRanking: 27,
       battingStats: { runs: 37, strikeRate: 105.7 },
       bowlingStats: { wickets: 3, economy: 10.1 }
     },
@@ -302,7 +366,7 @@ export class AuctionService {
       name: 'Aravind Ganesh A R',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 30,
+      mvpRanking: 28,
       battingStats: { runs: 34, strikeRate: 72.3 },
       bowlingStats: { wickets: 2, economy: 7.5 }
     },
@@ -311,7 +375,7 @@ export class AuctionService {
       name: 'HRB',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 31,
+      mvpRanking: 29,
       battingStats: { runs: 21, strikeRate: 105.0 },
       bowlingStats: { wickets: 2, economy: 18.5 }
     },
@@ -320,7 +384,7 @@ export class AuctionService {
       name: 'Umesh',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 32,
+      mvpRanking: 30,
       battingStats: { runs: 18, strikeRate: 72.0 },
       bowlingStats: { wickets: 2, economy: 5.7 }
     },
@@ -338,7 +402,7 @@ export class AuctionService {
       name: 'Sriram N',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 34,
+      mvpRanking: 31,
       battingStats: { runs: 16, strikeRate: 42.1 },
       bowlingStats: { wickets: 6, economy: 7.3 }
     },
@@ -352,13 +416,13 @@ export class AuctionService {
     }
   ];
 
-  // MANUAL POOL CONFIGURATION - You can modify these player IDs as needed
+  // MANUAL POOL CONFIGURATION - Updated to exclude captain IDs
   private createManualPools(): PlayerPool[] {
     return [
       {
         id: 1,
         name: 'Premium Pool',
-        playerIds: [1, 3, 11, 13, 23], // Pool 1: 5 players - Sharan M, Praveen, Gopal, Siddhartha, S N K
+        playerIds: [1, 3, 11, 13, 23], // Pool 1: 5 players - Sharan M, Praveen, Saravanan, Sarath, LOKI
         isActive: true,
         isCompleted: false
       },
@@ -372,7 +436,7 @@ export class AuctionService {
       {
         id: 3,
         name: 'Pool B',
-        playerIds: [2, 5, 9, 14, 15, 17, 29, 25, 28, 32, 16], // Pool 3: 10 players
+        playerIds: [2, 5, 9, 14, 15, 17, 29, 25, 28, 16], // Pool 3: 10 players
         isActive: false,
         isCompleted: false
       },
@@ -386,18 +450,56 @@ export class AuctionService {
     ];
   }
 
-  private initialTeams: Team[] = [
-    { id: 1, name: 'Vishnu', shortName: 'Vishnu', color: '#FF6B6B', budget: 2500, players: [] },
-    { id: 2, name: 'Karthikeyan', shortName: 'Karthikeyan', color: '#4ECDC4', budget: 2500, players: [] },
-    { id: 3, name: 'Akshay', shortName: 'Akshay', color: '#45B7D1', budget: 2500, players: [] },
-    { id: 4, name: 'Arumugam', shortName: 'Arumugam', color: '#96CEB4', budget: 2500, players: [] },
-    { id: 5, name: 'Guna', shortName: 'Guna', color: '#004BA0', budget: 2500, players: [] },
-  ];
+  // Teams with captains already assigned and budget adjusted
+  private createInitialTeams(): Team[] {
+    return [
+      { 
+        id: 1, 
+        name: 'Vishnu', 
+        shortName: 'Vishnu', 
+        color: '#FF6B6B', 
+        budget: 2380, // Reduced budget since captain costs 200
+        players: [this.teamCaptains[0]] // Vishnu as captain
+      },
+      { 
+        id: 2, 
+        name: 'Karthikeyan', 
+        shortName: 'Karthikeyan', 
+        color: '#4ECDC4', 
+        budget: 2150, 
+        players: [this.teamCaptains[1]] // Karthikeyan as captain
+      },
+      { 
+        id: 3, 
+        name: 'Akshay', 
+        shortName: 'Akshay', 
+        color: '#45B7D1', 
+        budget: 2130, 
+        players: [this.teamCaptains[2]] // Akshay as captain
+      },
+      { 
+        id: 4, 
+        name: 'Arumugam', 
+        shortName: 'Arumugam', 
+        color: '#96CEB4', 
+        budget: 2170, 
+        players: [this.teamCaptains[3]] // Arumugam as captain
+      },
+      { 
+        id: 5, 
+        name: 'Guna', 
+        shortName: 'Guna', 
+        color: '#004BA0', 
+        budget: 2230, 
+        players: [this.teamCaptains[4]] // Guna as captain
+      },
+    ];
+  }
 
   // BehaviorSubjects
   private availablePlayers = new BehaviorSubject<Player[]>([...this.initialPlayers]);
   private unsoldPlayers = new BehaviorSubject<Player[]>([]);
-  private teams = new BehaviorSubject<Team[]>([...this.initialTeams]);
+  private teams = new BehaviorSubject<Team[]>(this.createInitialTeams());
   private currentPlayer = new BehaviorSubject<Player | null>(null);
   private currentBid = new BehaviorSubject<number>(0);
   private currentTeam = new BehaviorSubject<Team | null>(null);
@@ -426,7 +528,8 @@ export class AuctionService {
     this.pools.next(initialPools);
     this.currentPool.next(initialPools[0]);
     
-    console.log('🎯 Service initialized with manual pool system');
+    console.log('🎯 Service initialized with team captains and manual pool system');
+    console.log('👑 Team captains assigned to their teams');
     console.log('📊 Pool structure:', this.getPoolSummary());
   }
 
@@ -659,14 +762,10 @@ export class AuctionService {
   // RESET AND RESTORE METHODS
 
   resetAuction(): void {
-    console.log('🔄 Resetting auction with manual pool system...');
+    console.log('🔄 Resetting auction with team captains and manual pool system...');
     
-    // Reset all teams to initial state
-    const resetTeams = this.initialTeams.map(team => ({
-      ...team,
-      budget: 2500,
-      players: []
-    }));
+    // Reset all teams with captains
+    const resetTeams = this.createInitialTeams();
     
     // Reset pools
     const resetPools = this.createManualPools();
@@ -682,7 +781,8 @@ export class AuctionService {
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
     
-    console.log('✅ Auction reset completed with manual pool system');
+    console.log('✅ Auction reset completed with team captains and manual pool system');
+    console.log('👑 All team captains assigned to their respective teams');
     console.log('📊 Pool summary:', this.getPoolSummary());
   }
 
@@ -697,7 +797,7 @@ export class AuctionService {
     pools?: PlayerPool[],
     currentPool?: PlayerPool | null
   ): void {
-    console.log('🔄 Restoring auction state with manual pools...');
+    console.log('🔄 Restoring auction state with captains and manual pools...');
     
     this.teams.next(teams);
     this.availablePlayers.next(availablePlayers);
@@ -716,7 +816,7 @@ export class AuctionService {
       this.reconstructPoolsFromState(availablePlayers);
     }
     
-    console.log('✅ Auction state with manual pools restored successfully');
+    console.log('✅ Auction state with captains and manual pools restored successfully');
   }
 
   private reconstructPoolsFromState(availablePlayers: Player[]): void {
@@ -796,7 +896,7 @@ export class AuctionService {
         lastUpdated: new Date().toISOString()
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(enhancedState));
-      console.log('✅ Auction state with manual pools saved successfully');
+      console.log('✅ Auction state with captains and manual pools saved successfully');
     } catch (error) {
       console.error('❌ Error saving auction state:', error);
     }
@@ -812,7 +912,7 @@ export class AuctionService {
       const savedState = localStorage.getItem(this.STORAGE_KEY);
       if (savedState) {
         const parsedState = JSON.parse(savedState);
-        console.log('✅ Auction state with manual pools loaded successfully');
+        console.log('✅ Auction state with captains and manual pools loaded successfully');
         return parsedState;
       }
       return null;
@@ -832,7 +932,7 @@ export class AuctionService {
       localStorage.removeItem(this.STORAGE_KEY);
       console.log('🗑️ Auction state cleared successfully');
       
-      // Reset to initial state with manual pools
+      // Reset to initial state with captains and manual pools
       this.resetAuction();
     } catch (error) {
       console.error('❌ Error clearing auction state:', error);
@@ -883,7 +983,8 @@ export class AuctionService {
       auctionInProgress: this.auctionInProgress.value,
       poolProgress: poolProgress,
       currentPool: currentPoolInfo,
-      poolSummary: this.getPoolSummary()
+      poolSummary: this.getPoolSummary(),
+      captainsAssigned: true
     };
   }
 
@@ -904,7 +1005,9 @@ export class AuctionService {
 
   // HELPER METHOD TO GET PLAYER BY ID
   getPlayerById(id: number): Player | undefined {
-    return this.initialPlayers.find(player => player.id === id);
+    // Check both regular players and captains
+    const allPlayers = [...this.initialPlayers, ...this.teamCaptains];
+    return allPlayers.find(player => player.id === id);
   }
 
   // METHOD TO GET PLAYERS BY POOL
@@ -917,7 +1020,17 @@ export class AuctionService {
       .filter(player => player !== undefined) as Player[];
   }
 
-    getSavedStateSummary(): any {
+  // METHOD TO GET ALL CAPTAINS
+  getTeamCaptains(): Player[] {
+    return [...this.teamCaptains];
+  }
+
+  // METHOD TO CHECK IF PLAYER IS CAPTAIN
+  isPlayerCaptain(playerId: number): boolean {
+    return this.teamCaptains.some(captain => captain.id === playerId);
+  }
+
+  getSavedStateSummary(): any {
     const state = this.loadAuctionState();
     if (!state) return null;
 
@@ -929,10 +1042,10 @@ export class AuctionService {
       soldPlayers: soldPlayers,
       unsoldPlayers: state.unsoldPlayers.length,
       auctionInProgress: state.auctionInProgress,
-      lastUpdated: state.lastUpdated
+      lastUpdated: state.lastUpdated,
+      hasCaptains: true
     };
   }
-
 
   // DEBUGGING METHODS
   logCurrentState(): void {
@@ -941,5 +1054,10 @@ export class AuctionService {
     console.log('Current Pool:', this.currentPool.value?.name || 'None');
     console.log('Pool Progress:', this.getPoolProgress());
     console.log('Pool Summary:', this.getPoolSummary());
+    console.log('👑 Team Captains Status:');
+    this.teams.value.forEach(team => {
+      const captain = team.players.find(p => this.isPlayerCaptain(p.id));
+      console.log(`  ${team.shortName}: ${captain?.name || 'No Captain'} (Budget: ₹${team.budget})`);
+    });
   }
 }

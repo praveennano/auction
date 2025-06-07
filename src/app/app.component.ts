@@ -420,7 +420,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   canTeamAffordNextBid(team: Team): boolean {
     const nextBidAmount = this.getNextBidAmount();
-    const hasCapacity = team.players.length < 7; // Max 7 players per team
+    const hasCapacity = team.players.length < 8; 
     return team.budget >= nextBidAmount && hasCapacity;
   }
 
@@ -583,14 +583,14 @@ export class AppComponent implements OnInit, OnDestroy {
   getTeamCapacityInfo(team: Team): { current: number; max: number; full: boolean } {
     return {
       current: team.players.length,
-      max: 7,
-      full: team.players.length >= 7
+      max: 8,
+      full: team.players.length >= 8
     };
   }
 
   // NEW METHOD: Check if auction should end (all teams full)
   shouldEndAuction(): boolean {
-    return this.teams.every(team => team.players.length >= 7);
+    return this.teams.every(team => team.players.length >= 8);
   }
 
   setButtonLoading(buttonType: string, loading: boolean): void {

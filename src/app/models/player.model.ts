@@ -15,9 +15,9 @@ export interface Player {
   teamId?: number;
   isSold?: boolean;
   isUnsold?: boolean;
-  
+     
   // Essential auction stats
-  mvpRanking: number;
+  mvpRanking: number; // Required field as per your structure
   battingStats: {
     runs: number;
     strikeRate: number;

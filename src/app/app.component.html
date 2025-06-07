@@ -150,14 +150,14 @@
           <div *ngIf="shouldEndAuction()" class="auction-complete">
             <i class="pi pi-users auction-icon"></i>
             <h3>🎉 Teams Complete!</h3>
-            <p>All teams have reached maximum capacity (7 players each)</p>
+            <p>All teams have reached maximum capacity (8 players each)</p>
             <div class="completion-summary">
               <div class="completion-stat">
                 <span class="completion-number">{{getSoldPlayersCount()}}</span>
                 <span class="completion-label">Players Sold</span>
               </div>
               <div class="completion-stat">
-                <span class="completion-number">{{teams.length * 7}}</span>
+                <span class="completion-number">{{teams.length * 8}}</span>
                 <span class="completion-label">Total Capacity</span>
               </div>
             </div>
@@ -269,23 +269,7 @@
               </div>
               
               <!-- Enhanced team player stats (hide 0 values and MVP > 20) -->
-              <div class="team-player-stats-mini" 
-                   *ngIf="(player.mvpRanking && player.mvpRanking <= 20) || 
-                          (player.battingStats.runs > 0) || 
-                          (player.bowlingStats && player.bowlingStats.wickets > 0)">
-                <!-- Only show MVP if <= 20 -->
-                <span class="mini-stat" *ngIf="player.mvpRanking && player.mvpRanking <= 20">
-                  MVP #{{player.mvpRanking}}
-                </span>
-                <!-- Only show runs if > 0 -->
-                <span class="mini-stat" *ngIf="player.battingStats.runs > 0">
-                  {{formatNumber(player.battingStats.runs)}}R
-                </span>
-                <!-- Only show wickets if exists and > 0 -->
-                <span class="mini-stat" *ngIf="player.bowlingStats && player.bowlingStats.wickets > 0">
-                  {{player.bowlingStats.wickets}}W
-                </span>
-              </div>
+              <!--  -->
             </div>
             
             <div *ngIf="team.players.length === 0" class="team-empty">
@@ -298,7 +282,7 @@
             <button class="btn-bid" 
                     [disabled]="!canTeamAffordNextBid(team)"
                     [style.background-color]="team.color"
-                    [title]="getTeamCapacityInfo(team).full ? 'Team Full (7/7)' : 
+                    [title]="getTeamCapacityInfo(team).full ? 'Team Full (8/8)' : 
                              team.budget < getNextBidAmount() ? 'Insufficient Budget' : 
                              'Bid ₹' + getNextBidAmount()"
                     (click)="placeBid(team.id)">
