@@ -58,11 +58,38 @@ html, body {
 
 /* Header */
 .app-header {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, #1e1b4b 100%);
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 25%, #6366f1 50%, #8b5cf6 75%, #a855f7 100%);
   color: white;
-  padding: 1rem;
+  //padding: 1.5rem 1rem;
   text-align: center;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background pattern */
+.app-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  animation: backgroundShift 10s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes backgroundShift {
+  0% {
+    transform: translateX(-10px) translateY(-5px) scale(1);
+  }
+  100% {
+    transform: translateX(10px) translateY(5px) scale(1.05);
+  }
 }
 
 .header-content {
@@ -72,21 +99,88 @@ html, body {
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
+/* Enhanced Title with Cricket Theme */
 .app-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 3px;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow:  0 2px 4px rgb(255 255 255 / 30%), 0 4px 8px rgb(147 176 180 / 20%), 0 0 20px rgb(255 255 255 / 30%);
   text-align: center;
+  grid-column: 2;
+  background: linear-gradient(45deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  // -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+  }
+}
+
+/* Cricket-themed decorative elements */
+.app-title::before {
+  content: '🏏';
+  position: absolute;
+  left: -3rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.8rem;
+  animation: bounceRotate 2s ease-in-out infinite;
+}
+
+.app-title::after {
+  content: '🏆';
+  position: absolute;
+  right: -3rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.8rem;
+  animation: bounceRotate 2s ease-in-out infinite reverse;
+}
+
+@keyframes bounceRotate {
+  0%, 100% {
+    transform: translateY(-50%) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-60%) rotate(10deg) scale(1.1);
+  }
+}
+
+/* Subtitle for additional flair */
+.app-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   grid-column: 2;
 }
 
+.app-subtitle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.25rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+/* Enhanced Header Actions */
 .header-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   align-items: center;
   justify-self: end;
   grid-column: 3;
@@ -95,35 +189,180 @@ html, body {
 .btn-header-action {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
+  gap: 0.6rem;
+  padding: 0.8rem 1.4rem;
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
   color: white;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: var(--transition);
-  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-header-action::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-header-action:hover::before {
+  left: 100%;
 }
 
 .btn-header-action:hover {
   background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-header-action:active {
+  transform: translateY(-1px) scale(1.02);
 }
 
 .btn-reset {
-  background: rgba(220, 38, 38, 0.8) !important;
-  border-color: rgba(220, 38, 38, 0.9) !important;
+  background: rgba(239, 68, 68, 0.8) !important;
+  border-color: rgba(239, 68, 68, 0.9) !important;
 }
 
 .btn-reset:hover {
-  background: rgba(220, 38, 38, 0.9) !important;
-  border-color: rgba(220, 38, 38, 1) !important;
+  background: rgba(239, 68, 68, 0.9) !important;
+  border-color: rgba(239, 68, 68, 1) !important;
+}
+
+/* Icon styling */
+.btn-header-action i {
+  font-size: 1.1rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* Live Auction Indicator */
+.live-indicator {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(239, 68, 68, 0.9);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: liveBlink 1s ease-in-out infinite alternate;
+}
+
+@keyframes liveBlink {
+  0% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .app-title {
+    font-size: 2.2rem;
+  }
+  
+  .app-title::before,
+  .app-title::after {
+    font-size: 1.5rem;
+  }
+  
+  .app-title::before {
+    left: -2.5rem;
+  }
+  
+  .app-title::after {
+    right: -2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .app-title-container {
+    grid-column: 1;
+    order: 1;
+  }
+
+  .header-actions {
+    justify-self: center;
+    grid-column: 1;
+    order: 2;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .app-title {
+    font-size: 1.8rem;
+  }
+  
+  .app-title::before,
+  .app-title::after {
+    display: none; /* Hide decorative elements on mobile */
+  }
+
+  .btn-header-action {
+    font-size: 0.85rem;
+    padding: 0.7rem 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 1rem 0.5rem;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .btn-header-action {
+    width: 100%;
+    max-width: 200px;
+    justify-content: center;
+  }
+
+  .app-title {
+    font-size: 1.6rem;
+  }
 }
 
 /* Main Container */
@@ -311,7 +550,6 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -326,9 +564,9 @@ html, body {
 }
 
 .spotlight-player-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  // font-size: 1.25rem;
+  // font-weight: 700;
+  // margin-bottom: 0.25rem;
   color: var(--color-text);
 }
 
@@ -347,17 +585,16 @@ html, body {
   align-items: center;
   gap: 0.4rem;
   background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
-  color: #92400e;
+  color: #000000;
   padding: 0.2rem 0.6rem;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.75rem;
   box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
-  margin-bottom: 0.5rem;
 }
 
 .mvp-icon {
-  color: #f59e0b;
+  color: #fd0e12;
 }
 
 /* Spotlight Stats - Reduced size */
@@ -432,42 +669,239 @@ html, body {
 
 /* Bid Display - Reduced size */
 .bid-display {
-  background: linear-gradient(135deg, var(--color-surface) 0%, #f8fafc 100%);
-  padding: 0.6rem;
-  border-radius: var(--radius);
-  min-width: 140px;
-  box-shadow: var(--shadow);
-  position: relative;
-  border: 2px solid var(--color-primary);
-  margin-bottom: 0.75rem;
+  text-align: center;
+  // margin: 1.5rem 0;
+  // padding: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  width:220px;
+  border: 2px solid #dee2e6;
 }
 
 .bid-label {
-  font-size: 0.7rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 0.15rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.bid-amount-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .bid-amount {
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-success);
-  margin-bottom: 0.15rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #2c5aa0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.btn-edit-bid {
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+}
+.btn-edit-bid:hover {
+  background: #5a6268;
+  transform: scale(1.05);
+}
+
+.btn-edit-bid:active {
+  transform: scale(0.95);
+}
+
+/* Edit bid section */
+.bid-edit-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+
 .bid-team {
-  font-size: 0.75rem;
+  color: #6c757d;
+  font-size: 1rem;
+  margin-top: 0.5rem;
 }
 
 .team-name {
   font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.bid-amount-section,
+.bid-edit-section {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .bid-amount {
+    font-size: 2rem;
+  }
+  
+  .bid-input {
+    font-size: 1.5rem;
+  }
+  
+  .bid-input-container {
+    min-width: 180px;
+  }
+  
+  .btn-edit-bid,
+  .btn-bid-confirm,
+  .btn-bid-cancel {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Focus styles for accessibility */
+.bid-input:focus {
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+}
+
+.btn-edit-bid:focus,
+.btn-bid-confirm:focus,
+.btn-bid-cancel:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }
 
 /* Auction Actions - Reduced size */
 .auction-actions {
   display: flex;
   gap: 0.5rem;
+  margin-top: 1.15rem;
+}
+
+
+.bid-input-container {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+  min-width: 200px;
+}
+.bid-input {
+  border: none;
+  outline: none;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c5aa0;
+  background: transparent;
+  width: 100%;
+  text-align: center;
+}
+
+.bid-input::-webkit-outer-spin-button,
+.bid-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.bid-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.bid-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-bid-confirm,
+.btn-bid-cancel {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.btn-bid-confirm {
+  background: #28a745;
+  color: white;
+}
+
+.btn-bid-confirm:hover:not(:disabled) {
+  background: #218838;
+  transform: scale(1.05);
+}
+
+.btn-bid-confirm:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-bid-cancel {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-bid-cancel:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}
+
+.btn-bid-confirm:active,
+.btn-bid-cancel:active {
+  transform: scale(0.95);
+}
+
+/* Validation and helper text */
+.bid-validation-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+}
+
+.bid-edit-helper {
+  color: #6c757d;
+  font-size: 0.75rem;
+  font-style: italic;
+  margin-top: 0.25rem;
 }
 
 .btn-auction-action {
@@ -965,3 +1399,108 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+.available-players-panel {
+  .panel-header {
+    flex-shrink: 0; // Ensure header doesn't shrink
+  }
+  
+ app-player-wordcloud {
+    flex: 1;
+    display: block;
+    height: 100%; // Available players can use full height
+    min-height: 200px;
+  }
+  
+  .empty-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    z-index: 10;
+  }
+}
+
+.unsold-players-panel {
+  display: flex;
+  flex-direction: column;
+  
+  .panel-header {
+    flex-shrink: 0; // Header stays fixed
+  }
+  
+  .unsold-wordcloud-section {
+    flex: 1; // Take remaining space but not more
+    display: flex;
+    flex-direction: column;
+    min-height: 150px; // Minimum height for word cloud
+    max-height: 60%; // IMPORTANT: Don't take more than 60% of panel height
+    position: relative;
+    overflow: hidden; // Prevent overflow
+    
+    app-player-wordcloud {
+      flex: 1;
+      height: 100%; // Use full available space in this section
+    }
+    
+    .empty-state {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      z-index: 10;
+    }
+  }
+  
+  .auction-stats {
+    flex-shrink: 0; // Stats section stays fixed
+    height: auto; // Let it size naturally
+    min-height: 200px; // Ensure stats have enough space
+    margin-top: 0.5rem;
+    border-top: 1px solid #e2e8f0; // Visual separator
+  }
+}
+
+// Enhanced styling for better visual separation
+// .panel.unsold-players-panel {
+//   border-left: 4px solid #ef4444;
+// }
+
+// .panel.available-players-panel {
+//   border-left: 4px solid #10b981;
+// }
+
+// Responsive adjustments
+@media (max-width: 1024px) {
+  .unsold-players-panel {
+    .unsold-wordcloud-section {
+      max-height: 50%; // Less space on smaller screens
+      min-height: 120px;
+    }
+    
+    .auction-stats {
+      min-height: 180px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .available-players-panel {
+    app-player-wordcloud {
+      min-height: 150px;
+    }
+  }
+  
+  .unsold-players-panel {
+    .unsold-wordcloud-section {
+      max-height: 45%; // Even less space on mobile
+      min-height: 100px;
+    }
+    
+    .auction-stats {
+      min-height: 160px;
+    }
+  }
+}
+

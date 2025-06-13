@@ -99,33 +99,63 @@ export class AuctionService {
   ];
 
   // Regular players for auction (original player list)
-  private initialPlayers: Player[] = [
-    {
+private initialPlayers: Player[] = [
+   {
       id: 1,
       name: 'Sharan M',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 6, // Adjusted ranking since captains take top 5
-      battingStats: { runs: 601, strikeRate: 168.8 },
-      bowlingStats: { wickets: 24, economy: 7.3 }
+      mvpRanking: 6,
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 4, // ✅ From Excel
+        runs: 360, // ✅ From Excel
+        battingAvg: 30.97, // ✅ From Excel
+        strikeRate: 154.23 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 10, // ✅ From Excel
+        economy: 7.5, // ✅ From Excel
+        catches: 9 // ✅ From Excel
+      },
     },
-    {
+     {
       id: 2,
       name: 'Sriram MP',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 7,
-      battingStats: { runs: 546, strikeRate: 169.0 },
-      bowlingStats: { wickets: 23, economy: 8.9 }
+      mvpRanking: 0,
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 56, // ✅ From Excel
+        battingAvg: 18.7, // ✅ From Excel
+        strikeRate: 121.7 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 2, // ✅ From Excel
+        economy: 8.5, // ✅ From Excel
+        catches: 3 // ✅ From Excel
+      }
     },
-    {
+      {
       id: 3,
       name: 'Praveen',
-      role: PlayerRole.ALL_ROUNDER,
+      role: PlayerRole.BATSMAN,
       basePrice: 100,
       mvpRanking: 8,
-      battingStats: { runs: 546, strikeRate: 169.0 },
-      bowlingStats: { wickets: 23, economy: 8.9 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 121, // ✅ From Excel
+        battingAvg: 60.5, // ✅ From Excel
+        strikeRate: 159.2 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 0, // ✅ From Excel
+        economy: 0.0, // ✅ From Excel
+        catches: 0 // ✅ From Excel
+      }
     },
     {
       id: 4,
@@ -133,17 +163,38 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 9,
-      battingStats: { runs: 438, strikeRate: 126.6 },
-      bowlingStats: { wickets: 25, economy: 8.5 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 5, // ✅ From Excel
+        runs: 614, // ✅ From Excel
+        battingAvg: 31.07, // ✅ From Excel
+        strikeRate: 133.97 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 25, // ✅ From Excel
+        economy: 9.16, // ✅ From Excel
+        catches: 7 // ✅ From Excel
+      }
     },
-    {
+  
+      {
       id: 5,
       name: 'Siddhartha',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 10,
-      battingStats: { runs: 420, strikeRate: 134.2 },
-      bowlingStats: { wickets: 20, economy: 10.2 }
+      battingStats: { 
+        Cup: 3, // ✅ Keeping your existing cup count
+        pomAwards: 5, // ✅ From Excel
+        runs: 236, // ✅ From Excel
+        battingAvg: 16.09, // ✅ From Excel
+        strikeRate: 115.98 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 23, // ✅ From Excel
+        economy: 9.73, // ✅ From Excel
+        catches: 15 // ✅ From Excel
+      }
     },
     {
       id: 6,
@@ -151,8 +202,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 36,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 5, // ✅ From Excel
+        runs: 469, // ✅ From Excel
+        battingAvg: 25.0, // ✅ From Excel
+        strikeRate: 156.52 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 13, // ✅ From Excel
+        economy: 11.26, // ✅ From Excel
+        catches: 7 // ✅ From Excel
+      }
     },
     {
       id: 7,
@@ -160,8 +221,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 11,
-      battingStats: { runs: 301, strikeRate: 142.0 },
-      bowlingStats: { wickets: 15, economy: 9.7 }
+      battingStats: { 
+        Cup: 3, // ✅ Keeping your existing cup count
+        pomAwards: 3, // ✅ From Excel
+        runs: 585, // ✅ From Excel
+        battingAvg: 23.84, // ✅ From Excel
+        strikeRate: 147.34 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 19, // ✅ From Excel
+        economy: 11.19, // ✅ From Excel
+        catches: 18 // ✅ From Excel
+      }
     },
     {
       id: 8,
@@ -169,8 +240,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 12,
-      battingStats: { runs: 259, strikeRate: 122.7 },
-      bowlingStats: { wickets: 16, economy: 7.6 }
+      battingStats: { 
+        Cup: 4, // ✅ Keeping your existing cup count
+        pomAwards: 2, // ✅ From Excel
+        runs: 302, // ✅ From Excel
+        battingAvg: 14.26, // ✅ From Excel
+        strikeRate: 130.27 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 40, // ✅ From Excel
+        economy: 7.42, // ✅ From Excel
+        catches: 18 // ✅ From Excel
+      }
     },
     {
       id: 9,
@@ -178,8 +259,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 13,
-      battingStats: { runs: 249, strikeRate: 134.6 },
-      bowlingStats: { wickets: 13, economy: 11.4 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 199, // ✅ From Excel
+        battingAvg: 13.32, // ✅ From Excel
+        strikeRate: 127.79 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 12, // ✅ From Excel
+        economy: 11.43, // ✅ From Excel
+        catches: 8 // ✅ From Excel
+      }
     },
     {
       id: 10,
@@ -187,8 +278,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 14,
-      battingStats: { runs: 217, strikeRate: 138.2 },
-      bowlingStats: { wickets: 12, economy: 9.6 }
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 2, // ✅ From Excel
+        runs: 285, // ✅ From Excel
+        battingAvg: 10.23, // ✅ From Excel
+        strikeRate: 106.9 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 17, // ✅ From Excel
+        economy: 11.17, // ✅ From Excel
+        catches: 26 // ✅ From Excel
+      }
     },
     {
       id: 11,
@@ -196,8 +297,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 15,
-      battingStats: { runs: 193, strikeRate: 140.9 },
-      bowlingStats: { wickets: 4, economy: 10.1 }
+      battingStats: { 
+        Cup: 3, // ✅ Keeping your existing cup count
+        pomAwards: 7, // ✅ From Excel
+        runs: 460, // ✅ From Excel
+        battingAvg: 15.32, // ✅ From Excel
+        strikeRate: 112.98 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 28, // ✅ From Excel
+        economy: 6.21, // ✅ From Excel
+        catches: 30 // ✅ From Excel
+      }
     },
     {
       id: 12,
@@ -205,17 +316,37 @@ export class AuctionService {
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 16,
-      battingStats: { runs: 159, strikeRate: 95.8 },
-      bowlingStats: { wickets: 10, economy: 9.4 }
+      battingStats: { 
+        Cup: 3, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 65, // ✅ From Excel
+        battingAvg: 8.13, // ✅ From Excel
+        strikeRate: 55.06 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 12, // ✅ From Excel
+        economy: 12.81, // ✅ From Excel
+        catches: 4 // ✅ From Excel
+      }
     },
     {
       id: 13,
-      name: 'Sarath',
+      name: 'Sarath Kumar',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 35,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 4, // ✅ Keeping your existing cup count (was mapped from 'Sarath')
+        pomAwards: 15, // ✅ From Excel
+        runs: 996, // ✅ From Excel
+        battingAvg: 32.7, // ✅ From Excel
+        strikeRate: 168.96 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 25, // ✅ From Excel
+        economy: 9.32, // ✅ From Excel
+        catches: 30 // ✅ From Excel
+      }
     },
     {
       id: 14,
@@ -223,8 +354,18 @@ export class AuctionService {
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 17,
-      battingStats: { runs: 136, strikeRate: 104.6 },
-      bowlingStats: { wickets: 19, economy: 9.5 }
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 193, // ✅ From Excel
+        battingAvg: 10.67, // ✅ From Excel
+        strikeRate: 87.32 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 21, // ✅ From Excel
+        economy: 10.58, // ✅ From Excel
+        catches: 7 // ✅ From Excel
+      }
     },
     {
       id: 15,
@@ -232,8 +373,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 18,
-      battingStats: { runs: 134, strikeRate: 148.9 },
-      bowlingStats: { wickets: 4, economy: 7.3 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 4, // ✅ From Excel
+        runs: 246, // ✅ From Excel
+        battingAvg: 13.26, // ✅ From Excel
+        strikeRate: 110.25 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 22, // ✅ From Excel
+        economy: 8.68, // ✅ From Excel
+        catches: 20 // ✅ From Excel
+      }
     },
     {
       id: 16,
@@ -241,8 +392,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 33,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 3, // ✅ From Excel
+        runs: 134, // ✅ From Excel
+        battingAvg: 9.19, // ✅ From Excel
+        strikeRate: 83.95 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 23, // ✅ From Excel
+        economy: 8.55, // ✅ From Excel
+        catches: 13 // ✅ From Excel
+      }
     },
     {
       id: 17,
@@ -250,8 +411,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 19,
-      battingStats: { runs: 125, strikeRate: 105.0 },
-      bowlingStats: { wickets: 14, economy: 7.3 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 199, // ✅ From Excel
+        battingAvg: 9.96, // ✅ From Excel
+        strikeRate: 114.06 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 8, // ✅ From Excel
+        economy: 10.96, // ✅ From Excel
+        catches: 6 // ✅ From Excel
+      }
     },
     {
       id: 18,
@@ -259,17 +430,37 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 20,
-      battingStats: { runs: 111, strikeRate: 104.7 },
-      bowlingStats: { wickets: 9, economy: 6.2 }
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 182, // ✅ From Excel
+        battingAvg: 11.46, // ✅ From Excel
+        strikeRate: 111.05 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 22, // ✅ From Excel
+        economy: 8.73, // ✅ From Excel
+        catches: 6 // ✅ From Excel
+      }
     },
     {
       id: 19,
       name: 'Ravi',
-      role: PlayerRole.BOWLER,
+      role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 21,
-      battingStats: { runs: 97, strikeRate: 78.2 },
-      bowlingStats: { wickets: 10, economy: 7.1 }
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 221, // ✅ From Excel
+        battingAvg: 13.32, // ✅ From Excel
+        strikeRate: 115.24 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 2, // ✅ From Excel
+        economy: 7.57, // ✅ From Excel
+        catches: 27 // ✅ From Excel
+      }
     },
     {
       id: 20,
@@ -277,8 +468,18 @@ export class AuctionService {
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 32,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 31, // ✅ From Excel
+        battingAvg: 5.6, // ✅ From Excel
+        strikeRate: 52.38 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 3, // ✅ From Excel
+        economy: 11.34, // ✅ From Excel
+        catches: 0 // ✅ From Excel
+      }
     },
     {
       id: 21,
@@ -286,8 +487,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 22,
-      battingStats: { runs: 74, strikeRate: 151.0 },
-      bowlingStats: { wickets: 6, economy: 6.8 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 9, // ✅ From Excel
+        battingAvg: 4.5, // ✅ From Excel
+        strikeRate: 56.25 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 0, // ✅ From Excel
+        economy: 7.4, // ✅ From Excel
+        catches: 0 // ✅ From Excel
+      }
     },
     {
       id: 22,
@@ -295,8 +506,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 32,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 4, // ✅ Keeping your existing cup count
+        pomAwards: 8, // ✅ From Excel
+        runs: 656, // ✅ From Excel
+        battingAvg: 31.82, // ✅ From Excel
+        strikeRate: 151.11 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 32, // ✅ From Excel
+        economy: 7.13, // ✅ From Excel
+        catches: 12 // ✅ From Excel
+      }
     },
     {
       id: 23,
@@ -304,8 +525,18 @@ export class AuctionService {
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 23,
-      battingStats: { runs: 72, strikeRate: 114.3 },
-      bowlingStats: { wickets: 4, economy: 7.9 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 29, // ✅ From Excel
+        battingAvg: 11.25, // ✅ From Excel
+        strikeRate: 90.65 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 7, // ✅ From Excel
+        economy: 8.45, // ✅ From Excel
+        catches: 4 // ✅ From Excel
+      }
     },
     {
       id: 24,
@@ -313,8 +544,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 24,
-      battingStats: { runs: 67, strikeRate: 145.7 },
-      bowlingStats: { wickets: 8, economy: 8.2 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 164, // ✅ From Excel
+        battingAvg: 23.57, // ✅ From Excel
+        strikeRate: 136.13 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 10, // ✅ From Excel
+        economy: 10.85, // ✅ From Excel
+        catches: 7 // ✅ From Excel
+      }
     },
     {
       id: 25,
@@ -322,17 +563,37 @@ export class AuctionService {
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 25,
-      battingStats: { runs: 53, strikeRate: 54.6 },
-      bowlingStats: { wickets: 12, economy: 8.8 }
+      battingStats: { 
+        Cup: 3, // ✅ Keeping your existing cup count
+        pomAwards: 2, // ✅ From Excel
+        runs: 156, // ✅ From Excel
+        battingAvg: 7.36, // ✅ From Excel
+        strikeRate: 117.21 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 18, // ✅ From Excel
+        economy: 9.13, // ✅ From Excel
+        catches: 8 // ✅ From Excel
+      }
     },
     {
       id: 26,
       name: 'Ajay',
-      role: PlayerRole.BOWLER,
+      role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 30,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 6, // ✅ From Excel
+        runs: 627, // ✅ From Excel
+        battingAvg: 26.43, // ✅ From Excel
+        strikeRate: 162.79 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 7, // ✅ From Excel
+        economy: 6.66, // ✅ From Excel
+        catches: 25 // ✅ From Excel
+      }
     },
     {
       id: 27,
@@ -340,8 +601,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 30,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 205, // ✅ From Excel
+        battingAvg: 12.82, // ✅ From Excel
+        strikeRate: 94.62 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 23, // ✅ From Excel
+        economy: 9.87, // ✅ From Excel
+        catches: 17 // ✅ From Excel
+      }
     },
     {
       id: 28,
@@ -349,8 +620,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 26,
-      battingStats: { runs: 39, strikeRate: 105.4 },
-      bowlingStats: { wickets: 5, economy: 11.3 }
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 146, // ✅ From Excel
+        battingAvg: 9.91, // ✅ From Excel
+        strikeRate: 92.0 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 16, // ✅ From Excel
+        economy: 8.68, // ✅ From Excel
+        catches: 2 // ✅ From Excel
+      }
     },
     {
       id: 29,
@@ -358,8 +639,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 27,
-      battingStats: { runs: 37, strikeRate: 105.7 },
-      bowlingStats: { wickets: 3, economy: 10.1 }
+      battingStats: { 
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 4, // ✅ From Excel
+        runs: 709, // ✅ From Excel
+        battingAvg: 31.46, // ✅ From Excel
+        strikeRate: 161.14 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 13, // ✅ From Excel
+        economy: 9.42, // ✅ From Excel
+        catches: 32 // ✅ From Excel
+      }
     },
     {
       id: 30,
@@ -367,8 +658,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 28,
-      battingStats: { runs: 34, strikeRate: 72.3 },
-      bowlingStats: { wickets: 2, economy: 7.5 }
+      battingStats: { 
+        Cup: 3, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ From Excel
+        runs: 230, // ✅ From Excel
+        battingAvg: 10.27, // ✅ From Excel
+        strikeRate: 115.33 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 9, // ✅ From Excel
+        economy: 7.48, // ✅ From Excel
+        catches: 11 // ✅ From Excel
+      }
     },
     {
       id: 31,
@@ -376,8 +677,18 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 29,
-      battingStats: { runs: 21, strikeRate: 105.0 },
-      bowlingStats: { wickets: 2, economy: 18.5 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 32, // ✅ From Excel
+        battingAvg: 32.0, // ✅ From Excel
+        strikeRate: 118.5 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 0, // ✅ From Excel
+        economy: 0.0, // ✅ From Excel
+        catches: 0 // ✅ From Excel
+      }
     },
     {
       id: 32,
@@ -385,17 +696,37 @@ export class AuctionService {
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 30,
-      battingStats: { runs: 18, strikeRate: 72.0 },
-      bowlingStats: { wickets: 2, economy: 5.7 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 11, // ✅ From Excel
+        runs: 784, // ✅ From Excel
+        battingAvg: 42.2, // ✅ From Excel
+        strikeRate: 147.28 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 27, // ✅ From Excel
+        economy: 8.97, // ✅ From Excel
+        catches: 8 // ✅ From Excel
+      }
     },
     {
       id: 33,
-      name: 'Madras Tekkers Boy',
+      name: 'Nish',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 38,
-      battingStats: { runs: 0, strikeRate: 0 },
-      bowlingStats: { wickets: 0, economy: 0 }
+      battingStats: { 
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 0, // ✅ From Excel
+        battingAvg: 0, // ✅ From Excel
+        strikeRate: 0 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 0, // ✅ From Excel
+        economy: 0, // ✅ From Excel
+        catches: 0 // ✅ From Excel
+      }
     },
     {
       id: 34,
@@ -403,16 +734,57 @@ export class AuctionService {
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 31,
-      battingStats: { runs: 16, strikeRate: 42.1 },
-      bowlingStats: { wickets: 6, economy: 7.3 }
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 8, // ✅ From Excel
+        battingAvg: 2.67, // ✅ From Excel
+        strikeRate: 26.67 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 1, // ✅ From Excel
+        economy: 9.67, // ✅ From Excel
+        catches: 0 // ✅ From Excel
+      }
     },
     {
       id: 35,
       name: 'Vignesh S',
       role: PlayerRole.BATSMAN,
       basePrice: 100,
-      mvpRanking: 37,
-      battingStats: { runs: 3, strikeRate: 20.0 }
+      mvpRanking: 0,
+      battingStats: { 
+        Cup: 0, // Not in provided list, keeping as 0
+        pomAwards: 1,
+        runs: 56,
+        battingAvg: 18.7,
+        strikeRate: 121.7
+      },
+      bowlingStats: { 
+        wickets: 2,
+        economy: 8.5,
+        catches: 3
+      }
+    },
+    // NEW PLAYERS - Adding missing players from your cup list
+     {
+      id: 37,
+      name: 'Muthu',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 22,
+      battingStats: { 
+        Cup: 1, // ✅ Keeping your existing cup count
+        pomAwards: 0, // ✅ From Excel
+        runs: 55, // ✅ From Excel
+        battingAvg: 15.83, // ✅ From Excel
+        strikeRate: 73.34 // ✅ From Excel
+      },
+      bowlingStats: { 
+        wickets: 9, // ✅ From Excel
+        economy: 11.89, // ✅ From Excel
+        catches: 6 // ✅ From Excel
+      }
     }
   ];
 
@@ -429,24 +801,24 @@ export class AuctionService {
       {
         id: 2,
         name: 'Pool A',
-        playerIds: [4, 8, 22, 35, 10, 32, 24, 6, 7, 18], // Pool 2: 10 players
-        isActive: false,
-        isCompleted: false
-      },
-      {
-        id: 3,
-        name: 'Pool B',
-        playerIds: [2, 5, 9, 14, 15, 17, 29, 25, 28, 16], // Pool 3: 10 players
-        isActive: false,
-        isCompleted: false
-      },
-      {
-        id: 4,
-        name: 'Pool C',
-        playerIds: [19, 21, 30, 31, 12, 26, 27, 33, 34, 20], // Pool 4: 10 players
+        playerIds: [4, 8, 22, 35, 10, 32, 24, 6, 7, 18,2, 5, 9, 14, 15, 17, 29, 25, 28, 16,19, 21, 30, 31, 12, 26, 27, 33, 34, 20], // Pool 2: 10 players
         isActive: false,
         isCompleted: false
       }
+      // {
+      //   id: 3,
+      //   name: 'Pool B',
+      //   playerIds: [2, 5, 9, 14, 15, 17, 29, 25, 28, 16], // Pool 3: 10 players
+      //   isActive: false,
+      //   isCompleted: false
+      // },
+      // {
+      //   id: 4,
+      //   name: 'Pool C',
+      //   playerIds: [19, 21, 30, 31, 12, 26, 27, 33, 34, 20], // Pool 4: 10 players
+      //   isActive: false,
+      //   isCompleted: false
+      // }
     ];
   }
 
@@ -561,12 +933,14 @@ export class AuctionService {
     
     // Set current player and bid
     this.currentPlayer.next(selectedPlayer);
-    this.currentBid.next(selectedPlayer.basePrice);
+    this.currentBid.next(selectedPlayer.basePrice );
     this.currentTeam.next(null);
     this.auctionInProgress.next(true);
     
     console.log(`🎲 Selected player: ${selectedPlayer.name} from ${currentPoolValue.name}`);
   }
+
+  
 
   private moveToNextPool(): void {
     const currentPools = this.pools.value;
@@ -606,6 +980,7 @@ export class AuctionService {
       console.log('🏁 All pools completed!');
     }
   }
+  
 
   sellPlayer(): void {
     const currentPlayerValue = this.currentPlayer.value;
@@ -650,7 +1025,6 @@ export class AuctionService {
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
     
-    console.log(`💰 Player ${currentPlayerValue.name} sold to ${currentTeamValue.shortName} for ₹${currentBidValue}`);
   }
 
   markUnsold(): void {
@@ -1049,15 +1423,14 @@ export class AuctionService {
 
   // DEBUGGING METHODS
   logCurrentState(): void {
-    console.log('🔍 Current Auction State:');
-    console.log('Available Players:', this.availablePlayers.value.length);
-    console.log('Current Pool:', this.currentPool.value?.name || 'None');
-    console.log('Pool Progress:', this.getPoolProgress());
-    console.log('Pool Summary:', this.getPoolSummary());
-    console.log('👑 Team Captains Status:');
+    // console.log('🔍 Current Auction State:');
+    // console.log('Available Players:', this.availablePlayers.value.length);
+    // console.log('Current Pool:', this.currentPool.value?.name || 'None');
+    // console.log('Pool Progress:', this.getPoolProgress());
+    // console.log('Pool Summary:', this.getPoolSummary());
+    // console.log('👑 Team Captains Status:');
     this.teams.value.forEach(team => {
       const captain = team.players.find(p => this.isPlayerCaptain(p.id));
-      console.log(`  ${team.shortName}: ${captain?.name || 'No Captain'} (Budget: ₹${team.budget})`);
     });
   }
 }

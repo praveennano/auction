@@ -64,7 +64,7 @@
       <!-- Bidding Section -->
       <div class="bid-section">
         <span class="bid-label">Current Bid</span>
-        <span class="bid-amount">₹{{ currentBid }}</span>
+        <span class="bid-amount">{{ currentBid }}</span>
         <span *ngIf="currentTeam" class="bid-team">
           by <span class="team-name" [style.color]="currentTeam.color">{{ currentTeam.shortName }}</span>
         </span>

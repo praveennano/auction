@@ -11,7 +11,7 @@
       <div class="flex justify-content-between align-items-center">
         <p-tag [value]="player.role" [severity]="getRoleTagSeverity(player.role)"></p-tag>
         <span [class]="'text-sm px-2 py-1 border-round font-semibold ' + priceTagClass">
-          {{ player.soldPrice ? '₹' + player.soldPrice : '₹' + player.basePrice }}
+          {{ player.soldPrice ? '' + player.soldPrice : '' + player.basePrice }}
         </span>
       </div>
     </div>

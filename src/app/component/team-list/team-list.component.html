@@ -6,7 +6,7 @@
     <div *ngFor="let team of teams" class="team-card" [style.border-left-color]="team.color">
       <div class="team-header" [style.background-color]="team.color + '15'">
         <h3 class="team-name">{{team.shortName}}</h3>
-        <div class="budget-badge">₹{{team.budget}}</div>
+        <div class="budget-badge">{{team.budget}}</div>
       </div>
       
       <!-- Player count indicator -->
@@ -18,7 +18,7 @@
         <div *ngFor="let player of team.players; trackBy: trackByPlayerId" 
              class="team-player-item">
           <span class="player-name">{{player.name}}</span>
-          <span class="player-price">₹{{player.soldPrice}}</span>
+          <span class="player-price">{{player.soldPrice}}</span>
         </div>
         
         <div *ngIf="team.players.length === 0" class="team-empty">
@@ -31,7 +31,7 @@
                 [disabled]="team.budget < currentBid + 10"
                 [style.background-color]="team.color"
                 (click)="placeBid(team.id, currentBid + 10)">
-          Bid ₹{{currentBid + 10}}
+          Bid {{currentBid + 10}}
         </button>
       </div>
     </div>

@@ -19,6 +19,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { PlayerWordcloudComponent } from './player-wordcloud/player-wordcloud.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +33,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     PlayerListComponent,
     TeamListComponent,
     CardModule,
+    FormsModule,
+    PlayerWordcloudComponent,
     ButtonModule,
     InputTextModule,
     TagModule,
@@ -49,6 +53,8 @@ export class AppComponent implements OnInit, OnDestroy {
   availablePlayers: Player[] = [];
   soldPlayers: Player[] = [];
   unsoldPlayers: Player[] = [];
+   isEditingBid: boolean = false;
+  editBidAmount: number = 0;
   currentPlayer: Player | null = null;
   auctionInProgress: boolean = false;
   currentBid: number = 0;
@@ -85,7 +91,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.setupAutoSave();
       }, 100);
     } else {
-      console.log('🖥️ Running in server environment, skipping localStorage operations');
       this.hasLoadedFromStorage = true;
     }
 
@@ -409,20 +414,115 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  getNextBidAmount(): number {
-    return this.currentBid + this.getBidIncrement(this.currentBid);
+  getMaxBidForTeam(team: Team): number {
+  const teamCapacity = this.getTeamCapacityInfo(team);
+  
+  // If team is full, they can't bid
+  if (teamCapacity.full) {
+    return 0;
   }
+  
+  const remainingSlotsAfterBid = teamCapacity.remainingSlots - 1;
+  const minimumNeededForRemainingSlots = remainingSlotsAfterBid * 100; // Base price is 100
+  const maxBid = team.budget - minimumNeededForRemainingSlots;
+  
+  // Ensure it's at least 0
+  return Math.max(maxBid, 0);
+}
+
+
+  getNextBidAmount(): number {
+
+    if (this.isEditingBid) {
+      return this.editBidAmount;
+    }
+  // Special case: if no one has bid yet (currentTeam is null) and currentBid is base price (100)
+  // then the first bid should be the same as base price (100)
+  if (!this.currentTeam && this.currentBid === this.currentPlayer?.basePrice) {
+    return this.currentBid; // First bid is exactly base price (100)
+  }
+    return this.currentBid + this.getBidIncrement(this.currentBid);
+}
+  
 
   placeBid(teamId: number, amount?: number): void {
+
+     if (this.isEditingBid) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Finish Editing',
+        detail: 'Please confirm or cancel the bid edit first',
+        life: 2000
+      });
+      return;
+    }
     const bidAmount = amount || this.getNextBidAmount();
     this.auctionService.placeBid(teamId, bidAmount);
   }
 
-  canTeamAffordNextBid(team: Team): boolean {
-    const nextBidAmount = this.getNextBidAmount();
-    const hasCapacity = team.players.length < 8; 
-    return team.budget >= nextBidAmount && hasCapacity;
+canTeamAffordNextBid(team: Team): boolean {
+
+     if (this.isEditingBid) {
+      return false;
+    }
+
+  const nextBidAmount = this.getNextBidAmount();
+  const maxBid = this.getMaxBidForTeam(team);
+  const teamCapacity = this.getTeamCapacityInfo(team);
+  
+  // Team is full
+  if (teamCapacity.full) {
+    return false;
   }
+  
+  // Check if team can afford the next bid amount
+  return maxBid >= nextBidAmount;
+}
+
+getBidButtonText(team: Team): string {
+
+  if (this.isEditingBid) {
+      return 'Editing...';
+    }
+
+  const teamCapacity = this.getTeamCapacityInfo(team);
+  const nextBidAmount = this.getNextBidAmount();
+  const maxBid = this.getMaxBidForTeam(team);
+  
+  // Team is full
+  if (teamCapacity.full) {
+    return 'FULL';
+  }
+  
+  // Team can't afford next bid - show their maximum possible bid
+  if (maxBid < nextBidAmount) {
+    return `Max ${maxBid}`;
+  }
+  
+  // Normal bid - show next bid amount
+  return `Bid ${nextBidAmount}`;
+}
+
+getBidButtonTooltip(team: Team): string {
+
+   if (this.isEditingBid) {
+      return 'Please finish editing the bid amount first';
+    }
+
+  const teamCapacity = this.getTeamCapacityInfo(team);
+  const maxBid = this.getMaxBidForTeam(team);
+  const nextBidAmount = this.getNextBidAmount();
+  
+  if (teamCapacity.full) {
+    return 'Team Full (8/8 players)';
+  }
+  
+  if (maxBid < nextBidAmount) {
+    return `Cannot afford ${nextBidAmount}. Maximum possible bid: ${maxBid}`;
+  }
+  
+  return `Next bid: ${nextBidAmount}. Team can bid up to: ${maxBid}`;
+}
 
   sellPlayer(): void {
     this.auctionService.sellPlayer();
@@ -580,13 +680,23 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   // NEW METHOD: Get team capacity info
-  getTeamCapacityInfo(team: Team): { current: number; max: number; full: boolean } {
-    return {
-      current: team.players.length,
-      max: 8,
-      full: team.players.length >= 8
-    };
-  }
+ getTeamCapacityInfo(team: Team): { 
+  current: number; 
+  max: number; 
+  full: boolean;
+  remainingSlots: number;
+} {
+  const current = team.players.length;
+  const max = 8;
+  const remainingSlots = max - current;
+  
+  return {
+    current,
+    max,
+    full: current >= max,
+    remainingSlots
+  };
+}
 
   // NEW METHOD: Check if auction should end (all teams full)
   shouldEndAuction(): boolean {
@@ -655,5 +765,85 @@ export class AppComponent implements OnInit, OnDestroy {
       (count, team) => count + team.players.length, 
       0
     );
+  }
+
+   startEditingBid(): void {
+    if (!this.currentPlayer || !this.auctionInProgress) {
+      return;
+    }
+    
+    this.isEditingBid = true;
+    this.editBidAmount = this.currentBid;
+    
+    // Focus the input after the view updates
+    setTimeout(() => {
+      const inputElement = document.querySelector('.bid-input') as HTMLInputElement;
+      if (inputElement) {
+        inputElement.focus();
+        inputElement.select();
+      }
+    }, 100);
+  }
+  
+  confirmBidEdit(): void {
+    if (!this.isValidBidAmount(this.editBidAmount)) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Invalid Bid Amount',
+        detail: `Bid must be between ${this.currentPlayer?.basePrice} and ${this.getMaxPossibleBid()}`,
+        life: 3000
+      });
+      return;
+    }
+    this.currentBid = this.editBidAmount;
+      if (this.currentTeam && this.editBidAmount > this.currentBid) {
+      this.currentTeam = null;
+      this.auctionService['currentTeam'].next(null);
+    }
+    
+    // Update the auction service with the new bid
+    this.auctionService['currentBid'].next(this.editBidAmount);
+    
+    this.isEditingBid = false;
+    
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Bid Updated',
+      detail: `Current bid set to ${this.editBidAmount}`,
+      life: 2000
+    });
+  }
+
+  cancelBidEdit(): void {
+    this.isEditingBid = false;
+    this.editBidAmount = this.currentBid;
+  }
+  
+  isValidBidAmount(amount: number): boolean {
+    if (!this.currentPlayer) return false;
+    
+    const minBid = this.currentPlayer.basePrice;
+    const maxBid = this.getMaxPossibleBid();
+    
+    return amount >= minBid && amount <= maxBid && Number.isInteger(amount);
+  }
+
+  getMaxPossibleBid(): number {
+    if (!this.currentPlayer) return 0;
+    
+    // Find the team with the highest budget that can still afford players
+    let maxPossibleBid = 0;
+    
+    this.teams.forEach(team => {
+      const teamCapacity = this.getTeamCapacityInfo(team);
+      
+      // Skip teams that are already full
+      if (teamCapacity.full) return;
+      
+      const maxBidForTeam = this.getMaxBidForTeam(team);
+      maxPossibleBid = Math.max(maxPossibleBid, maxBidForTeam);
+    });
+    
+    return maxPossibleBid;
   }
 }

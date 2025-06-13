@@ -1,27 +1,40 @@
 <!-- Enhanced app.component.html with Team Capacity Limits -->
+
+<!-- Enhanced Header HTML Structure -->
 <div class="auction-app">
-  <!-- Header without Pool Progress -->
+  <!-- Enhanced Header with Cricket Theme -->
   <div class="app-header">
     <div class="header-content">
-      <h1 class="app-title">CWF Auction</h1>
+      <!-- Enhanced Title Section -->
+      <div class="app-title-container">
+        <h1 class="app-title">CWF Auction</h1>
+        <div class="app-subtitle"> Cricket With Fun</div>
+      </div>
       
+      <!-- Enhanced Action Buttons -->
       <div class="header-actions">
-        <!-- Save Button -->
+        <!-- Save Button with enhanced styling -->
         <button class="btn-header-action" 
                 title="Save Auction Data"
                 (click)="saveAuctionData()">
           <i class="pi pi-save"></i>
-          Save
+          <span>Save</span>
         </button>
         
-        <!-- Reset Button -->
+        <!-- Reset Button with enhanced styling -->
         <button class="btn-header-action btn-reset" 
                 title="Reset Entire Auction"
                 (click)="resetAuction()">
           <i class="pi pi-refresh"></i>
-          Reset Auction
+          <span>Reset</span>
         </button>
       </div>
+    </div>
+    
+    <!-- Optional: Live indicator -->
+    <div class="live-indicator" *ngIf="auctionInProgress">
+      <div class="live-dot"></div>
+      <span>LIVE AUCTION</span>
     </div>
   </div>
 
@@ -34,7 +47,7 @@
         </div>
         
         <!-- Scrollable Players List (Clean, No Pool Info) -->
-        <div class="players-list">
+        <!-- <div class="players-list">
           <div *ngFor="let player of availablePlayers" class="player-card">
             
             <div class="player-main-row">
@@ -43,17 +56,18 @@
               </div>
               
               <div class="player-price-section">
-                <div class="player-price">₹{{player.basePrice}}</div>
+                <div class="player-price">{{player.basePrice}}</div>
               </div>
             </div>
-          </div>
+          </div> -->
+           <app-player-wordcloud [players]="availablePlayers"></app-player-wordcloud>
           
-          <div *ngIf="availablePlayers.length === 0" class="empty-state">
+          <!-- <div *ngIf="availablePlayers.length === 0" class="empty-state">
             <i class="pi pi-users empty-icon"></i>
             <p>All players have been auctioned!</p>
-          </div>
+          </div> -->
         </div>
-      </div>
+      <!-- </div> -->
       
       <!-- Center Panel - Current Auction (Enhanced with Conditional Stats) -->
       <div class="panel current-auction-panel">
@@ -61,9 +75,6 @@
           
           <div class="player-spotlight">
             <h2 class="spotlight-player-name">{{currentPlayer.name}}</h2>
-            <div class="player-role-tag" [ngClass]="getRoleClass(currentPlayer.role)">
-              {{currentPlayer.role}}
-            </div>
             
             <!-- Only show MVP if ranking <= 20 -->
             <div class="mvp-spotlight" *ngIf="currentPlayer.mvpRanking && currentPlayer.mvpRanking <= 20">
@@ -73,53 +84,149 @@
           </div>
 
           <!-- Enhanced Player Stats (Hide 0 values) -->
-          <div class="spotlight-stats">
-            <div class="stats-grid">
-              <!-- Only show runs if > 0 -->
-              <div class="spotlight-stat batting" *ngIf="currentPlayer.battingStats.runs > 0">
-                <div class="stat-icon">🏏</div>
-                <div class="stat-info">
-                  <div class="stat-number">{{currentPlayer.battingStats.runs | number}}</div>
-                  <div class="stat-text">Runs</div>
-                </div>
-              </div>
-              
-              <!-- Only show strike rate if > 0 -->
-              <div class="spotlight-stat batting" *ngIf="currentPlayer.battingStats.strikeRate > 0">
-                <div class="stat-icon">⚡</div>
-                <div class="stat-info">
-                  <div class="stat-number">{{currentPlayer.battingStats.strikeRate | number:'1.1-1'}}</div>
-                  <div class="stat-text">Strike Rate</div>
-                </div>
-              </div>
-              
-              <!-- Only show wickets if exists and > 0 -->
-              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.wickets > 0">
-                <div class="stat-icon">🎯</div>
-                <div class="stat-info">
-                  <div class="stat-number">{{currentPlayer.bowlingStats.wickets}}</div>
-                  <div class="stat-text">Wickets</div>
-                </div>
-              </div>
-              
-              <!-- Only show economy if exists and > 0 -->
-              <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.economy > 0">
-                <div class="stat-icon">📊</div>
-                <div class="stat-info">
-                  <div class="stat-number">{{currentPlayer.bowlingStats.economy | number:'1.1-2'}}</div>
-                  <div class="stat-text">Economy</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- Replace the existing spotlight-stats section in your app.component.html -->
+<!-- Find this section and replace it entirely -->
+
+<!-- Enhanced Player Stats (8 stats total, hide 0 values) -->
+<div class="spotlight-stats">
+  <div class="stats-grid-enhanced">
+    <!-- Row 1: Primary Batting Stats -->
+    <!-- Only show runs if > 0 -->
+    <div class="spotlight-stat batting" *ngIf="currentPlayer.battingStats.runs > 0">
+      <div class="stat-icon">🏏</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.battingStats.runs | number}}</div>
+        <div class="stat-text">Runs</div>
+      </div>
+    </div>
+    
+    <!-- Only show strike rate if > 0 -->
+    <div class="spotlight-stat batting" *ngIf="currentPlayer.battingStats.strikeRate > 0">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.battingStats.strikeRate | number:'1.1-1'}}</div>
+        <div class="stat-text">Strike Rate</div>
+      </div>
+    </div>
+    
+    <!-- Only show batting average if exists and > 0 -->
+    <div class="spotlight-stat batting" *ngIf="currentPlayer.battingStats.battingAvg && currentPlayer.battingStats.battingAvg > 0">
+      <div class="stat-icon">📊</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.battingStats.battingAvg | number:'1.1-2'}}</div>
+        <div class="stat-text">Avg</div>
+      </div>
+    </div>
+    
+    <!-- Only show POM awards if exists and > 0 -->
+    <div class="spotlight-stat special" *ngIf="currentPlayer.battingStats.pomAwards && currentPlayer.battingStats.pomAwards > 0">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.battingStats.pomAwards}}</div>
+        <div class="stat-text">POM Awards</div>
+      </div>
+    </div>
+    
+    <!-- Row 2: Bowling & Achievement Stats -->
+    <!-- Only show wickets if exists and > 0 -->
+    <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.wickets > 0">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.bowlingStats.wickets}}</div>
+        <div class="stat-text">Wickets</div>
+      </div>
+    </div>
+    
+    <!-- Only show economy if exists and > 0 -->
+    <div class="spotlight-stat bowling" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.economy > 0">
+      <div class="stat-icon">📈</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.bowlingStats.economy | number:'1.1-2'}}</div>
+        <div class="stat-text">Economy</div>
+      </div>
+    </div>
+    
+    <!-- Only show catches if exists and > 0 -->
+    <div class="spotlight-stat fielding" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.catches && currentPlayer.bowlingStats.catches > 0">
+      <div class="stat-icon">🤲</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.bowlingStats.catches}}</div>
+        <div class="stat-text">Catches</div>
+      </div>
+    </div>
+    
+    <!-- Only show cups if exists and > 0 -->
+    <div class="spotlight-stat special" *ngIf="currentPlayer.battingStats.Cup && currentPlayer.battingStats.Cup > 0">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-info">
+        <div class="stat-number">{{currentPlayer.battingStats.Cup}}</div>
+        <div class="stat-text">Cups Won</div>
+      </div>
+    </div>
+  </div>
+</div>
           
-          <div class="bid-display">
-            <div class="bid-label">Current Bid</div>
-            <div class="bid-amount">₹{{currentBid}}</div>
-            <div *ngIf="currentTeam" class="bid-team">
-              by <span class="team-name" [style.color]="currentTeam.color">{{currentTeam.shortName}}</span>
-            </div>
-          </div>
+<!-- Update the bid display section in your HTML template -->
+
+<div class="bid-display">
+  <div class="bid-label">Current Bid</div>
+  
+  <!-- Normal bid display -->
+  <div *ngIf="!isEditingBid" class="bid-amount-section">
+    <div class="bid-amount">{{currentBid}}</div>
+    <button class="btn-edit-bid" 
+            title="Edit bid amount"
+            (click)="startEditingBid()">
+      <i class="pi pi-pencil"></i>
+    </button>
+  </div>
+
+  <!-- Edit bid input -->
+  <div *ngIf="isEditingBid" class="bid-edit-section">
+    <div class="bid-input-container">
+      <input type="number" 
+             class="bid-input"
+             [(ngModel)]="editBidAmount"
+             [min]="currentPlayer?.basePrice || 100"
+             [max]="getMaxPossibleBid()"
+             (keyup.enter)="confirmBidEdit()"
+             (keyup.escape)="cancelBidEdit()"
+             #bidInput>
+    </div>
+    
+    <div class="bid-edit-actions">
+      <button class="btn-bid-confirm" 
+              [disabled]="!isValidBidAmount(editBidAmount)"
+              (click)="confirmBidEdit()">
+        <i class="pi pi-check"></i>
+      </button>
+      <button class="btn-bid-cancel" 
+              (click)="cancelBidEdit()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Validation message -->
+  <div *ngIf="isEditingBid && !isValidBidAmount(editBidAmount)" class="bid-validation-error">
+    <span *ngIf="editBidAmount < (currentPlayer?.basePrice || 100)">
+      Minimum bid: {{currentPlayer?.basePrice || 100}}
+    </span>
+    <span *ngIf="editBidAmount > getMaxPossibleBid()">
+      Maximum possible bid: {{getMaxPossibleBid()}}
+    </span>
+  </div>
+  
+  <!-- Current team display -->
+  <div *ngIf="currentTeam && !isEditingBid" class="bid-team">
+    by <span class="team-name" [style.color]="currentTeam.color">{{currentTeam.shortName}}</span>
+  </div>
+  
+  <!-- Edit mode helper text -->
+  <div *ngIf="isEditingBid" class="bid-edit-helper">
+    <small>Press Enter to confirm, Escape to cancel</small>
+  </div>
+</div>
           
           <div class="auction-actions">
             <button class="btn-auction-action sold" 
@@ -195,14 +302,16 @@
           <h2 class="panel-title">Unsold Players ({{unsoldPlayers.length}})</h2>
         </div>
         
-        <div class="players-list">
-          <div *ngFor="let player of unsoldPlayers" class="player-card-simple unsold">
-            <div class="player-name-only">{{player.name}}</div>
-          </div>
+        <div class="unsold-wordcloud-section">
+    <app-player-wordcloud 
+      [players]="unsoldPlayers" 
+      [isUnsoldMode]="true"
+      title="Unsold">
+    </app-player-wordcloud>
           
           <div *ngIf="unsoldPlayers.length === 0" class="empty-state">
             <i class="pi pi-check-circle empty-icon"></i>
-            <p>No unsold players</p>
+           
           </div>
         </div>
 
@@ -255,7 +364,7 @@
           <!-- ENHANCED: Team header with capacity indicator -->
           <div class="team-header" [style.background-color]="team.color + '15'">
             <div class="team-name">{{team.shortName}}</div>
-            <div class="team-budget">₹{{team.budget}}</div>
+            <div class="team-budget">{{team.budget}}</div>
             <div class="team-capacity" [class.full]="getTeamCapacityInfo(team).full">
               {{getTeamCapacityInfo(team).current}}/{{getTeamCapacityInfo(team).max}}
             </div>
@@ -265,7 +374,7 @@
             <div *ngFor="let player of team.players" class="team-player enhanced">
               <div class="team-player-main">
                 <span class="player-name">{{player.name}}</span> 
-                <span class="player-price">₹{{player.soldPrice}}</span>
+                <span class="player-price">{{player.soldPrice}}</span>
               </div>
               
               <!-- Enhanced team player stats (hide 0 values and MVP > 20) -->
@@ -284,9 +393,9 @@
                     [style.background-color]="team.color"
                     [title]="getTeamCapacityInfo(team).full ? 'Team Full (8/8)' : 
                              team.budget < getNextBidAmount() ? 'Insufficient Budget' : 
-                             'Bid ₹' + getNextBidAmount()"
+                             'Bid ' + getNextBidAmount()"
                     (click)="placeBid(team.id)">
-              <span *ngIf="!getTeamCapacityInfo(team).full">Bid ₹{{getNextBidAmount()}}</span>
+              <span *ngIf="!getTeamCapacityInfo(team).full">Bid {{getNextBidAmount()}}</span>
               <span *ngIf="getTeamCapacityInfo(team).full" class="team-full-text">FULL</span>
             </button>
           </div>

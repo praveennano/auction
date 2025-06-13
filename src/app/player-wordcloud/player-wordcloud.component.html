@@ -1,0 +1,20 @@
+
+<!-- src/app/component/player-wordcloud/player-wordcloud.component.html -->
+<div class="wordcloud-container">
+  <div class="wordcloud-grid">
+    <div
+      *ngFor="let player of shuffledPlayers; trackBy: trackByPlayerId"
+      class="wordcloud-word"
+      [style.font-size.px]="player.fontSize"
+      [style.color]="player.color"
+      [style.font-weight]="player.fontWeight"
+      >
+      {{player.name}}
+    </div>
+    
+    <!-- Empty state when no players -->
+    <div *ngIf="shuffledPlayers.length === 0" class="empty-wordcloud">
+      <span class="empty-text">No {{title.toLowerCase()}} available</span>
+    </div>
+  </div>
+</div>

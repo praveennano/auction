@@ -1,0 +1,245 @@
+/* Fixed WordCloud Styles - No Overlaps Guaranteed */
+
+.wordcloud-container {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  position: relative;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+}
+
+.wordcloud-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 12px;
+  height: 100%;
+  align-content: center;
+  padding: 8px;
+}
+
+.wordcloud-word {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  user-select: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  /* Prevent text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  
+  /* Ensure text doesn't overflow */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  
+  /* Flex item properties - prevents overlapping */
+  flex-shrink: 0;
+  flex-grow: 0;
+  
+  /* Subtle gradient border */
+  position: relative;
+}
+
+.wordcloud-word::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.wordcloud-word:hover::before {
+  opacity: 1;
+}
+
+.wordcloud-word:hover {
+  transform: translateY(-2px) scale(1.05);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 1);
+  text-shadow: none;
+  border: 1px solid currentColor;
+}
+
+/* Different styles for available vs unsold players */
+.wordcloud-word[style*="#2563eb"] {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(37, 99, 235, 0.1));
+  border-left: 3px solid #2563eb;
+}
+
+.wordcloud-word[style*="#dc2626"] {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), rgba(220, 38, 38, 0.1));
+  border-left: 3px solid #dc2626;
+}
+
+.wordcloud-word[style*="#2563eb"]:hover {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(37, 99, 235, 0.2));
+  box-shadow: 
+    0 8px 25px rgba(37, 99, 235, 0.2),
+    0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.wordcloud-word[style*="#dc2626"]:hover {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(220, 38, 38, 0.2));
+  box-shadow: 
+    0 8px 25px rgba(220, 38, 38, 0.2),
+    0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.empty-wordcloud {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(248, 250, 252, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.empty-text {
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.7;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .wordcloud-container {
+    padding: 12px;
+  }
+  
+  .wordcloud-grid {
+    gap: 6px 8px;
+    padding: 4px;
+  }
+  
+  .wordcloud-word {
+    max-width: 150px;
+    padding: 4px 8px;
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .wordcloud-container {
+    padding: 8px;
+  }
+  
+  .wordcloud-grid {
+    gap: 4px 6px;
+  }
+  
+  .wordcloud-word {
+    max-width: 120px;
+    padding: 3px 6px;
+    font-size: 12px !important;
+  }
+}
+
+/* Animation for words appearing */
+@keyframes wordAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.wordcloud-word {
+  animation: wordAppear 0.4s ease-out;
+}
+
+/* Stagger animation for multiple words */
+.wordcloud-word:nth-child(1) { animation-delay: 0.02s; }
+.wordcloud-word:nth-child(2) { animation-delay: 0.04s; }
+.wordcloud-word:nth-child(3) { animation-delay: 0.06s; }
+.wordcloud-word:nth-child(4) { animation-delay: 0.08s; }
+.wordcloud-word:nth-child(5) { animation-delay: 0.10s; }
+.wordcloud-word:nth-child(6) { animation-delay: 0.12s; }
+.wordcloud-word:nth-child(7) { animation-delay: 0.14s; }
+.wordcloud-word:nth-child(8) { animation-delay: 0.16s; }
+.wordcloud-word:nth-child(9) { animation-delay: 0.18s; }
+.wordcloud-word:nth-child(10) { animation-delay: 0.20s; }
+.wordcloud-word:nth-child(11) { animation-delay: 0.22s; }
+.wordcloud-word:nth-child(12) { animation-delay: 0.24s; }
+.wordcloud-word:nth-child(13) { animation-delay: 0.26s; }
+.wordcloud-word:nth-child(14) { animation-delay: 0.28s; }
+.wordcloud-word:nth-child(15) { animation-delay: 0.30s; }
+.wordcloud-word:nth-child(16) { animation-delay: 0.32s; }
+.wordcloud-word:nth-child(17) { animation-delay: 0.34s; }
+.wordcloud-word:nth-child(18) { animation-delay: 0.36s; }
+.wordcloud-word:nth-child(19) { animation-delay: 0.38s; }
+.wordcloud-word:nth-child(20) { animation-delay: 0.40s; }
+.wordcloud-word:nth-child(21) { animation-delay: 0.42s; }
+.wordcloud-word:nth-child(22) { animation-delay: 0.44s; }
+.wordcloud-word:nth-child(23) { animation-delay: 0.46s; }
+.wordcloud-word:nth-child(24) { animation-delay: 0.48s; }
+.wordcloud-word:nth-child(25) { animation-delay: 0.50s; }
+.wordcloud-word:nth-child(26) { animation-delay: 0.52s; }
+.wordcloud-word:nth-child(27) { animation-delay: 0.54s; }
+.wordcloud-word:nth-child(28) { animation-delay: 0.56s; }
+.wordcloud-word:nth-child(29) { animation-delay: 0.58s; }
+.wordcloud-word:nth-child(30) { animation-delay: 0.60s; }
+.wordcloud-word:nth-child(31) { animation-delay: 0.62s; }
+.wordcloud-word:nth-child(32) { animation-delay: 0.64s; }
+.wordcloud-word:nth-child(33) { animation-delay: 0.66s; }
+.wordcloud-word:nth-child(34) { animation-delay: 0.68s; }
+.wordcloud-word:nth-child(35) { animation-delay: 0.70s; }
+
+/* For any additional items beyond 35, use a default delay */
+.wordcloud-word:nth-child(n+36) {
+  animation-delay: 0.72s;
+}
+
+/* Subtle background pattern */
+.wordcloud-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(239, 68, 68, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wordcloud-grid {
+  position: relative;
+  z-index: 1;
+}

@@ -1,0 +1,157 @@
+/* Add these styles to your app.component.scss file */
+
+/* Enhanced stats grid for 8 stats (4x2 layout on desktop) */
+.stats-grid-enhanced {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Update existing .spotlight-stat with enhanced styling */
+.spotlight-stat {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid #e2e8f0;
+  transition: var(--transition);
+  min-height: 60px;
+}
+
+.spotlight-stat:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+  border-color: var(--color-primary);
+}
+
+/* Different styles for different stat categories */
+.spotlight-stat.batting {
+  border-left: 3px solid #3b82f6;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.spotlight-stat.bowling {
+  border-left: 3px solid #10b981;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.spotlight-stat.fielding {
+  border-left: 3px solid #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.spotlight-stat.special {
+  border-left: 3px solid #8b5cf6;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+/* Enhanced stat icon styling */
+.stat-icon {
+  font-size: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  border-radius: 50%;
+  color: white;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+/* Different icon backgrounds for different stat types */
+.spotlight-stat.batting .stat-icon {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.spotlight-stat.bowling .stat-icon {
+  background: linear-gradient(135deg, #10b981, #047857);
+}
+
+.spotlight-stat.fielding .stat-icon {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.spotlight-stat.special .stat-icon {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+/* Stat text styling */
+.stat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-number {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-text {
+  font-size: 0.65rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  margin-top: 0.05rem;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Responsive design for the enhanced stats */
+@media (max-width: 1024px) {
+  .stats-grid-enhanced {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid-enhanced {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.3rem;
+    max-width: 280px;
+  }
+  
+  .spotlight-stat {
+    padding: 0.3rem;
+    min-height: 50px;
+  }
+  
+  .stat-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .stat-number {
+    font-size: 0.75rem;
+  }
+  
+  .stat-text {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid-enhanced {
+    grid-template-columns: 1fr;
+    max-width: 200px;
+  }
+  
+  .spotlight-stat {
+    justify-content: center;
+    text-align: center;
+  }
+}
