@@ -480,10 +480,9 @@ canTeamAffordNextBid(team: Team): boolean {
 }
 
 getBidButtonText(team: Team): string {
-
   if (this.isEditingBid) {
-      return 'Editing...';
-    }
+    return 'Editing...';
+  }
 
   const teamCapacity = this.getTeamCapacityInfo(team);
   const nextBidAmount = this.getNextBidAmount();
@@ -491,16 +490,62 @@ getBidButtonText(team: Team): string {
   
   // Team is full
   if (teamCapacity.full) {
-    return 'FULL';
+    return 'FULL (8/8)';
   }
   
   // Team can't afford next bid - show their maximum possible bid
   if (maxBid < nextBidAmount) {
-    return `Max ${maxBid}`;
+    return `Max Bid: ${maxBid}`;
   }
   
   // Normal bid - show next bid amount
   return `Bid ${nextBidAmount}`;
+}
+
+getTeamBidStatus(team: Team): {
+  canBid: boolean;
+  reason: string;
+  maxBid: number;
+  nextBid: number;
+  slotsRemaining: number;
+} {
+  const teamCapacity = this.getTeamCapacityInfo(team);
+  const maxBid = this.getMaxBidForTeam(team);
+  const nextBid = this.getNextBidAmount();
+  
+  if (teamCapacity.full) {
+    return {
+      canBid: false,
+      reason: 'Team is at maximum capacity',
+      maxBid: 0,
+      nextBid,
+      slotsRemaining: 0
+    };
+  }
+  
+  if (maxBid < nextBid) {
+    return {
+      canBid: false,
+      reason: `Insufficient budget for next bid (${nextBid}). Need to reserve budget for remaining slots.`,
+      maxBid,
+      nextBid,
+      slotsRemaining: teamCapacity.remainingSlots
+    };
+  }
+  
+  return {
+    canBid: true,
+    reason: 'Team can place bid',
+    maxBid,
+    nextBid,
+    slotsRemaining: teamCapacity.remainingSlots
+  };
+}
+
+getRemainingBudgetForSlots(team: Team): number {
+  const teamCapacity = this.getTeamCapacityInfo(team);
+  const remainingSlotsAfterCurrentBid = teamCapacity.remainingSlots - 1;
+  return Math.max(remainingSlotsAfterCurrentBid * 100, 0); // Base price is 100
 }
 
 getBidButtonTooltip(team: Team): string {
@@ -509,19 +554,20 @@ getBidButtonTooltip(team: Team): string {
       return 'Please finish editing the bid amount first';
     }
 
-  const teamCapacity = this.getTeamCapacityInfo(team);
+    const teamCapacity = this.getTeamCapacityInfo(team);
   const maxBid = this.getMaxBidForTeam(team);
   const nextBidAmount = this.getNextBidAmount();
+  const remainingBudget = this.getRemainingBudgetForSlots(team);
   
   if (teamCapacity.full) {
-    return 'Team Full (8/8 players)';
+    return 'Team Full (8/8 players) - Cannot bid anymore';
   }
   
   if (maxBid < nextBidAmount) {
-    return `Cannot afford ${nextBidAmount}. Maximum possible bid: ${maxBid}`;
+    return `Cannot afford ${nextBidAmount}. Maximum possible bid: ${maxBid}. Need ${remainingBudget} for remaining ${teamCapacity.remainingSlots - 1} players.`;
   }
   
-  return `Next bid: ${nextBidAmount}. Team can bid up to: ${maxBid}`;
+  return `Next bid: ${nextBidAmount}. Team can bid up to: ${maxBid} (Budget: ${team.budget}, Slots: ${teamCapacity.remainingSlots})`;
 }
 
   sellPlayer(): void {
