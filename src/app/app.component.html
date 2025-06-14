@@ -235,8 +235,8 @@
               SOLD!
             </button>
             <button class="btn-auction-action unsold" 
-                    [disabled]="currentTeam !== null && currentBid > currentPlayer.basePrice"
-                    (click)="markUnsold()">
+                     [disabled]="currentTeam !== null && currentBid > (currentPlayer?.basePrice || 0)"
+                     (click)="markUnsold()">
               UNSOLD
             </button>
           </div>

@@ -408,6 +408,42 @@ html, body {
   color: white;
 }
 
+/* Enhanced unsold button with better disabled state */
+.btn-auction-action.unsold:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #6c757d !important;
+  transform: none !important;
+}
+
+.btn-auction-action.unsold:disabled:hover {
+  transform: none !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* Optional: Add a tooltip for better UX */
+.btn-auction-action.unsold[disabled]::after {
+  content: "Cannot mark unsold after bidding starts";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.btn-auction-action.unsold[disabled]:hover::after {
+  opacity: 1;
+}
+
 .panel-title {
   font-size: 1.1rem;
   font-weight: 600;

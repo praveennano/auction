@@ -462,25 +462,25 @@ private initialPlayers: Player[] = [
         catches: 27 // ✅ From Excel
       }
     },
-    {
-      id: 20,
-      name: 'Gopi',
-      role: PlayerRole.BOWLER,
-      basePrice: 100,
-      mvpRanking: 32,
-      battingStats: { 
-        Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 31, // ✅ From Excel
-        battingAvg: 5.6, // ✅ From Excel
-        strikeRate: 52.38 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 3, // ✅ From Excel
-        economy: 11.34, // ✅ From Excel
-        catches: 0 // ✅ From Excel
-      }
-    },
+    // {
+    //   id: 20,
+    //   name: 'Gopi',
+    //   role: PlayerRole.BOWLER,
+    //   basePrice: 100,
+    //   mvpRanking: 32,
+    //   battingStats: { 
+    //     Cup: 0, // ✅ Keeping your existing cup count
+    //     pomAwards: 0, // ✅ From Excel
+    //     runs: 31, // ✅ From Excel
+    //     battingAvg: 5.6, // ✅ From Excel
+    //     strikeRate: 52.38 // ✅ From Excel
+    //   },
+    //   bowlingStats: { 
+    //     wickets: 3, // ✅ From Excel
+    //     economy: 11.34, // ✅ From Excel
+    //     catches: 0 // ✅ From Excel
+    //   }
+    // },
     {
       id: 21,
       name: 'Suresh K',
@@ -766,7 +766,6 @@ private initialPlayers: Player[] = [
         catches: 3
       }
     },
-    // NEW PLAYERS - Adding missing players from your cup list
      {
       id: 37,
       name: 'Muthu',
@@ -794,14 +793,14 @@ private initialPlayers: Player[] = [
       {
         id: 1,
         name: 'Premium Pool',
-        playerIds: [1, 3, 11, 13, 23], // Pool 1: 5 players - Sharan M, Praveen, Saravanan, Sarath, LOKI
+        playerIds: [1, 3, 29, 13, 23], // Pool 1: 5 players - Sharan M, Praveen, Saravanan, Sarath, LOKI
         isActive: true,
         isCompleted: false
       },
       {
         id: 2,
         name: 'Pool A',
-        playerIds: [4, 8, 22, 35, 10, 32, 24, 6, 7, 18,2, 5, 9, 14, 15, 17, 29, 25, 28, 16,19, 21, 30, 31, 12, 26, 27, 33, 34, 20], // Pool 2: 10 players
+        playerIds: [4, 8, 22, 35, 10, 32, 24, 6, 7, 18, 2, 11, 5, 9, 14, 15, 17, 29, 25, 28, 16,19, 21, 30, 31, 12, 26, 27, 33, 34,37], // Pool 2: 10 players
         isActive: false,
         isCompleted: false
       }
