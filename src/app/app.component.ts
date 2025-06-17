@@ -405,12 +405,10 @@ export class AppComponent implements OnInit, OnDestroy {
   // ================================
 
   getBidIncrement(currentBid: number): number {
-    if (currentBid < 250) {
+    if (currentBid < 1000) {
       return 10;
-    } else if (currentBid >= 250 && currentBid < 400) {
-      return 20;
-    } else {
-      return 30;
+    }  else {
+      return 10;
     }
   }
 
@@ -892,4 +890,104 @@ getBidButtonTooltip(team: Team): string {
     
     return maxPossibleBid;
   }
+
+rebidCurrentPlayer(): void {
+  if (!this.currentPlayer || !this.auctionInProgress) {
+    return;
+  }
+
+  if (this.isEditingBid) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Finish Editing',
+      detail: 'Please confirm or cancel the bid edit first',
+      life: 2000
+    });
+    return;
+  }
+
+  // Enhanced confirmation dialog with better styling
+  this.confirmationService.confirm({
+    message: `
+      <div class="rebid-confirmation-content">
+        <div class="rebid-player-info">
+          <div class="rebid-player-name">${this.currentPlayer.name}</div>
+          <div class="rebid-current-status">
+            <span class="current-bid-label">Current Bid:</span>
+            <span class="current-bid-amount">${this.currentBid}</span>
+            ${this.currentTeam ? `<span class="current-team">by ${this.currentTeam.shortName}</span>` : ''}
+          </div>
+        </div>
+        <div class="rebid-action-info">
+          <div class="rebid-icon">🔄</div>
+          <div class="rebid-text">
+            <strong>This will restart the auction</strong>
+            <div class="rebid-details">
+              • Reset bid to base price: <strong>${this.currentPlayer.basePrice}</strong><br>
+              • Clear current bidding team<br>
+              • Allow fresh bidding to begin
+            </div>
+          </div>
+        </div>
+      </div>
+    `,
+    header: '🔄 Restart Player Auction',
+    acceptButtonStyleClass: 'p-button-warning p-button-lg rebid-confirm-btn',
+    rejectButtonStyleClass: 'p-button-secondary p-button-lg rebid-cancel-btn',
+    acceptLabel: ' Yes, Restart Auction',
+    rejectLabel: ' Cancel',
+    defaultFocus: 'reject', // Focus on cancel by default for safety
+    accept: () => {
+      this.performRebidCurrentPlayer();
+    },
+    reject: () => {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Rebid Cancelled',
+        detail: `Auction for ${this.currentPlayer?.name} continues`,
+        life: 2000
+      });
+    }
+  });
+}
+
+// PRIVATE METHOD: Perform the rebid for current player
+private performRebidCurrentPlayer(): void {
+  if (!this.currentPlayer) {
+    return;
+  }
+
+  try {
+    const playerName = this.currentPlayer.name;
+    
+    // Reset the auction for the current player
+    this.currentBid = this.currentPlayer.basePrice;
+    this.currentTeam = null;
+    
+    // Update the auction service observables
+    this.auctionService['currentBid'].next(this.currentPlayer.basePrice);
+    this.auctionService['currentTeam'].next(null);
+    
+    // Keep the same player in auction, just reset the bidding
+    // No need to change currentPlayer or auctionInProgress
+    
+    this.messageService.add({
+      severity: 'success',
+      summary: '🔄 Auction Restarted',
+      detail: `Bidding for ${playerName} has been reset to base price ${this.currentPlayer.basePrice}`,
+      life: 3000
+    });
+    
+    console.log(`🔄 Auction restarted for ${playerName} at base price ${this.currentPlayer.basePrice}`);
+    
+  } catch (error) {
+    console.error('❌ Error during rebid:', error);
+    this.messageService.add({
+      severity: 'error',
+      summary: '❌ Rebid Failed',
+      detail: 'Could not restart the auction. Please try again.',
+      life: 3000
+    });
+  }
+}
 }

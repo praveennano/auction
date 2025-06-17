@@ -46,7 +46,7 @@ export class AuctionService {
       bowlingStats: { wickets: 28, economy: 7.8 },
       teamId: 1, // Pre-assigned to team 1
       isSold: true,
-      soldPrice: 120
+      soldPrice: 160
     },
     {
       id: 102,
@@ -58,7 +58,7 @@ export class AuctionService {
       bowlingStats: { wickets: 25, economy: 8.2 },
       teamId: 2, // Pre-assigned to team 2
       isSold: true,
-      soldPrice: 350
+      soldPrice: 230
     },
     {
       id: 103,
@@ -70,7 +70,7 @@ export class AuctionService {
       bowlingStats: { wickets: 22, economy: 8.5 },
       teamId: 3, // Pre-assigned to team 3
       isSold: true,
-      soldPrice: 370
+      soldPrice: 270
     },
     {
       id: 104,
@@ -82,7 +82,7 @@ export class AuctionService {
       bowlingStats: { wickets: 20, economy: 8.8 },
       teamId: 4, // Pre-assigned to team 4
       isSold: true,
-      soldPrice: 330
+      soldPrice: 300
     },
     {
       id: 105,
@@ -94,7 +94,7 @@ export class AuctionService {
       bowlingStats: { wickets: 18, economy: 9.0 },
       teamId: 5, // Pre-assigned to team 5
       isSold: true,
-      soldPrice: 270
+      soldPrice: 290
     }
   ];
 
@@ -105,7 +105,7 @@ private initialPlayers: Player[] = [
       name: 'Sharan M',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 6,
+      mvpRanking: 1,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 4, // ✅ From Excel
@@ -143,7 +143,7 @@ private initialPlayers: Player[] = [
       name: 'Praveen',
       role: PlayerRole.BATSMAN,
       basePrice: 100,
-      mvpRanking: 8,
+      mvpRanking: 4,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ From Excel
@@ -162,7 +162,7 @@ private initialPlayers: Player[] = [
       name: 'Gopal',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 9,
+      mvpRanking: 5,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 5, // ✅ From Excel
@@ -182,7 +182,7 @@ private initialPlayers: Player[] = [
       name: 'Siddhartha',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 10,
+      mvpRanking: 6,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 5, // ✅ From Excel
@@ -201,7 +201,7 @@ private initialPlayers: Player[] = [
       name: 'Sowrish',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 36,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 5, // ✅ From Excel
@@ -220,7 +220,7 @@ private initialPlayers: Player[] = [
       name: 'Vetri',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 11,
+      mvpRanking: 7,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 3, // ✅ From Excel
@@ -239,7 +239,7 @@ private initialPlayers: Player[] = [
       name: 'S N K',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 12,
+      mvpRanking: 9,
       battingStats: { 
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 2, // ✅ From Excel
@@ -258,7 +258,7 @@ private initialPlayers: Player[] = [
       name: 'Nageshwaran',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 13,
+      mvpRanking: 10,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -277,7 +277,7 @@ private initialPlayers: Player[] = [
       name: 'Pradeep',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 14,
+      mvpRanking: 8,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 2, // ✅ From Excel
@@ -296,7 +296,7 @@ private initialPlayers: Player[] = [
       name: 'Saravanan',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 15,
+      mvpRanking: 18,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 7, // ✅ From Excel
@@ -334,7 +334,7 @@ private initialPlayers: Player[] = [
       name: 'Sarath Kumar',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 35,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 4, // ✅ Keeping your existing cup count (was mapped from 'Sarath')
         pomAwards: 15, // ✅ From Excel
@@ -353,7 +353,7 @@ private initialPlayers: Player[] = [
       name: 'Mahesh',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 17,
+      mvpRanking: 11,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -372,7 +372,7 @@ private initialPlayers: Player[] = [
       name: 'S S Deepak',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 18,
+      mvpRanking: 21,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 4, // ✅ From Excel
@@ -391,7 +391,7 @@ private initialPlayers: Player[] = [
       name: 'Naveen',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 33,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 3, // ✅ From Excel
@@ -410,7 +410,7 @@ private initialPlayers: Player[] = [
       name: 'Dg',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 19,
+      mvpRanking: 14,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -448,7 +448,7 @@ private initialPlayers: Player[] = [
       name: 'Ravi',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 21,
+      mvpRanking: 12,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ From Excel
@@ -486,7 +486,7 @@ private initialPlayers: Player[] = [
       name: 'Suresh K',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 22,
+      mvpRanking: 26,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ From Excel
@@ -505,7 +505,7 @@ private initialPlayers: Player[] = [
       name: 'Ashok',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 32,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 8, // ✅ From Excel
@@ -524,7 +524,7 @@ private initialPlayers: Player[] = [
       name: 'LOKI',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 23,
+      mvpRanking: 24,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -543,7 +543,7 @@ private initialPlayers: Player[] = [
       name: 'Saravanan Shanmugam',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 24,
+      mvpRanking: 19,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -562,7 +562,7 @@ private initialPlayers: Player[] = [
       name: 'Shiva',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 25,
+      mvpRanking: 15,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 2, // ✅ From Excel
@@ -581,7 +581,7 @@ private initialPlayers: Player[] = [
       name: 'Ajay',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 30,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 6, // ✅ From Excel
@@ -600,7 +600,7 @@ private initialPlayers: Player[] = [
       name: 'Arun Menon',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 30,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -619,7 +619,7 @@ private initialPlayers: Player[] = [
       name: 'Logesh',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 26,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -657,7 +657,7 @@ private initialPlayers: Player[] = [
       name: 'Aravind Ganesh A R',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 28,
+      mvpRanking: 30,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ From Excel
@@ -676,7 +676,7 @@ private initialPlayers: Player[] = [
       name: 'HRB',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 29,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ From Excel
@@ -695,7 +695,7 @@ private initialPlayers: Player[] = [
       name: 'Umesh',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 30,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 11, // ✅ From Excel
@@ -714,7 +714,7 @@ private initialPlayers: Player[] = [
       name: 'Nish',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 38,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ From Excel
@@ -733,7 +733,7 @@ private initialPlayers: Player[] = [
       name: 'Sriram N',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 31,
+      mvpRanking: 29,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ From Excel
@@ -771,7 +771,7 @@ private initialPlayers: Player[] = [
       name: 'Muthu',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 22,
+      mvpRanking: 25,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ From Excel
@@ -822,50 +822,50 @@ private initialPlayers: Player[] = [
   }
 
   // Teams with captains already assigned and budget adjusted
-  private createInitialTeams(): Team[] {
-    return [
-      { 
-        id: 1, 
-        name: 'Vishnu', 
-        shortName: 'Vishnu', 
-        color: '#FF6B6B', 
-        budget: 2380, // Reduced budget since captain costs 200
-        players: [this.teamCaptains[0]] // Vishnu as captain
-      },
-      { 
-        id: 2, 
-        name: 'Karthikeyan', 
-        shortName: 'Karthikeyan', 
-        color: '#4ECDC4', 
-        budget: 2150, 
-        players: [this.teamCaptains[1]] // Karthikeyan as captain
-      },
-      { 
-        id: 3, 
-        name: 'Akshay', 
-        shortName: 'Akshay', 
-        color: '#45B7D1', 
-        budget: 2130, 
-        players: [this.teamCaptains[2]] // Akshay as captain
-      },
-      { 
-        id: 4, 
-        name: 'Arumugam', 
-        shortName: 'Arumugam', 
-        color: '#96CEB4', 
-        budget: 2170, 
-        players: [this.teamCaptains[3]] // Arumugam as captain
-      },
-      { 
-        id: 5, 
-        name: 'Guna', 
-        shortName: 'Guna', 
-        color: '#004BA0', 
-        budget: 2230, 
-        players: [this.teamCaptains[4]] // Guna as captain
-      },
-    ];
-  }
+private createInitialTeams(): Team[] {
+  return [
+    {
+      id: 1,
+      name: 'Vishnu',
+      shortName: 'Team Vishnu',
+      color: '#F39C12', // Vibrant Red - Bold & Powerful
+      budget: 2340,
+      players: [this.teamCaptains[0]] // Vishnu as captain
+    },
+    {
+      id: 2,
+      name: 'Karthikeyan',
+      shortName: 'Team Karthi',
+      color: '#3498DB', // Royal Blue - Classic & Professional
+      budget: 2270,
+      players: [this.teamCaptains[1]] // Karthikeyan as captain
+    },
+    {
+      id: 3,
+      name: 'Akshay',
+      shortName: 'Team Akshay',
+      color: '#E74C3C', // Golden Orange - Energetic & Dynamic
+      budget: 2230,
+      players: [this.teamCaptains[2]] // Akshay as captain
+    },
+    {
+      id: 4,
+      name: 'Aru',
+      shortName: 'Team Aru',
+      color: '#27AE60', // Forest Green - Fresh & Strong
+      budget: 2200,
+      players: [this.teamCaptains[3]] // Arumugam as captain
+    },
+    {
+      id: 5,
+      name: 'Guna',
+      shortName: 'Team Guna',
+      color: '#8E44AD', // Purple - Regal & Distinctive
+      budget: 2210,
+      players: [this.teamCaptains[4]] // Guna as captain
+    },
+  ];
+}
 
   // BehaviorSubjects
   private availablePlayers = new BehaviorSubject<Player[]>([...this.initialPlayers]);
@@ -1419,6 +1419,24 @@ private initialPlayers: Player[] = [
       hasCaptains: true
     };
   }
+
+  rebidCurrentPlayer(): void {
+  const currentPlayerValue = this.currentPlayer.value;
+  
+  if (!currentPlayerValue || !this.auctionInProgress.value) {
+    console.log('❌ No current player to rebid or auction not in progress');
+    return;
+  }
+  
+  // Reset the bidding for the current player
+  this.currentBid.next(currentPlayerValue.basePrice);
+  this.currentTeam.next(null);
+  
+  // Keep the same player in auction, just reset the bidding state
+  // currentPlayer and auctionInProgress remain unchanged
+  
+  console.log(`🔄 Auction restarted for ${currentPlayerValue.name} at base price ${currentPlayerValue.basePrice}`);
+}
 
   // DEBUGGING METHODS
   logCurrentState(): void {

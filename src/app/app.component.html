@@ -4,39 +4,47 @@
 <div class="auction-app">
   <!-- Enhanced Header with Cricket Theme -->
   <div class="app-header">
-    <div class="header-content">
-      <!-- Enhanced Title Section -->
-      <div class="app-title-container">
-        <h1 class="app-title">CWF Auction</h1>
-        <div class="app-subtitle"> Cricket With Fun</div>
-      </div>
-      
-      <!-- Enhanced Action Buttons -->
-      <div class="header-actions">
-        <!-- Save Button with enhanced styling -->
-        <button class="btn-header-action" 
-                title="Save Auction Data"
-                (click)="saveAuctionData()">
-          <i class="pi pi-save"></i>
-          <span>Save</span>
-        </button>
-        
-        <!-- Reset Button with enhanced styling -->
-        <button class="btn-header-action btn-reset" 
-                title="Reset Entire Auction"
-                (click)="resetAuction()">
-          <i class="pi pi-refresh"></i>
-          <span>Reset</span>
-        </button>
-      </div>
+   <div class="header-content">
+    <!-- NEW: Logo in Left Corner -->
+    <div class="app-logo-left">
+      <img src="assets/cwf.webp" 
+           alt="CWF Logo" 
+           class="app-logo"
+           onerror="this.style.display='none'">
     </div>
     
-    <!-- Optional: Live indicator -->
-    <div class="live-indicator" *ngIf="auctionInProgress">
-      <div class="live-dot"></div>
-      <span>LIVE AUCTION</span>
+    <!-- Center Title Section -->
+    <div class="app-title-container">
+      <h1 class="app-title">CWF Auction</h1>
+      <div class="app-subtitle">Cricket With Fun</div>
+    </div>
+    
+    <!-- Enhanced Action Buttons -->
+    <div class="header-actions">
+      <!-- Save Button with enhanced styling -->
+      <button class="btn-header-action" 
+              title="Save Auction Data"
+              (click)="saveAuctionData()">
+        <i class="pi pi-save"></i>
+        <span>Save</span>
+      </button>
+      
+      <!-- Reset Button with enhanced styling -->
+      <button class="btn-header-action btn-reset" 
+              title="Reset Entire Auction"
+              (click)="resetAuction()">
+        <i class="pi pi-refresh"></i>
+        <span>Reset</span>
+      </button>
     </div>
   </div>
+  
+  <!-- Optional: Live indicator -->
+  <div class="live-indicator" *ngIf="auctionInProgress">
+    <div class="live-dot"></div>
+    <span>LIVE AUCTION</span>
+  </div>
+</div>
 
   <div class="main-container">
     <div class="content-grid">
@@ -239,6 +247,14 @@
                      (click)="markUnsold()">
               UNSOLD
             </button>
+
+             <button class="btn-auction-action rebid" 
+          [disabled]="isEditingBid"
+          title="Restart auction for {{currentPlayer?.name}}"
+          (click)="rebidCurrentPlayer()">
+    <i class="pi pi-refresh"></i>
+    REBID
+  </button>
           </div>
         </div>
         
