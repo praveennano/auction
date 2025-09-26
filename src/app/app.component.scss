@@ -109,6 +109,73 @@
   text-overflow: ellipsis;
 }
 
+.team-budget {
+  font-size: 1.2rem; /* Increased from default */
+  font-weight: 700;
+  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.4rem 0.8rem; /* Increased padding */
+  border-radius: var(--radius);
+  border: 1px solid var(--color-primary-light);
+  box-shadow: var(--shadow-sm);
+  min-width: fit-content;
+  white-space: nowrap;
+}
+
+.team-max-bid {
+  font-size: 1.1rem; /* Increased from default */
+  font-weight: 700;
+  padding: 0.5rem 0.9rem; /* Increased padding */
+  border-radius: var(--radius);
+  text-align: center;
+  min-width: fit-content;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+/* Different states for max bid */
+.team-max-bid.full-team {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #dc2626;
+  border-color: #f87171;
+  font-size: 1rem; /* Slightly smaller for FULL text */
+}
+
+.team-max-bid.limited-bid {
+  background: linear-gradient(135deg, #fef3c7, #fed7aa);
+  color: #d97706;
+  border-color: #f59e0b;
+}
+
+.team-max-bid.can-bid {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  color: #16a34a;
+  border-color: #10b981;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .team-header {
+    padding: 0.5rem 0.75rem;
+    gap: 0.4rem;
+  }
+  
+  .team-budget {
+    font-size: 1.1rem; /* Slightly smaller on mobile but still larger than default */
+    padding: 0.35rem 0.7rem;
+  }
+  
+  // .team-max-bid {
+  //   font-size: 1rem; /* Slightly smaller on mobile but still larger than default */
+  //   padding: 0.4rem 0.8rem;
+  // }
+  
+  .team-max-bid.full-team {
+    font-size: 0.9rem;
+  }
+}
 /* Responsive design for the enhanced stats */
 @media (max-width: 1024px) {
   .stats-grid-enhanced {

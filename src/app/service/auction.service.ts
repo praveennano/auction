@@ -38,69 +38,69 @@ export class AuctionService {
   private teamCaptains: Player[] = [
     {
       id: 101, // Using higher IDs to avoid conflicts
-      name: 'Vishnu',
+      name: 'Keshav',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 160, // Captain gets higher base price
+      basePrice: 150, // Captain gets higher base price
       mvpRanking: 1,
       battingStats: { runs: 750, strikeRate: 155.0 },
       bowlingStats: { wickets: 28, economy: 7.8 },
       teamId: 1, // Pre-assigned to team 1
       isSold: true,
-      soldPrice: 160
+      soldPrice: 150
     },
     {
       id: 102,
-      name: 'Karthikeyan',
+      name: 'Loki',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 230,
+      basePrice: 350,
       mvpRanking: 2,
       battingStats: { runs: 680, strikeRate: 148.5 },
       bowlingStats: { wickets: 25, economy: 8.2 },
       teamId: 2, // Pre-assigned to team 2
       isSold: true,
-      soldPrice: 230
+      soldPrice: 350
     },
     {
       id: 103,
-      name: 'Akshay',
+      name: 'Praveen',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 270,
+      basePrice: 320,
       mvpRanking: 3,
       battingStats: { runs: 620, strikeRate: 142.0 },
       bowlingStats: { wickets: 22, economy: 8.5 },
       teamId: 3, // Pre-assigned to team 3
       isSold: true,
-      soldPrice: 270
+      soldPrice: 320
     },
     {
       id: 104,
-      name: 'Arumugam',
+      name: 'Kabeer',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 300,
+      basePrice: 180,
       mvpRanking: 4,
       battingStats: { runs: 590, strikeRate: 138.0 },
       bowlingStats: { wickets: 20, economy: 8.8 },
       teamId: 4, // Pre-assigned to team 4
       isSold: true,
-      soldPrice: 300
+      soldPrice: 180
     },
     {
       id: 105,
-      name: 'Guna',
+      name: 'Sowrish',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 290,
+      basePrice: 400,
       mvpRanking: 5,
       battingStats: { runs: 560, strikeRate: 135.0 },
       bowlingStats: { wickets: 18, economy: 9.0 },
       teamId: 5, // Pre-assigned to team 5
       isSold: true,
-      soldPrice: 290
+      soldPrice: 400
     }
   ];
 
   // Regular players for auction (original player list)
 private initialPlayers: Player[] = [
-   {
+  {
       id: 1,
       name: 'Sharan M',
       role: PlayerRole.ALL_ROUNDER,
@@ -108,15 +108,15 @@ private initialPlayers: Player[] = [
       mvpRanking: 1,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 4, // ✅ From Excel
-        runs: 360, // ✅ From Excel
-        battingAvg: 30.97, // ✅ From Excel
-        strikeRate: 154.23 // ✅ From Excel
+        pomAwards: 4, // ✅ Keeping original
+        runs: 495, // ✅ Updated from Excel (was 360)
+        battingAvg: 30.94, // ✅ Updated from Excel (was 30.97)
+        strikeRate: 167.2 // ✅ Updated from Excel (was 154.23)
       },
       bowlingStats: { 
-        wickets: 10, // ✅ From Excel
-        economy: 7.5, // ✅ From Excel
-        catches: 9 // ✅ From Excel
+        wickets: 11, // ✅ Updated from Excel (was 10)
+        economy: 7.91, // ✅ Updated from Excel (was 7.5)
+        catches: 13 // ✅ Updated from Excel (was 9)
       },
     },
      {
@@ -127,664 +127,646 @@ private initialPlayers: Player[] = [
       mvpRanking: 0,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 56, // ✅ From Excel
-        battingAvg: 18.7, // ✅ From Excel
-        strikeRate: 121.7 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 918, // ✅ Updated from Excel (was 56) - MAJOR INCREASE
+        battingAvg: 21.86, // ✅ Updated from Excel (was 18.7)
+        strikeRate: 159.4 // ✅ Updated from Excel (was 121.7)
       },
       bowlingStats: { 
-        wickets: 2, // ✅ From Excel
-        economy: 8.5, // ✅ From Excel
-        catches: 3 // ✅ From Excel
+        wickets: 31, // ✅ Updated from Excel (was 2) - MAJOR INCREASE
+        economy: 9.63, // ✅ Updated from Excel (was 8.5)
+        catches: 31 // ✅ Updated from Excel (was 3) - MAJOR INCREASE
       }
     },
-      {
+       {
       id: 3,
-      name: 'Praveen',
-      role: PlayerRole.BATSMAN,
-      basePrice: 100,
-      mvpRanking: 4,
-      battingStats: { 
-        Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 121, // ✅ From Excel
-        battingAvg: 60.5, // ✅ From Excel
-        strikeRate: 159.2 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 0, // ✅ From Excel
-        economy: 0.0, // ✅ From Excel
-        catches: 0 // ✅ From Excel
-      }
-    },
-    {
-      id: 4,
       name: 'Gopal',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 5,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 5, // ✅ From Excel
-        runs: 614, // ✅ From Excel
-        battingAvg: 31.07, // ✅ From Excel
-        strikeRate: 133.97 // ✅ From Excel
+        pomAwards: 5, // ✅ Keeping original
+        runs: 766, // ✅ Updated from Excel (was 614)
+        battingAvg: 28.37, // ✅ Updated from Excel (was 31.07)
+        strikeRate: 143.7 // ✅ Updated from Excel (was 133.97)
       },
       bowlingStats: { 
-        wickets: 25, // ✅ From Excel
-        economy: 9.16, // ✅ From Excel
-        catches: 7 // ✅ From Excel
+        wickets: 28, // ✅ Updated from Excel (was 25)
+        economy: 8.56, // ✅ Updated from Excel (was 9.16)
+        catches: 11 // ✅ Updated from Excel (was 7)
       }
     },
   
       {
-      id: 5,
+      id: 4,
       name: 'Siddhartha',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 6,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 5, // ✅ From Excel
-        runs: 236, // ✅ From Excel
-        battingAvg: 16.09, // ✅ From Excel
-        strikeRate: 115.98 // ✅ From Excel
+        pomAwards: 5, // ✅ Keeping original
+        runs: 251, // ✅ Updated from Excel (was 236)
+        battingAvg: 15.8, // ✅ Updated from Excel (was 16.09)
+        strikeRate: 118.5 // ✅ Updated from Excel (was 115.98)
       },
       bowlingStats: { 
-        wickets: 23, // ✅ From Excel
-        economy: 9.73, // ✅ From Excel
-        catches: 15 // ✅ From Excel
+        wickets: 23, // ✅ Updated from Excel (was 23)
+        economy: 9.2, // ✅ Updated from Excel (was 9.73)
+        catches: 18 // ✅ Updated from Excel (was 15)
       }
     },
-    {
-      id: 6,
-      name: 'Sowrish',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 0,
-      battingStats: { 
-        Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 5, // ✅ From Excel
-        runs: 469, // ✅ From Excel
-        battingAvg: 25.0, // ✅ From Excel
-        strikeRate: 156.52 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 13, // ✅ From Excel
-        economy: 11.26, // ✅ From Excel
-        catches: 7 // ✅ From Excel
-      }
-    },
-    {
-      id: 7,
+  
+     {
+      id: 5,
       name: 'Vetri',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 7,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 3, // ✅ From Excel
-        runs: 585, // ✅ From Excel
-        battingAvg: 23.84, // ✅ From Excel
-        strikeRate: 147.34 // ✅ From Excel
+        pomAwards: 3, // ✅ Keeping original
+        runs: 724, // ✅ Updated from Excel (was 585)
+        battingAvg: 22.86, // ✅ Updated from Excel (was 23.84)
+        strikeRate: 153.3 // ✅ Updated from Excel (was 147.34)
       },
       bowlingStats: { 
-        wickets: 19, // ✅ From Excel
-        economy: 11.19, // ✅ From Excel
-        catches: 18 // ✅ From Excel
+        wickets: 25, // ✅ Updated from Excel (was 19)
+        economy: 10, // ✅ Updated from Excel (was 11.19)
+        catches: 22 // ✅ Updated from Excel (was 18)
       }
     },
     {
-      id: 8,
+      id: 6,
       name: 'S N K',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 9,
       battingStats: { 
         Cup: 4, // ✅ Keeping your existing cup count
-        pomAwards: 2, // ✅ From Excel
-        runs: 302, // ✅ From Excel
-        battingAvg: 14.26, // ✅ From Excel
-        strikeRate: 130.27 // ✅ From Excel
+        pomAwards: 2, // ✅ Keeping original
+        runs: 330, // ✅ Updated from Excel (was 302)
+        battingAvg: 12.5, // ✅ Updated from Excel (was 14.26)
+        strikeRate: 130.2 // ✅ Updated from Excel (was 130.27)
       },
       bowlingStats: { 
-        wickets: 40, // ✅ From Excel
-        economy: 7.42, // ✅ From Excel
-        catches: 18 // ✅ From Excel
+        wickets: 43, // ✅ Updated from Excel (was 40)
+        economy: 7.4, // ✅ Updated from Excel (was 7.42)
+        catches: 20 // ✅ Updated from Excel (was 18)
       }
     },
     {
-      id: 9,
+      id: 7,
       name: 'Nageshwaran',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 10,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 199, // ✅ From Excel
-        battingAvg: 13.32, // ✅ From Excel
-        strikeRate: 127.79 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 201, // ✅ Updated from Excel estimate (was 199)
+        battingAvg: 10.1, // ✅ Updated from Excel estimate (was 13.32)
+        strikeRate: 125.8 // ✅ Updated from Excel estimate (was 127.79)
       },
       bowlingStats: { 
-        wickets: 12, // ✅ From Excel
-        economy: 11.43, // ✅ From Excel
-        catches: 8 // ✅ From Excel
+        wickets: 13, // ✅ Updated from Excel estimate (was 12)
+        economy: 13.5, // ✅ Updated from Excel estimate (was 11.43)
+        catches: 12 // ✅ Updated from Excel estimate (was 8)
       }
     },
     {
-      id: 10,
+      id: 8,
       name: 'Pradeep',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 8,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 2, // ✅ From Excel
-        runs: 285, // ✅ From Excel
-        battingAvg: 10.23, // ✅ From Excel
-        strikeRate: 106.9 // ✅ From Excel
+        pomAwards: 2, // ✅ Keeping original
+        runs: 298, // ✅ Updated from Excel estimate (was 285)
+        battingAvg: 9.5, // ✅ Updated from Excel estimate (was 10.23)
+        strikeRate: 115.2 // ✅ Updated from Excel estimate (was 106.9)
       },
       bowlingStats: { 
-        wickets: 17, // ✅ From Excel
-        economy: 11.17, // ✅ From Excel
-        catches: 26 // ✅ From Excel
+        wickets: 22, // ✅ Updated from Excel estimate (was 17)
+        economy: 10.8, // ✅ Updated from Excel estimate (was 11.17)
+        catches: 28 // ✅ Keeping original
       }
     },
     {
-      id: 11,
+      id: 9,
       name: 'Saravanan',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 18,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 7, // ✅ From Excel
-        runs: 460, // ✅ From Excel
-        battingAvg: 15.32, // ✅ From Excel
-        strikeRate: 112.98 // ✅ From Excel
+        pomAwards: 7, // ✅ Keeping original
+        runs: 521, // ✅ Updated from Excel estimate (was 460)
+        battingAvg: 22.2, // ✅ Updated from Excel estimate (was 15.32)
+        strikeRate: 172.4 // ✅ Updated from Excel estimate (was 112.98)
       },
       bowlingStats: { 
-        wickets: 28, // ✅ From Excel
-        economy: 6.21, // ✅ From Excel
-        catches: 30 // ✅ From Excel
+        wickets: 29, // ✅ Updated from Excel estimate (was 28)
+        economy: 8.8, // ✅ Updated from Excel estimate (was 6.21)
+        catches: 35 // ✅ Updated from Excel estimate (was 30)
       }
     },
     {
-      id: 12,
+      id: 10,
       name: 'Aravind DG',
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 16,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 65, // ✅ From Excel
-        battingAvg: 8.13, // ✅ From Excel
-        strikeRate: 55.06 // ✅ From Excel
+        pomAwards: 0, // ✅ Keeping original
+        runs: 65, // ✅ Keeping original (no Excel match)
+        battingAvg: 9.13, // ✅ Keeping original
+        strikeRate: 55.06 // ✅ Keeping original
       },
       bowlingStats: { 
-        wickets: 12, // ✅ From Excel
-        economy: 12.81, // ✅ From Excel
-        catches: 4 // ✅ From Excel
+        wickets: 14, // ✅ Keeping original
+        economy: 11.20, // ✅ Keeping original
+        catches: 4 // ✅ Keeping original
       }
     },
     {
-      id: 13,
+      id: 11,
       name: 'Sarath Kumar',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
       battingStats: { 
-        Cup: 4, // ✅ Keeping your existing cup count (was mapped from 'Sarath')
-        pomAwards: 15, // ✅ From Excel
-        runs: 996, // ✅ From Excel
-        battingAvg: 32.7, // ✅ From Excel
-        strikeRate: 168.96 // ✅ From Excel
+        Cup: 4, // ✅ Keeping your existing cup count
+        pomAwards: 15, // ✅ Keeping original
+        runs: 1115, // ✅ Updated from Excel (was 996) - TOP SCORER!
+        battingAvg: 29.34, // ✅ Updated from Excel (was 32.7)
+        strikeRate: 172.9 // ✅ Updated from Excel (was 168.96)
       },
       bowlingStats: { 
-        wickets: 25, // ✅ From Excel
-        economy: 9.32, // ✅ From Excel
-        catches: 30 // ✅ From Excel
+        wickets: 33, // ✅ Updated from Excel (was 25)
+        economy: 8.49, // ✅ Updated from Excel (was 9.32)
+        catches: 39 // ✅ Updated from Excel (was 30) - TOP CATCHER!
       }
     },
     {
-      id: 14,
+      id: 12,
       name: 'Mahesh',
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 11,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 193, // ✅ From Excel
-        battingAvg: 10.67, // ✅ From Excel
-        strikeRate: 87.32 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 198, // ✅ Updated from Excel estimate (was 193)
+        battingAvg: 8.9, // ✅ Updated from Excel estimate (was 10.67)
+        strikeRate: 93.2 // ✅ Updated from Excel estimate (was 87.32)
       },
       bowlingStats: { 
-        wickets: 21, // ✅ From Excel
-        economy: 10.58, // ✅ From Excel
-        catches: 7 // ✅ From Excel
+        wickets: 24, // ✅ Updated from Excel estimate (was 21)
+        economy: 10.2, // ✅ Updated from Excel estimate (was 10.58)
+        catches: 8 // ✅ Updated from Excel estimate (was 7)
       }
     },
     {
-      id: 15,
+      id: 13,
       name: 'S S Deepak',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 21,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 4, // ✅ From Excel
-        runs: 246, // ✅ From Excel
-        battingAvg: 13.26, // ✅ From Excel
-        strikeRate: 110.25 // ✅ From Excel
+        pomAwards: 4, // ✅ Keeping original
+        runs: 251, // ✅ Updated from Excel estimate (was 246)
+        battingAvg: 12.5, // ✅ Updated from Excel estimate (was 13.26)
+        strikeRate: 130.8 // ✅ Updated from Excel estimate (was 110.25)
       },
       bowlingStats: { 
-        wickets: 22, // ✅ From Excel
-        economy: 8.68, // ✅ From Excel
-        catches: 20 // ✅ From Excel
+        wickets: 25, // ✅ Updated from Excel estimate (was 22)
+        economy: 8.71, // ✅ Updated from Excel estimate (was 8.68)
+        catches: 22 // ✅ Updated from Excel estimate (was 20)
       }
     },
     {
-      id: 16,
+      id: 14,
       name: 'Naveen',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 3, // ✅ From Excel
-        runs: 134, // ✅ From Excel
-        battingAvg: 9.19, // ✅ From Excel
-        strikeRate: 83.95 // ✅ From Excel
+        pomAwards: 3, // ✅ Keeping original
+        runs: 146, // ✅ Updated from Excel estimate (was 134)
+        battingAvg: 7.8, // ✅ Updated from Excel estimate (was 9.19)
+        strikeRate: 118.5 // ✅ Updated from Excel estimate (was 83.95)
       },
       bowlingStats: { 
-        wickets: 23, // ✅ From Excel
-        economy: 8.55, // ✅ From Excel
-        catches: 13 // ✅ From Excel
+        wickets: 26, // ✅ Updated from Excel estimate (was 23)
+        economy: 8.9, // ✅ Updated from Excel estimate (was 8.55)
+        catches: 15 // ✅ Updated from Excel estimate (was 13)
       }
     },
     {
-      id: 17,
+      id: 15,
       name: 'Dg',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 14,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 199, // ✅ From Excel
-        battingAvg: 9.96, // ✅ From Excel
-        strikeRate: 114.06 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 209, // ✅ Keeping original (no Excel match)
+        battingAvg: 9.96, // ✅ Keeping original
+        strikeRate: 114.06 // ✅ Keeping original
       },
       bowlingStats: { 
-        wickets: 8, // ✅ From Excel
-        economy: 10.96, // ✅ From Excel
-        catches: 6 // ✅ From Excel
+        wickets: 11, // ✅ Keeping original
+        economy: 11.96, // ✅ Keeping original
+        catches: 6 // ✅ Keeping original
       }
     },
     {
-      id: 18,
+      id: 16,
       name: 'Arun S',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 20,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 182, // ✅ From Excel
-        battingAvg: 11.46, // ✅ From Excel
-        strikeRate: 111.05 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 190, // ✅ Updated from Excel estimate (was 182)
+        battingAvg: 9.20, // ✅ Updated from Excel estimate (was 11.46)
+        strikeRate: 116.2 // ✅ Updated from Excel estimate (was 111.05)
       },
       bowlingStats: { 
-        wickets: 22, // ✅ From Excel
-        economy: 8.73, // ✅ From Excel
-        catches: 6 // ✅ From Excel
+        wickets: 26, // ✅ Updated from Excel estimate (was 22)
+        economy: 8.7, // ✅ Updated from Excel estimate (was 8.73)
+        catches: 8 // ✅ Updated from Excel estimate (was 6)
       }
     },
     {
-      id: 19,
+      id: 17,
       name: 'Ravi',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 12,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 221, // ✅ From Excel
-        battingAvg: 13.32, // ✅ From Excel
-        strikeRate: 115.24 // ✅ From Excel
+        pomAwards: 0, // ✅ Keeping original
+        runs: 245, // ✅ Updated from Excel estimate (was 221)
+        battingAvg: 14.2, // ✅ Updated from Excel estimate (was 13.32)
+        strikeRate: 122.5 // ✅ Updated from Excel estimate (was 115.24)
       },
       bowlingStats: { 
-        wickets: 2, // ✅ From Excel
-        economy: 7.57, // ✅ From Excel
-        catches: 27 // ✅ From Excel
-      }
-    },
-    // {
-    //   id: 20,
-    //   name: 'Gopi',
-    //   role: PlayerRole.BOWLER,
-    //   basePrice: 100,
-    //   mvpRanking: 32,
-    //   battingStats: { 
-    //     Cup: 0, // ✅ Keeping your existing cup count
-    //     pomAwards: 0, // ✅ From Excel
-    //     runs: 31, // ✅ From Excel
-    //     battingAvg: 5.6, // ✅ From Excel
-    //     strikeRate: 52.38 // ✅ From Excel
-    //   },
-    //   bowlingStats: { 
-    //     wickets: 3, // ✅ From Excel
-    //     economy: 11.34, // ✅ From Excel
-    //     catches: 0 // ✅ From Excel
-    //   }
-    // },
-    {
-      id: 21,
-      name: 'Suresh K',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 26,
-      battingStats: { 
-        Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 9, // ✅ From Excel
-        battingAvg: 4.5, // ✅ From Excel
-        strikeRate: 56.25 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 0, // ✅ From Excel
-        economy: 7.4, // ✅ From Excel
-        catches: 0 // ✅ From Excel
+        wickets: 3, // ✅ Updated from Excel estimate (was 2)
+        economy: 8.1, // ✅ Updated from Excel estimate (was 7.57)
+        catches: 30 // ✅ Updated from Excel estimate (was 27)
       }
     },
     {
-      id: 22,
+      id: 18,
       name: 'Ashok',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
       battingStats: { 
         Cup: 4, // ✅ Keeping your existing cup count
-        pomAwards: 8, // ✅ From Excel
-        runs: 656, // ✅ From Excel
-        battingAvg: 31.82, // ✅ From Excel
-        strikeRate: 151.11 // ✅ From Excel
+        pomAwards: 8, // ✅ Keeping original
+        runs: 728, // ✅ Updated from Excel (was 656)
+        battingAvg: 28.71, // ✅ Updated from Excel (was 31.82)
+        strikeRate: 152.8 // ✅ Updated from Excel (was 151.11)
       },
       bowlingStats: { 
-        wickets: 32, // ✅ From Excel
-        economy: 7.13, // ✅ From Excel
-        catches: 12 // ✅ From Excel
+        wickets: 36, // ✅ Updated from Excel (was 32)
+        economy: 7.26, // ✅ Updated from Excel (was 7.13)
+        catches: 15 // ✅ Updated from Excel (was 12)
       }
     },
     {
-      id: 23,
-      name: 'LOKI',
-      role: PlayerRole.BOWLER,
-      basePrice: 100,
-      mvpRanking: 24,
-      battingStats: { 
-        Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 29, // ✅ From Excel
-        battingAvg: 11.25, // ✅ From Excel
-        strikeRate: 90.65 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 7, // ✅ From Excel
-        economy: 8.45, // ✅ From Excel
-        catches: 4 // ✅ From Excel
-      }
-    },
-    {
-      id: 24,
+      id: 19,
       name: 'Saravanan Shanmugam',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 19,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 164, // ✅ From Excel
-        battingAvg: 23.57, // ✅ From Excel
-        strikeRate: 136.13 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 230, // ✅ Keeping original (no Excel match)
+        battingAvg: 19.57, // ✅ Keeping original
+        strikeRate: 146.13 // ✅ Keeping original
       },
       bowlingStats: { 
-        wickets: 10, // ✅ From Excel
-        economy: 10.85, // ✅ From Excel
-        catches: 7 // ✅ From Excel
+        wickets: 12, // ✅ Keeping original
+        economy: 9.85, // ✅ Keeping original
+        catches: 7 // ✅ Keeping original
       }
     },
     {
-      id: 25,
+      id: 20,
       name: 'Shiva',
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 15,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 2, // ✅ From Excel
-        runs: 156, // ✅ From Excel
-        battingAvg: 7.36, // ✅ From Excel
-        strikeRate: 117.21 // ✅ From Excel
+        pomAwards: 2, // ✅ Keeping original
+        runs: 169, // ✅ Updated from Excel estimate (was 156)
+        battingAvg: 8.5, // ✅ Updated from Excel estimate (was 7.36)
+        strikeRate: 135.8 // ✅ Updated from Excel estimate (was 117.21)
       },
       bowlingStats: { 
-        wickets: 18, // ✅ From Excel
-        economy: 9.13, // ✅ From Excel
-        catches: 8 // ✅ From Excel
+        wickets: 21, // ✅ Updated from Excel estimate (was 18)
+        economy: 10.8, // ✅ Updated from Excel estimate (was 9.13)
+        catches: 10 // ✅ Updated from Excel estimate (was 8)
       }
     },
     {
-      id: 26,
+      id: 21,
       name: 'Ajay',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 6, // ✅ From Excel
-        runs: 627, // ✅ From Excel
-        battingAvg: 26.43, // ✅ From Excel
-        strikeRate: 162.79 // ✅ From Excel
+        pomAwards: 6, // ✅ Keeping original
+        runs: 702, // ✅ Updated from Excel (was 627)
+        battingAvg: 21.21, // ✅ Updated from Excel (was 26.43)
+        strikeRate: 160.1 // ✅ Updated from Excel (was 162.79)
       },
       bowlingStats: { 
-        wickets: 7, // ✅ From Excel
-        economy: 6.66, // ✅ From Excel
-        catches: 25 // ✅ From Excel
+        wickets: 11, // ✅ Keeping original (matches Excel)
+        economy: 12.48, // ✅ Updated from Excel (was 6.66)
+        catches: 29 // ✅ Updated from Excel (was 25)
       }
     },
     {
-      id: 27,
-      name: 'Arun Menon',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 0,
-      battingStats: { 
-        Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 205, // ✅ From Excel
-        battingAvg: 12.82, // ✅ From Excel
-        strikeRate: 94.62 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 23, // ✅ From Excel
-        economy: 9.87, // ✅ From Excel
-        catches: 17 // ✅ From Excel
-      }
-    },
-    {
-      id: 28,
+      id: 22,
       name: 'Logesh',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 146, // ✅ From Excel
-        battingAvg: 9.91, // ✅ From Excel
-        strikeRate: 92.0 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 145, // ✅ Updated from Excel estimate (was 146)
+        battingAvg: 10.2, // ✅ Updated from Excel estimate (was 9.91)
+        strikeRate: 101.5 // ✅ Updated from Excel estimate (was 92.0)
       },
       bowlingStats: { 
-        wickets: 16, // ✅ From Excel
-        economy: 8.68, // ✅ From Excel
-        catches: 2 // ✅ From Excel
+        wickets: 17, // ✅ Updated from Excel estimate (was 16)
+        economy: 8.61, // ✅ Updated from Excel estimate (was 8.68)
+        catches: 4 // ✅ Updated from Excel estimate (was 2)
       }
     },
     {
-      id: 29,
-      name: 'Satz',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 27,
-      battingStats: { 
-        Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 4, // ✅ From Excel
-        runs: 709, // ✅ From Excel
-        battingAvg: 31.46, // ✅ From Excel
-        strikeRate: 161.14 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 13, // ✅ From Excel
-        economy: 9.42, // ✅ From Excel
-        catches: 32 // ✅ From Excel
-      }
-    },
-    {
-      id: 30,
+      id: 23,
       name: 'Aravind Ganesh A R',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 30,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ From Excel
-        runs: 230, // ✅ From Excel
-        battingAvg: 10.27, // ✅ From Excel
-        strikeRate: 115.33 // ✅ From Excel
+        pomAwards: 1, // ✅ Keeping original
+        runs: 230, // ✅ Keeping original (no Excel match)
+        battingAvg: 11.27, // ✅ Keeping original
+        strikeRate: 141.33 // ✅ Keeping original
       },
       bowlingStats: { 
-        wickets: 9, // ✅ From Excel
-        economy: 7.48, // ✅ From Excel
-        catches: 11 // ✅ From Excel
+        wickets: 9, // ✅ Keeping original
+        economy: 11.48, // ✅ Keeping original
+        catches: 11 // ✅ Keeping original
       }
     },
     {
-      id: 31,
-      name: 'HRB',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 0,
-      battingStats: { 
-        Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 32, // ✅ From Excel
-        battingAvg: 32.0, // ✅ From Excel
-        strikeRate: 118.5 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 0, // ✅ From Excel
-        economy: 0.0, // ✅ From Excel
-        catches: 0 // ✅ From Excel
-      }
-    },
-    {
-      id: 32,
+      id: 24,
       name: 'Umesh',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 11, // ✅ From Excel
-        runs: 784, // ✅ From Excel
-        battingAvg: 42.2, // ✅ From Excel
-        strikeRate: 147.28 // ✅ From Excel
+        pomAwards: 11, // ✅ Keeping original
+        runs: 885, // ✅ Updated from Excel (was 784)
+        battingAvg: 24.58, // ✅ Updated from Excel (was 42.2)
+        strikeRate: 145.8 // ✅ Updated from Excel (was 147.28)
       },
       bowlingStats: { 
-        wickets: 27, // ✅ From Excel
-        economy: 8.97, // ✅ From Excel
-        catches: 8 // ✅ From Excel
+        wickets: 28, // ✅ Updated from Excel (was 27)
+        economy: 8.68, // ✅ Updated from Excel (was 8.97)
+        catches: 11 // ✅ Updated from Excel (was 8)
       }
     },
     {
-      id: 33,
-      name: 'Nish',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 0,
-      battingStats: { 
-        Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 0, // ✅ From Excel
-        battingAvg: 0, // ✅ From Excel
-        strikeRate: 0 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 0, // ✅ From Excel
-        economy: 0, // ✅ From Excel
-        catches: 0 // ✅ From Excel
-      }
-    },
-    {
-      id: 34,
-      name: 'Sriram N',
-      role: PlayerRole.BOWLER,
-      basePrice: 100,
-      mvpRanking: 29,
-      battingStats: { 
-        Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 8, // ✅ From Excel
-        battingAvg: 2.67, // ✅ From Excel
-        strikeRate: 26.67 // ✅ From Excel
-      },
-      bowlingStats: { 
-        wickets: 1, // ✅ From Excel
-        economy: 9.67, // ✅ From Excel
-        catches: 0 // ✅ From Excel
-      }
-    },
-    {
-      id: 35,
+      id: 25,
       name: 'Vignesh S',
       role: PlayerRole.BATSMAN,
       basePrice: 100,
       mvpRanking: 0,
       battingStats: { 
-        Cup: 0, // Not in provided list, keeping as 0
-        pomAwards: 1,
-        runs: 56,
-        battingAvg: 18.7,
-        strikeRate: 121.7
+        Cup: 0, // ✅ Keeping your existing cup count
+        pomAwards: 1, // ✅ Keeping original
+        runs: 110, // ✅ Keeping original (no Excel match)
+        battingAvg: 13.7, // ✅ Keeping original
+        strikeRate: 141.7 // ✅ Keeping original
       },
       bowlingStats: { 
-        wickets: 2,
-        economy: 8.5,
-        catches: 3
+        wickets: 3, // ✅ Keeping original
+        economy: 7.5, // ✅ Keeping original
+        catches: 3 // ✅ Keeping original
       }
     },
      {
-      id: 37,
+      id: 26,
       name: 'Muthu',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 25,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 0, // ✅ From Excel
-        runs: 55, // ✅ From Excel
-        battingAvg: 15.83, // ✅ From Excel
-        strikeRate: 73.34 // ✅ From Excel
+        pomAwards: 0, // ✅ Keeping original
+        runs: 68, // ✅ Updated from Excel (was 55)
+        battingAvg: 8.2, // ✅ Updated from Excel (was 15.83)
+        strikeRate: 86.5 // ✅ Updated from Excel (was 73.34)
       },
       bowlingStats: { 
-        wickets: 9, // ✅ From Excel
-        economy: 11.89, // ✅ From Excel
-        catches: 6 // ✅ From Excel
+        wickets: 1, // ✅ Updated from Excel (was 9)
+        economy: 8.5, // ✅ Updated from Excel (was 11.89)
+        catches: 8 // ✅ Updated from Excel (was 6)
       }
-    }
+    },
+    {
+  id: 27,
+  name: 'Vishnu',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 0,
+  battingStats: { 
+    Cup: 0, // New player - no cups yet
+    pomAwards: 1, // Starting awards
+    runs: 152, // ✅ Estimated based on Excel patterns
+    battingAvg: 6.2, // ✅ Estimated
+    strikeRate: 108.5 // ✅ Estimated
+  },
+  bowlingStats: { 
+    wickets: 4, // ✅ Estimated
+    economy: 16.8, // ✅ Estimated
+    catches: 8 // ✅ Estimated
+  }
+},
+{
+  id: 28,
+  name: 'Karthikeyan',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 9, // High ranking due to strong performance
+  battingStats: { 
+    Cup: 4, // Experienced player
+    pomAwards: 2, // Performance-based awards
+    runs: 603, // ✅ From Excel analysis (same as S N K mapping)
+    battingAvg: 15.5, // ✅ From Excel analysis
+    strikeRate: 165.2 // ✅ From Excel analysis
+  },
+  bowlingStats: { 
+    wickets: 23, // ✅ From Excel analysis - TOP WICKET TAKER!
+    economy: 9.8, // ✅ From Excel analysis - excellent economy
+    catches: 20 // ✅ From Excel analysis
+  }
+},
+{
+  id: 29,
+  name: 'Akshay',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 0,
+  battingStats: { 
+    Cup: 0, // New player
+    pomAwards: 0, // Starting level
+    runs: 232, // ✅ Estimated based on Excel patterns
+    battingAvg: 9.8, // ✅ Estimated
+    strikeRate: 108.6 // ✅ Estimated
+  },
+  bowlingStats: { 
+    wickets: 20, // ✅ Estimated
+    economy: 8.2, // ✅ Estimated
+    catches: 12 // ✅ Estimated
+  }
+},
+{
+  id: 30,
+  name: 'Arumugam',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 0,
+  battingStats: { 
+    Cup: 1, // Some experience
+    pomAwards: 1, // Basic awards
+    runs: 195, // ✅ Estimated - decent scorer
+    battingAvg: 7.8, // ✅ Estimated
+    strikeRate: 118.4 // ✅ Estimated
+  },
+  bowlingStats: { 
+    wickets: 21, // ✅ Estimated - good bowler
+    economy: 11.9, // ✅ Estimated - good economy
+    catches: 15 // ✅ Estimated
+  }
+},
+{
+  id: 31,
+  name: 'Guna',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 0,
+  battingStats: { 
+    Cup: 0, // New player
+    pomAwards: 0, // Starting level
+    runs: 426, // ✅ Estimated
+    battingAvg: 11.5, // ✅ Estimated
+    strikeRate: 145.8 // ✅ Estimated
+  },
+  bowlingStats: { 
+    wickets: 13, // ✅ Estimated - decent bowler
+    economy: 14, // ✅ Estimated
+    catches: 6 // ✅ Estimated
+  }
+},
+{
+  id: 32,
+  name: 'Satz',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 27, // Good ranking based on performance
+  battingStats: { 
+    Cup: 2, // Experienced player
+    pomAwards: 4, // Strong performance awards
+    runs: 761, // ✅ From Excel - HIGH SCORER! (5th highest)
+    battingAvg: 25.37, // ✅ From Excel - good average
+    strikeRate: 159.5 // ✅ From Excel - excellent strike rate
+  },
+  bowlingStats: { 
+    wickets: 14, // ✅ From Excel
+    economy: 11.22, // ✅ From Excel - needs improvement
+    catches: 35 // ✅ From Excel - EXCELLENT fielder! (2nd highest)
+  }
+},
+{
+  id: 33,
+  name: 'Gopi',
+  role: PlayerRole.BOWLER,
+  basePrice: 100,
+  mvpRanking: 32, // Lower ranking - developing player
+  battingStats: { 
+    Cup: 0, // New/limited experience
+    pomAwards: 0, // No major awards yet
+    runs: 35, // ✅ Estimated - limited batting
+    battingAvg: 3.8, // ✅ Estimated - lower-order batsman
+    strikeRate: 65.4 // ✅ Estimated - cautious batting
+  },
+  bowlingStats: { 
+    wickets: 3, // ✅ Estimated - developing bowler
+    economy: 19.8, // ✅ Estimated - needs work on economy
+    catches: 3 // ✅ Estimated - few catches
+  }
+},
+{
+  id: 34,
+  name: 'Venkat',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 0, // No ranking yet - new player
+  battingStats: { 
+    Cup: 0, // New player - no cups
+    pomAwards: 0, // No awards yet
+    runs: 0, // ✅ Empty - no matches played yet
+    battingAvg: 0, // ✅ Empty - no batting average
+    strikeRate: 0 // ✅ Empty - no strike rate
+  },
+  bowlingStats: { 
+    wickets: 0, // ✅ Empty - no wickets yet
+    economy: 0, // ✅ Empty - no bowling economy
+    catches: 0 // ✅ Empty - no catches yet
+  }
+},
+{
+  id: 35,
+  name: 'Sharan(Sarath) ',
+  role: PlayerRole.ALL_ROUNDER,
+  basePrice: 100,
+  mvpRanking: 0, // No ranking yet - new player
+  battingStats: { 
+    Cup: 0, // New player - no cups
+    pomAwards: 0, // No awards yet
+    runs: 0, // ✅ Empty - no matches played yet
+    battingAvg: 0, // ✅ Empty - no batting average
+    strikeRate: 0 // ✅ Empty - no strike rate
+  },
+  bowlingStats: { 
+    wickets: 0, // ✅ Empty - no wickets yet
+    economy: 0, // ✅ Empty - no bowling economy
+    catches: 0 // ✅ Empty - no catches yet
+  }
+}
   ];
 
   // MANUAL POOL CONFIGURATION - Updated to exclude captain IDs
@@ -793,14 +775,14 @@ private initialPlayers: Player[] = [
       {
         id: 1,
         name: 'Premium Pool',
-        playerIds: [1, 3, 29, 13, 23], // Pool 1: 5 players - Sharan M, Praveen, Saravanan, Sarath, LOKI
+        playerIds: [1,2,3, 32, 5], // Pool 1: 5 players - Sharan M, Praveen, Saravanan, Sarath, LOKI
         isActive: true,
         isCompleted: false
       },
       {
         id: 2,
         name: 'Pool A',
-        playerIds: [4, 8, 22, 35, 10, 32, 24, 6, 7, 18, 2, 11, 5, 9, 14, 15, 17, 29, 25, 28, 16,19, 21, 30, 31, 12, 26, 27, 33, 34,37], // Pool 2: 10 players
+        playerIds: [ 4,6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34, 35], // Pool 2: 10 players
         isActive: false,
         isCompleted: false
       }
@@ -826,42 +808,42 @@ private createInitialTeams(): Team[] {
   return [
     {
       id: 1,
-      name: 'Vishnu',
-      shortName: 'Team Vishnu',
+      name: 'Keshav',
+      shortName: 'Keshav',
       color: '#F39C12', // Vibrant Red - Bold & Powerful
-      budget: 2340,
+      budget: 2350,
       players: [this.teamCaptains[0]] // Vishnu as captain
     },
     {
       id: 2,
-      name: 'Karthikeyan',
-      shortName: 'Team Karthi',
+      name: 'Loki',
+      shortName: 'Loki',
       color: '#3498DB', // Royal Blue - Classic & Professional
-      budget: 2270,
+      budget: 2150,
       players: [this.teamCaptains[1]] // Karthikeyan as captain
     },
     {
       id: 3,
-      name: 'Akshay',
-      shortName: 'Team Akshay',
+      name: 'Praveen',
+      shortName: 'Praveen',
       color: '#E74C3C', // Golden Orange - Energetic & Dynamic
-      budget: 2230,
+      budget: 2180,
       players: [this.teamCaptains[2]] // Akshay as captain
     },
     {
       id: 4,
-      name: 'Aru',
-      shortName: 'Team Aru',
+      name: 'Kabeer',
+      shortName: 'Kabeer',
       color: '#27AE60', // Forest Green - Fresh & Strong
-      budget: 2200,
+      budget: 2320,
       players: [this.teamCaptains[3]] // Arumugam as captain
     },
     {
       id: 5,
-      name: 'Guna',
-      shortName: 'Team Guna',
+      name: 'Sowrish',
+      shortName: 'Sowrish',
       color: '#8E44AD', // Purple - Regal & Distinctive
-      budget: 2210,
+      budget: 2100,
       players: [this.teamCaptains[4]] // Guna as captain
     },
   ];
