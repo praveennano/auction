@@ -155,13 +155,13 @@
     </div>
     
     <!-- Only show catches if exists and > 0 -->
-    <div class="spotlight-stat fielding" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.catches && currentPlayer.bowlingStats.catches > 0">
+    <!-- <div class="spotlight-stat fielding" *ngIf="currentPlayer.bowlingStats && currentPlayer.bowlingStats.catches && currentPlayer.bowlingStats.catches > 0">
       <div class="stat-icon">🤲</div>
       <div class="stat-info">
         <div class="stat-number">{{currentPlayer.bowlingStats.catches}}</div>
         <div class="stat-text">Catches</div>
       </div>
-    </div>
+    </div> -->
     
     <!-- Only show cups if exists and > 0 -->
     <div class="spotlight-stat special" *ngIf="currentPlayer.battingStats.Cup && currentPlayer.battingStats.Cup > 0">

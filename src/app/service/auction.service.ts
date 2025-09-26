@@ -143,10 +143,10 @@ private initialPlayers: Player[] = [
       name: 'Gopal',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 5,
+      mvpRanking: 0,
       battingStats: { 
-        Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 5, // ✅ Keeping original
+        Cup: 2, // ✅ Keeping your existing cup count
+        pomAwards: 9, // ✅ Keeping original
         runs: 766, // ✅ Updated from Excel (was 614)
         battingAvg: 28.37, // ✅ Updated from Excel (was 31.07)
         strikeRate: 143.7 // ✅ Updated from Excel (was 133.97)
@@ -163,7 +163,7 @@ private initialPlayers: Player[] = [
       name: 'Siddhartha',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 6,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 5, // ✅ Keeping original
@@ -183,10 +183,10 @@ private initialPlayers: Player[] = [
       name: 'Vetri',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 7,
+      mvpRanking: 9,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 3, // ✅ Keeping original
+        pomAwards: 7, // ✅ Keeping original
         runs: 724, // ✅ Updated from Excel (was 585)
         battingAvg: 22.86, // ✅ Updated from Excel (was 23.84)
         strikeRate: 153.3 // ✅ Updated from Excel (was 147.34)
@@ -202,7 +202,7 @@ private initialPlayers: Player[] = [
       name: 'S N K',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 9,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 2, // ✅ Keeping original
@@ -221,7 +221,7 @@ private initialPlayers: Player[] = [
       name: 'Nageshwaran',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 10,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
@@ -240,10 +240,10 @@ private initialPlayers: Player[] = [
       name: 'Pradeep',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 8,
+      mvpRanking: 3,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 2, // ✅ Keeping original
+        pomAwards: 3, // ✅ Keeping original
         runs: 298, // ✅ Updated from Excel estimate (was 285)
         battingAvg: 9.5, // ✅ Updated from Excel estimate (was 10.23)
         strikeRate: 115.2 // ✅ Updated from Excel estimate (was 106.9)
@@ -259,10 +259,10 @@ private initialPlayers: Player[] = [
       name: 'Saravanan',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 18,
+      mvpRanking: 0,
       battingStats: { 
-        Cup: 3, // ✅ Keeping your existing cup count
-        pomAwards: 7, // ✅ Keeping original
+        Cup: 4, // ✅ Keeping your existing cup count
+        pomAwards: 8, // ✅ Keeping original
         runs: 521, // ✅ Updated from Excel estimate (was 460)
         battingAvg: 22.2, // ✅ Updated from Excel estimate (was 15.32)
         strikeRate: 172.4 // ✅ Updated from Excel estimate (was 112.98)
@@ -278,7 +278,7 @@ private initialPlayers: Player[] = [
       name: 'Aravind DG',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 16,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ Keeping original
@@ -316,7 +316,7 @@ private initialPlayers: Player[] = [
       name: 'Mahesh',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 11,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
@@ -335,9 +335,9 @@ private initialPlayers: Player[] = [
       name: 'S S Deepak',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 21,
+      mvpRanking: 0,
       battingStats: { 
-        Cup: 0, // ✅ Keeping your existing cup count
+        Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 4, // ✅ Keeping original
         runs: 251, // ✅ Updated from Excel estimate (was 246)
         battingAvg: 12.5, // ✅ Updated from Excel estimate (was 13.26)
@@ -373,7 +373,7 @@ private initialPlayers: Player[] = [
       name: 'Dg',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 14,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
@@ -392,9 +392,9 @@ private initialPlayers: Player[] = [
       name: 'Arun S',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 20,
+      mvpRanking: 0,
       battingStats: { 
-        Cup: 2, // ✅ Keeping your existing cup count
+        Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 190, // ✅ Updated from Excel estimate (was 182)
         battingAvg: 9.20, // ✅ Updated from Excel estimate (was 11.46)
@@ -411,9 +411,9 @@ private initialPlayers: Player[] = [
       name: 'Ravi',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 12,
+      mvpRanking: 0,
       battingStats: { 
-        Cup: 2, // ✅ Keeping your existing cup count
+        Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ Keeping original
         runs: 245, // ✅ Updated from Excel estimate (was 221)
         battingAvg: 14.2, // ✅ Updated from Excel estimate (was 13.32)
@@ -449,7 +449,7 @@ private initialPlayers: Player[] = [
       name: 'Saravanan Shanmugam',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 19,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
@@ -468,7 +468,7 @@ private initialPlayers: Player[] = [
       name: 'Shiva',
       role: PlayerRole.BOWLER,
       basePrice: 100,
-      mvpRanking: 15,
+      mvpRanking: 10,
       battingStats: { 
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 2, // ✅ Keeping original
@@ -490,7 +490,7 @@ private initialPlayers: Player[] = [
       mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 6, // ✅ Keeping original
+        pomAwards: 8, // ✅ Keeping original
         runs: 702, // ✅ Updated from Excel (was 627)
         battingAvg: 21.21, // ✅ Updated from Excel (was 26.43)
         strikeRate: 160.1 // ✅ Updated from Excel (was 162.79)
@@ -525,9 +525,9 @@ private initialPlayers: Player[] = [
       name: 'Aravind Ganesh A R',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 30,
+      mvpRanking: 0,
       battingStats: { 
-        Cup: 3, // ✅ Keeping your existing cup count
+        Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 230, // ✅ Keeping original (no Excel match)
         battingAvg: 11.27, // ✅ Keeping original
@@ -547,7 +547,7 @@ private initialPlayers: Player[] = [
       mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 11, // ✅ Keeping original
+        pomAwards: 12, // ✅ Keeping original
         runs: 885, // ✅ Updated from Excel (was 784)
         battingAvg: 24.58, // ✅ Updated from Excel (was 42.2)
         strikeRate: 145.8 // ✅ Updated from Excel (was 147.28)
@@ -582,7 +582,7 @@ private initialPlayers: Player[] = [
       name: 'Muthu',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
-      mvpRanking: 25,
+      mvpRanking: 0,
       battingStats: { 
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ Keeping original
@@ -620,9 +620,9 @@ private initialPlayers: Player[] = [
   name: 'Karthikeyan',
   role: PlayerRole.ALL_ROUNDER,
   basePrice: 100,
-  mvpRanking: 9, // High ranking due to strong performance
+  mvpRanking: 8, // High ranking due to strong performance
   battingStats: { 
-    Cup: 4, // Experienced player
+    Cup: 0, // Experienced player
     pomAwards: 2, // Performance-based awards
     runs: 603, // ✅ From Excel analysis (same as S N K mapping)
     battingAvg: 15.5, // ✅ From Excel analysis
@@ -641,8 +641,8 @@ private initialPlayers: Player[] = [
   basePrice: 100,
   mvpRanking: 0,
   battingStats: { 
-    Cup: 0, // New player
-    pomAwards: 0, // Starting level
+    Cup: 1, // New player
+    pomAwards: 1, // Starting level
     runs: 232, // ✅ Estimated based on Excel patterns
     battingAvg: 9.8, // ✅ Estimated
     strikeRate: 108.6 // ✅ Estimated
@@ -658,7 +658,7 @@ private initialPlayers: Player[] = [
   name: 'Arumugam',
   role: PlayerRole.ALL_ROUNDER,
   basePrice: 100,
-  mvpRanking: 0,
+  mvpRanking: 7,
   battingStats: { 
     Cup: 1, // Some experience
     pomAwards: 1, // Basic awards
@@ -677,10 +677,10 @@ private initialPlayers: Player[] = [
   name: 'Guna',
   role: PlayerRole.ALL_ROUNDER,
   basePrice: 100,
-  mvpRanking: 0,
+  mvpRanking: 5,
   battingStats: { 
     Cup: 0, // New player
-    pomAwards: 0, // Starting level
+    pomAwards: 1, // Starting level
     runs: 426, // ✅ Estimated
     battingAvg: 11.5, // ✅ Estimated
     strikeRate: 145.8 // ✅ Estimated
@@ -696,7 +696,7 @@ private initialPlayers: Player[] = [
   name: 'Satz',
   role: PlayerRole.ALL_ROUNDER,
   basePrice: 100,
-  mvpRanking: 27, // Good ranking based on performance
+  mvpRanking: 0, // Good ranking based on performance
   battingStats: { 
     Cup: 2, // Experienced player
     pomAwards: 4, // Strong performance awards
@@ -715,7 +715,7 @@ private initialPlayers: Player[] = [
   name: 'Gopi',
   role: PlayerRole.BOWLER,
   basePrice: 100,
-  mvpRanking: 32, // Lower ranking - developing player
+  mvpRanking: 0, // Lower ranking - developing player
   battingStats: { 
     Cup: 0, // New/limited experience
     pomAwards: 0, // No major awards yet
