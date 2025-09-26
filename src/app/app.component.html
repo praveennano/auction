@@ -433,5 +433,70 @@
   </div>
 </div>
 
+<div class="celebration-overlay" 
+     *ngIf="showCelebration" 
+     [@fadeInOut]>
+  
+  <!-- Confetti Rain -->
+  <div class="confetti-container">
+    <div *ngFor="let confetti of confettiPieces; trackBy: trackByIndex" 
+         class="confetti-piece"
+         [style.left.%]="confetti.x"
+         [style.background-color]="confetti.color"
+         [style.width.px]="confetti.size"
+         [style.height.px]="confetti.size"
+         [style.animation-delay]="confetti.delay + 'ms'"
+         [style.animation-duration]="confetti.duration + 'ms'">
+    </div>
+  </div>
+
+  <!-- Main Celebration Message -->
+  <div class="celebration-message" [@bounceIn]>
+    
+    <!-- SOLD Badge -->
+    <div class="sold-badge">
+      <i class="pi pi-check-circle"></i>
+      <span>SOLD!</span>
+      <span class="celebration-emoji">🎉</span>
+    </div>
+    
+    <!-- Player Information -->
+    <div class="celebration-info" [@slideUp]>
+      <div class="celebration-player-name">
+        {{celebrationData.playerName}}
+      </div>
+      
+      <div class="celebration-team-info">
+        <span>sold to</span>
+        <div class="celebration-team-name" 
+             [style.color]="celebrationData.teamColor">
+          {{celebrationData.teamName}}
+        </div>
+      </div>
+      
+      <div class="celebration-price">
+        <span class="amount">{{celebrationData.soldPrice | number}}</span>
+      </div>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="celebration-decorations">
+      <div class="decoration-left">🏏</div>
+      <div class="decoration-right">🏆</div>
+      <div class="decoration-top">⭐</div>
+    </div>
+  </div>
+
+  <!-- Corner Party Poppers -->
+  <div class="party-poppers">
+    <div class="popper top-left">🎉</div>
+    <div class="popper top-right">🎊</div>
+    <div class="popper bottom-left">🎈</div>
+    <div class="popper bottom-right">🥳</div>
+  </div>
+
+</div>
+
+
 <p-confirmDialog></p-confirmDialog>
 <p-toast></p-toast>

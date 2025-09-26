@@ -1308,6 +1308,12 @@ private createInitialTeams(): Team[] {
     };
   }
 
+  resetAuctionState(): void {
+  this.currentPlayer.next(null);
+  this.currentBid.next(0);
+  this.currentTeam.next(null);
+  this.auctionInProgress.next(false);
+}
   // UTILITY METHODS
   getSoldPlayersCount(): number {
     return this.teams.value.reduce(

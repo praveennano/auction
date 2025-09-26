@@ -21,6 +21,15 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PlayerWordcloudComponent } from './player-wordcloud/player-wordcloud.component';
 import { FormsModule } from '@angular/forms';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+interface CelebrationData {
+  playerName: string;
+  teamName: string;
+  teamColor: string;
+  soldPrice: number;
+}
 
 @Component({
   selector: 'app-root',
@@ -43,7 +52,34 @@ import { FormsModule } from '@angular/forms';
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+    animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-in', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('500ms ease-out', style({ opacity: 0 }))
+      ])
+    ]),
+    
+    trigger('bounceIn', [
+      transition(':enter', [
+        style({ transform: 'translate(-50%, -50%) scale(0)', opacity: 0 }),
+        animate('600ms cubic-bezier(0.68, -0.55, 0.265, 1.55)', 
+          style({ transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }))
+      ])
+    ]),
+
+    trigger('slideUp', [
+      transition(':enter', [
+        style({ transform: 'translateY(50px)', opacity: 0 }),
+        animate('400ms cubic-bezier(0.68, -0.55, 0.265, 1.55)', 
+          style({ transform: 'translateY(0)', opacity: 1 }))
+      ])
+    ])
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Cricket Player Auction';
@@ -59,6 +95,15 @@ export class AppComponent implements OnInit, OnDestroy {
   auctionInProgress: boolean = false;
   currentBid: number = 0;
   currentTeam: Team | null = null;
+
+   showCelebration = false;
+  celebrationData: CelebrationData = {
+    playerName: '',
+    teamName: '',
+    teamColor: '',
+    soldPrice: 0
+  };
+  confettiPieces: any[] = [];
   
   // PRIVATE: Pool-related properties (hidden from UI, used internally)
   private pools: PlayerPool[] = [];
@@ -127,9 +172,7 @@ export class AppComponent implements OnInit, OnDestroy {
     );
   }
 
-  // ================================
-  // LOAD/SAVE STATE METHODS
-  // ================================
+
 
   private loadSavedState(): void {
     if (!this.isBrowser) {
@@ -568,9 +611,145 @@ getBidButtonTooltip(team: Team): string {
   return `Next bid: ${nextBidAmount}. Team can bid up to: ${maxBid} (Budget: ${team.budget}, Slots: ${teamCapacity.remainingSlots})`;
 }
 
-  sellPlayer(): void {
-    this.auctionService.sellPlayer();
+ playSuccessSound(): void {
+    try {
+      const audio = new Audio('assets/sounds/celebration.mp3');
+      audio.volume = 0.3;
+      audio.play().catch(() => {
+        // Sound file not found, that's ok
+      });
+    } catch (error) {
+      // No audio support, that's ok
+    }
   }
+
+  // Helper method for template
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  sellPlayer(): void {
+  console.log('🔍 sellPlayer() called');
+  console.log('Current Player:', this.currentPlayer);
+  console.log('Current Team:', this.currentTeam);
+  
+  if (this.currentPlayer && this.currentTeam) {
+    // Store references to avoid null issues
+    const playerToSell = this.currentPlayer;
+    const buyingTeam = this.currentTeam;
+    const finalPrice = this.currentBid;
+    
+    console.log('🎯 About to trigger celebration for:', {
+      playerName: playerToSell.name,
+      teamName: buyingTeam.shortName,
+      teamColor: buyingTeam.color,
+      soldPrice: finalPrice
+    });
+    
+    // Create sold player object
+    const soldPlayer = {
+      ...playerToSell,
+      soldPrice: finalPrice,
+      teamId: buyingTeam.id
+    };
+
+    // Add player to team
+    buyingTeam.players.push(soldPlayer);
+    buyingTeam.budget -= finalPrice;
+
+    // Remove from available players
+    this.availablePlayers = this.availablePlayers.filter(p => p.name !== playerToSell.name);
+
+    // Move to sold players
+    this.soldPlayers.push(soldPlayer);
+
+    // 🎉 TRIGGER CELEBRATION - using stored references
+    this.triggerCelebration({
+      playerName: playerToSell.name,
+      teamName: buyingTeam.shortName,
+      teamColor: buyingTeam.color,
+      soldPrice: finalPrice
+    });
+
+    // Reset auction state using service
+    this.auctionService.resetAuctionState();
+    
+    // Optional: Play success sound (comment this out to avoid errors)
+    // this.playSuccessSound();
+    
+    console.log('✅ sellPlayer() completed');
+  } else {
+    console.log('❌ sellPlayer() failed - missing player or team');
+  }
+}
+
+triggerCelebration(data: any): void {
+  console.log('🎉 triggerCelebration() called with:', data);
+  
+  this.celebrationData = data;
+  this.generateConfetti();
+  this.showCelebration = true;
+  
+  console.log('🎊 showCelebration set to:', this.showCelebration);
+  console.log('🎨 confettiPieces generated:', this.confettiPieces.length);
+  console.log('🎨 First few confetti pieces:', this.confettiPieces.slice(0, 3));
+  
+  // Auto-hide after 6 seconds
+  setTimeout(() => {
+    console.log('⏰ Auto-hiding celebration');
+    this.showCelebration = false;
+  }, 6000);
+}
+
+generateContinuousConfetti(): void {
+  // Generate initial wave
+  this.generateConfetti();
+  
+  // Generate second wave after 1.5 seconds
+  setTimeout(() => {
+    const secondWave = [];
+    const colors = [
+      this.celebrationData.teamColor,
+      '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', 
+      '#eb4d4b', '#6c5ce7', '#a29bfe', '#fd79a8'
+    ];
+    
+    for (let i = 0; i < 40; i++) {
+      secondWave.push({
+        x: Math.random() * 100,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 1000, // Shorter delay for second wave
+        duration: 4000 + Math.random() * 2000,
+        size: 6 + Math.random() * 8
+      });
+    }
+    
+    // Add second wave to existing confetti
+    this.confettiPieces = [...this.confettiPieces, ...secondWave];
+  }, 1500);
+}
+
+generateConfetti(): void {
+  this.confettiPieces = [];
+  const colors = [
+    this.celebrationData.teamColor || '#e74c3c', // Fallback color
+    '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', 
+    '#eb4d4b', '#6c5ce7', '#a29bfe', '#fd79a8'
+  ];
+
+  // Generate 60 confetti pieces with consistent settings
+  for (let i = 0; i < 60; i++) {
+    this.confettiPieces.push({
+      x: Math.random() * 100,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      delay: Math.random() * 2000, // 0-2 seconds delay
+      duration: 4000, // Fixed 4 second duration for all pieces
+      size: 8 + Math.random() * 4 // 8-12px size
+    });
+  }
+
+  console.log(`🎊 Generated ${this.confettiPieces.length} confetti pieces`);
+}
 
   markUnsold(): void {
     this.auctionService.markUnsold();
