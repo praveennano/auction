@@ -628,54 +628,27 @@ getBidButtonTooltip(team: Team): string {
     return index;
   }
 
-  sellPlayer(): void {
+sellPlayer(): void {
   console.log('🔍 sellPlayer() called');
   console.log('Current Player:', this.currentPlayer);
   console.log('Current Team:', this.currentTeam);
   
   if (this.currentPlayer && this.currentTeam) {
-    // Store references to avoid null issues
+    // Store references for celebration
     const playerToSell = this.currentPlayer;
     const buyingTeam = this.currentTeam;
     const finalPrice = this.currentBid;
     
-    console.log('🎯 About to trigger celebration for:', {
-      playerName: playerToSell.name,
-      teamName: buyingTeam.shortName,
-      teamColor: buyingTeam.color,
-      soldPrice: finalPrice
-    });
+    // Use the service method to handle the sale
+    this.auctionService.sellPlayer();
     
-    // Create sold player object
-    const soldPlayer = {
-      ...playerToSell,
-      soldPrice: finalPrice,
-      teamId: buyingTeam.id
-    };
-
-    // Add player to team
-    buyingTeam.players.push(soldPlayer);
-    buyingTeam.budget -= finalPrice;
-
-    // Remove from available players
-    this.availablePlayers = this.availablePlayers.filter(p => p.name !== playerToSell.name);
-
-    // Move to sold players
-    this.soldPlayers.push(soldPlayer);
-
-    // 🎉 TRIGGER CELEBRATION - using stored references
+    // Trigger celebration after service handles the sale
     this.triggerCelebration({
       playerName: playerToSell.name,
       teamName: buyingTeam.shortName,
       teamColor: buyingTeam.color,
       soldPrice: finalPrice
     });
-
-    // Reset auction state using service
-    this.auctionService.resetAuctionState();
-    
-    // Optional: Play success sound (comment this out to avoid errors)
-    // this.playSuccessSound();
     
     console.log('✅ sellPlayer() completed');
   } else {
@@ -698,7 +671,7 @@ triggerCelebration(data: any): void {
   setTimeout(() => {
     console.log('⏰ Auto-hiding celebration');
     this.showCelebration = false;
-  }, 6000);
+  }, 4000);
 }
 
 generateContinuousConfetti(): void {
