@@ -1,21 +1,20 @@
-/* Add these styles to your app.component.scss file */
-/* ADD THESE CELEBRATION STYLES AT THE TOP LEVEL - NOT INSIDE ANY MEDIA QUERY */
+/* Enhanced Post-Sale Celebration Styles - Cleaned Version */
 
-/* Celebration Overlay - MUST BE OUTSIDE MEDIA QUERIES */
+/* CELEBRATION OVERLAY */
 .celebration-overlay {
-  position: fixed !important;  /* !important to ensure it overrides any other positioning */
+  position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
-  z-index: 9999 !important;    /* Very high z-index to appear above everything */
+  z-index: 9999 !important;
   pointer-events: none;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(3px);
 }
 
-/* Confetti Animation */
+/* CONFETTI ANIMATION */
 .confetti-container {
   position: absolute;
   width: 100%;
@@ -28,31 +27,51 @@
   top: -30px;
   border-radius: 2px;
   opacity: 0.9;
-  animation: confetti-fall-simple linear forwards;
+  animation: confetti-fall-enhanced linear forwards;
   
-  /* Simple shape variations */
-  &:nth-child(odd) {
+  &:nth-child(4n) {
     border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   }
   
-  &:nth-child(3n) {
-    transform: rotate(45deg);
+  &:nth-child(4n+1) {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+  
+  &:nth-child(4n+2) {
+    clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+  }
+  
+  &:nth-child(4n+3) {
+    border-radius: 50%;
+    transform-origin: center;
   }
 }
 
-
-@keyframes confetti-fall-simple {
+@keyframes confetti-fall-enhanced {
   0% {
-    transform: translateY(-50px) rotate(0deg);
+    transform: translateY(-50px) rotate(0deg) scale(1);
     opacity: 1;
   }
+  25% {
+    opacity: 1;
+    transform: translateY(25vh) rotate(90deg) scale(1.2);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(50vh) rotate(180deg) scale(0.8);
+  }
+  75% {
+    opacity: 0.6;
+    transform: translateY(75vh) rotate(270deg) scale(1.1);
+  }
   100% {
-    transform: translateY(calc(100vh + 50px)) rotate(360deg);
-    opacity: 0.3;
+    transform: translateY(calc(100vh + 50px)) rotate(360deg) scale(0.5);
+    opacity: 0;
   }
 }
 
-/* Main Celebration Message */
+/* MAIN CELEBRATION MESSAGE */
 .celebration-message {
   position: absolute;
   top: 50%;
@@ -60,90 +79,133 @@
   transform: translate(-50%, -50%);
   text-align: center;
   background: linear-gradient(145deg, 
-    rgba(255, 255, 255, 0.95) 0%, 
-    rgba(248, 250, 252, 0.98) 50%,
-    rgba(255, 255, 255, 0.95) 100%);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 3rem 2.5rem;
-  min-width: 350px;
+    rgba(255, 255, 255, 0.98) 0%, 
+    rgba(248, 250, 252, 0.99) 30%,
+    rgba(240, 245, 251, 0.98) 70%,
+    rgba(255, 255, 255, 0.98) 100%);
+  backdrop-filter: blur(25px);
+  border-radius: 28px;
+  padding: 3.5rem 3rem;
+  min-width: 400px;
   max-width: 90vw;
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+    0 35px 70px -12px rgba(0, 0, 0, 0.4),
+    0 15px 35px -5px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: visible;
   
-  /* Subtle glow effect */
   &::before {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
     background: linear-gradient(45deg, 
-      var(--color-primary), 
-      #4ecdc4, 
-      #45b7d1, 
-      #f9ca24,
-      var(--color-primary));
-    border-radius: 27px;
+      #10b981, #3b82f6, #8b5cf6, #f59e0b, #ef4444, #10b981);
+    background-size: 300% 300%;
+    border-radius: 32px;
     z-index: -1;
-    opacity: 0.15;
-    animation: glow-rotate 3s linear infinite;
+    opacity: 0.3;
+    animation: gradient-border 4s ease infinite;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+    border-radius: 38px;
+    animation: pulse-ring 2s ease-out infinite;
   }
 }
 
-@keyframes glow-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes gradient-border {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
-/* SOLD Badge */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* SOLD BADGE */
 .sold-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  background: linear-gradient(135deg, #10b981 0%, #059669 70%, #047857 100%);
+  gap: 1rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 40%, #047857 100%);
   color: white;
-  padding: 1.2rem 2.5rem;
-  border-radius: 60px;
-  font-size: 2rem;
+  padding: 1.5rem 3rem;
+  border-radius: 70px;
+  font-size: 2.4rem;
   font-weight: 900;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   box-shadow: 
-    0 15px 35px rgba(16, 185, 129, 0.4),
-    0 5px 15px rgba(16, 185, 129, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  animation: badge-celebration 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  letter-spacing: 0.08em;
+    0 20px 45px rgba(16, 185, 129, 0.5),
+    0 10px 25px rgba(16, 185, 129, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  animation: badge-celebration-enhanced 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.1em;
   position: relative;
   
+  &::before {
+    content: '✨';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    font-size: 1.5rem;
+    animation: sparkle-top-left 2s ease-in-out infinite;
+  }
+  
+  &::after {
+    content: '✨';
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    font-size: 1.5rem;
+    animation: sparkle-bottom-right 2s ease-in-out infinite 0.5s;
+  }
+  
   i {
-    font-size: 1.8rem;
-    animation: icon-bounce 2s ease-in-out infinite;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    font-size: 2rem;
+    animation: icon-celebration 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
   }
   
   .celebration-emoji {
-    font-size: 1.5rem;
-    animation: emoji-wiggle 1s ease-in-out infinite;
+    font-size: 1.8rem;
+    animation: emoji-party 1.2s ease-in-out infinite;
   }
 }
 
-@keyframes badge-celebration {
+@keyframes badge-celebration-enhanced {
   0% {
-    transform: scale(0) rotate(-180deg);
+    transform: scale(0) rotate(-360deg);
     opacity: 0;
   }
-  50% {
-    transform: scale(1.15) rotate(10deg);
+  30% {
+    transform: scale(1.3) rotate(-10deg);
     opacity: 1;
+  }
+  60% {
+    transform: scale(0.9) rotate(5deg);
   }
   100% {
     transform: scale(1) rotate(0deg);
@@ -151,104 +213,245 @@
   }
 }
 
-@keyframes icon-bounce {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.1) rotate(5deg); }
+@keyframes sparkle-top-left {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: scale(1.5) rotate(180deg);
+    opacity: 1;
+  }
 }
 
-@keyframes emoji-wiggle {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(-5deg) scale(1.1); }
-  75% { transform: rotate(5deg) scale(1.1); }
+@keyframes sparkle-bottom-right {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: scale(1.5) rotate(-180deg);
+    opacity: 1;
+  }
 }
 
-/* Celebration Info */
+@keyframes icon-celebration {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+  }
+  25% { 
+    transform: scale(1.2) rotate(-10deg);
+  }
+  50% { 
+    transform: scale(1.1) rotate(0deg);
+  }
+  75% { 
+    transform: scale(1.2) rotate(10deg);
+  }
+}
+
+@keyframes emoji-party {
+  0%, 100% { 
+    transform: rotate(0deg) scale(1);
+  }
+  25% { 
+    transform: rotate(-15deg) scale(1.2);
+  }
+  75% { 
+    transform: rotate(15deg) scale(1.2);
+  }
+}
+
+/* CELEBRATION INFO */
 .celebration-info {
   position: relative;
 }
 
 .celebration-player-name {
-  font-size: 2.8rem;
-  font-weight: 800;
+  font-size: 3.2rem;
+  font-weight: 900;
   color: #1e293b;
-  margin-bottom: 1rem;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-  line-height: 1.1;
-  animation: name-glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes name-glow {
-  0% { text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); }
-  100% { text-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 0 20px rgba(16, 185, 129, 0.3); }
-}
-
-.celebration-team-info {
   margin-bottom: 1.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  line-height: 1.1;
+  animation: name-rainbow 3s ease-in-out infinite;
+  background: linear-gradient(45deg, #1e293b, #3b82f6, #10b981, #1e293b);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #10b981;
+    filter: blur(10px);
+    opacity: 0.7;
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes name-rainbow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* TEAM INFO */
+.celebration-team-info {
+  margin-bottom: 2rem;
+  position: relative;
   
   span {
     display: block;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: #64748b;
-    font-weight: 500;
-    margin-bottom: 0.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    animation: text-slide-up 0.8s ease-out 0.5s both;
   }
 }
 
 .celebration-team-name {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  animation: team-pulse 2s ease-in-out infinite;
+  letter-spacing: 0.15em;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  animation: team-celebration 2.5s ease-in-out infinite;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: currentColor;
+    animation: underline-grow 1s ease-out 1s both;
+  }
 }
 
-@keyframes team-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+@keyframes text-slide-up {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
+@keyframes team-celebration {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+  }
+  50% { 
+    transform: scale(1.05) rotate(1deg);
+  }
+}
+
+@keyframes underline-grow {
+  0% { width: 0; }
+  100% { width: 80%; }
+}
+
+/* PRICE DISPLAY */
 .celebration-price {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  margin-top: 1.5rem;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  position: relative;
   
+  &::before,
+  &::after {
+    content: '💰';
+    position: absolute;
+    font-size: 1.5rem;
+    animation: money-float 3s ease-in-out infinite;
+  }
+  
+  &::before {
+    left: -60px;
+    animation-delay: 0s;
+  }
+  
+  &::after {
+    right: -60px;
+    animation-delay: 1s;
+  }
   
   .amount {
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-weight: 900;
-    color: #047857;
-    text-shadow: 0 4px 8px rgba(4, 120, 87, 0.3);
-    animation: price-shimmer 2s ease-in-out infinite;
+    background: linear-gradient(45deg, #047857, #10b981, #34d399, #10b981);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: price-celebration 2.5s ease-in-out infinite;
     position: relative;
-
-  }
-}
-
-@keyframes price-shimmer {
-  0%, 100% { 
-    transform: scale(1);
-    color: #047857;
-  }
-  50% { 
-    transform: scale(1.05);
-    color: #10b981;
+    
+    &::before {
+      content: '₹';
+      position: absolute;
+      left: -2.5rem;
+      top: 0;
+      font-size: 2.5rem;
+      color: #047857;
+      animation: currency-bounce 2s ease-in-out infinite;
+    }
   }
 }
 
 @keyframes money-float {
-  0%, 100% { transform: translateY(-50%) rotate(0deg) scale(1); }
-  33% { transform: translateY(-60%) rotate(-10deg) scale(1.1); }
-  66% { transform: translateY(-40%) rotate(10deg) scale(0.9); }
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0.7;
+  }
+  33% { 
+    transform: translateY(-20px) rotate(-15deg) scale(1.2);
+    opacity: 1;
+  }
+  66% { 
+    transform: translateY(10px) rotate(15deg) scale(0.9);
+    opacity: 0.8;
+  }
 }
 
-@keyframes gem-sparkle {
-  0%, 100% { transform: translateY(-50%) scale(1) rotate(0deg); opacity: 1; }
-  50% { transform: translateY(-60%) scale(1.2) rotate(180deg); opacity: 0.8; }
+@keyframes price-celebration {
+  0%, 100% { 
+    transform: scale(1);
+    background-position: 0% 50%;
+  }
+  50% { 
+    transform: scale(1.1);
+    background-position: 100% 50%;
+  }
 }
 
+@keyframes currency-bounce {
+  0%, 100% { 
+    transform: translateY(0) scale(1);
+  }
+  50% { 
+    transform: translateY(-10px) scale(1.1);
+  }
+}
+
+/* DECORATIONS */
 .celebration-decorations {
   position: absolute;
   width: 100%;
@@ -259,50 +462,60 @@
   
   .decoration-left,
   .decoration-right,
-  .decoration-bottom {
+  .decoration-top {
     position: absolute;
-    font-size: 3.5rem; /* INCREASED from 2rem to 3.5rem */
-    opacity: 0.8; /* Slightly more visible */
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow for better visibility */
+    font-size: 4rem;
+    opacity: 0.9;
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   }
   
   .decoration-left {
-    top: 15%; /* Adjusted position slightly */
-    left: -1.5rem; /* Adjusted for larger size */
-    animation: decoration-bounce 2s ease-in-out infinite;
+    top: 15%;
+    left: -2rem;
+    animation: decoration-bounce-rotate 3s ease-in-out infinite;
   }
   
   .decoration-right {
-    top: 20%; /* Adjusted position slightly */
-    right: -1.5rem; /* Adjusted for larger size */
-    animation: decoration-bounce 2s ease-in-out infinite 0.5s;
+    top: 20%;
+    right: -2rem;
+    animation: decoration-bounce-rotate 3s ease-in-out infinite 0.5s;
   }
   
-  .decoration-bottom {
-    bottom: 8%; /* Adjusted position slightly */
+  .decoration-top {
+    top: -1rem;
     left: 50%;
     transform: translateX(-50%);
-    animation: decoration-twinkle 1.5s ease-in-out infinite;
+    animation: decoration-star-twinkle 2s ease-in-out infinite;
   }
 }
 
-@keyframes decoration-bounce {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-15px) scale(1.15); } /* Increased bounce effect */
+@keyframes decoration-bounce-rotate {
+  0%, 100% { 
+    transform: translateY(0) scale(1) rotate(0deg); 
+  }
+  25% { 
+    transform: translateY(-8px) scale(1.1) rotate(-5deg); 
+  }
+  50% { 
+    transform: translateY(-15px) scale(1.15) rotate(0deg); 
+  }
+  75% { 
+    transform: translateY(-8px) scale(1.1) rotate(5deg); 
+  }
 }
 
-@keyframes decoration-twinkle {
+@keyframes decoration-star-twinkle {
   0%, 100% { 
-    opacity: 0.8; 
-    transform: translateX(-50%) scale(1); 
+    opacity: 0.9; 
+    transform: translateX(-50%) scale(1) rotate(0deg);
   }
   50% { 
     opacity: 1; 
-    transform: translateX(-50%) scale(1.3); /* Increased scale effect */
+    transform: translateX(-50%) scale(1.4) rotate(90deg);
   }
 }
 
-
+/* PARTY POPPERS */
 .party-poppers {
   position: absolute;
   width: 100%;
@@ -311,45 +524,47 @@
   
   .popper {
     position: absolute;
-    font-size: 4.5rem; /* INCREASED from 3rem to 4.5rem */
-    animation: popper-celebration 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25)); /* Enhanced shadow */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added text shadow */
+    font-size: 5rem;
+    animation: popper-mega-celebration 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
   }
   
   .top-left {
-    top: 8%; /* Adjusted position for larger size */
-    left: 6%;
+    top: 5%;
+    left: 5%;
     animation-delay: 0.2s;
   }
   
   .top-right {
-    top: 10%;
-    right: 6%; /* Adjusted position for larger size */
-    animation-delay: 0.4s;
-  }
-  
-  .bottom-left {
-    bottom: 12%; /* Adjusted position for larger size */
-    left: 8%;
+    top: 8%;
+    right: 5%;
     animation-delay: 0.6s;
   }
   
+  .bottom-left {
+    bottom: 15%;
+    left: 8%;
+    animation-delay: 1s;
+  }
+  
   .bottom-right {
-    bottom: 8%; /* Adjusted position for larger size */
+    bottom: 10%;
     right: 8%;
-    animation-delay: 0.8s;
+    animation-delay: 1.4s;
   }
 }
 
-
-@keyframes popper-celebration {
+@keyframes popper-mega-celebration {
   0% {
-    transform: scale(0) rotate(-180deg);
+    transform: scale(0) rotate(-360deg);
     opacity: 0;
   }
+  40% {
+    transform: scale(1.6) rotate(25deg);
+    opacity: 1;
+  }
   70% {
-    transform: scale(1.4) rotate(15deg); /* Increased scale and rotation */
+    transform: scale(0.8) rotate(-10deg);
     opacity: 1;
   }
   100% {
@@ -358,30 +573,34 @@
   }
 }
 
-/* Test button styling */
-.btn-test {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 10000;
-  background: #10b981;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+/* SOUND WAVE EFFECT */
+.celebration-overlay::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: sound-wave 2s ease-out infinite;
 }
 
-.btn-test:hover {
-  background: #059669;
-  transform: translateY(-2px);
+@keyframes sound-wave {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+  }
+  100% {
+    width: 800px;
+    height: 800px;
+    opacity: 0;
+  }
 }
 
-/* YOUR EXISTING STYLES CONTINUE BELOW - Keep all your existing CSS */
-
-/* Enhanced stats grid for 8 stats (4x2 layout on desktop) */
+/* ENHANCED STATS GRID */
 .stats-grid-enhanced {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -390,7 +609,6 @@
   margin: 0 auto;
 }
 
-/* Update existing .spotlight-stat with enhanced styling */
 .spotlight-stat {
   background: var(--color-surface);
   border-radius: var(--radius);
@@ -410,37 +628,6 @@
   border-color: var(--color-primary);
 }
 
-/* Continue with all your other existing styles... */
-/* Enhanced stats grid for 8 stats (4x2 layout on desktop) */
-.stats-grid-enhanced {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.4rem;
-  max-width: 420px;
-  margin: 0 auto;
-}
-
-/* Update existing .spotlight-stat with enhanced styling */
-.spotlight-stat {
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 0.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid #e2e8f0;
-  transition: var(--transition);
-  min-height: 60px;
-}
-
-.spotlight-stat:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
-  border-color: var(--color-primary);
-}
-
-/* Different styles for different stat categories */
 .spotlight-stat.batting {
   border-left: 3px solid #3b82f6;
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
@@ -461,7 +648,6 @@
   background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
 }
 
-/* Enhanced stat icon styling */
 .stat-icon {
   font-size: 1rem;
   width: 2rem;
@@ -476,7 +662,6 @@
   flex-shrink: 0;
 }
 
-/* Different icon backgrounds for different stat types */
 .spotlight-stat.batting .stat-icon {
   background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
@@ -493,7 +678,6 @@
   background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 }
 
-/* Stat text styling */
 .stat-info {
   flex: 1;
   min-width: 0;
@@ -520,12 +704,13 @@
   text-overflow: ellipsis;
 }
 
+/* TEAM STYLING */
 .team-budget {
-  font-size: 1.2rem; /* Increased from default */
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--color-primary);
   background: rgba(255, 255, 255, 0.8);
-  padding: 0.4rem 0.8rem; /* Increased padding */
+  padding: 0.4rem 0.8rem;
   border-radius: var(--radius);
   border: 1px solid var(--color-primary-light);
   box-shadow: var(--shadow-sm);
@@ -534,9 +719,9 @@
 }
 
 .team-max-bid {
-  font-size: 1.1rem; /* Increased from default */
+  font-size: 1.1rem;
   font-weight: 700;
-  padding: 0.5rem 0.9rem; /* Increased padding */
+  padding: 0.5rem 0.9rem;
   border-radius: var(--radius);
   text-align: center;
   min-width: fit-content;
@@ -546,12 +731,11 @@
   transition: var(--transition);
 }
 
-/* Different states for max bid */
 .team-max-bid.full-team {
   background: linear-gradient(135deg, #fee2e2, #fecaca);
   color: #dc2626;
   border-color: #f87171;
-  font-size: 1rem; /* Slightly smaller for FULL text */
+  font-size: 1rem;
 }
 
 .team-max-bid.limited-bid {
@@ -566,41 +750,7 @@
   border-color: #10b981;
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-  .team-header {
-    padding: 0.5rem 0.75rem;
-    gap: 0.4rem;
-  }
-  
-  .team-budget {
-    font-size: 1.1rem; /* Slightly smaller on mobile but still larger than default */
-    padding: 0.35rem 0.7rem;
-  }
-  .celebration-decorations {
-    .decoration-left,
-    .decoration-right,
-    .decoration-bottom {
-      font-size: 2.8rem; /* Smaller on mobile but still larger than before */
-    }
-  }
-  
-  .party-poppers .popper {
-    font-size: 3.5rem; /* Smaller on mobile but still larger than before */
-  }
-
-  
-  
-  // .team-max-bid {
-  //   font-size: 1rem; /* Slightly smaller on mobile but still larger than default */
-  //   padding: 0.4rem 0.8rem;
-  // }
-  
-  .team-max-bid.full-team {
-    font-size: 0.9rem;
-  }
-}
-/* Responsive design for the enhanced stats */
+/* RESPONSIVE DESIGN */
 @media (max-width: 1024px) {
   .stats-grid-enhanced {
     grid-template-columns: repeat(3, 1fr);
@@ -609,6 +759,46 @@
 }
 
 @media (max-width: 768px) {
+  .celebration-message {
+    padding: 2.5rem 2rem;
+    min-width: 320px;
+    border-radius: 20px;
+  }
+  
+  .celebration-player-name {
+    font-size: 2.4rem;
+  }
+  
+  .celebration-team-name {
+    font-size: 1.8rem;
+  }
+  
+  .celebration-price .amount {
+    font-size: 3rem;
+    
+    &::before {
+      font-size: 2rem;
+      left: -2rem;
+    }
+  }
+  
+  .sold-badge {
+    font-size: 2rem;
+    padding: 1.2rem 2.5rem;
+  }
+  
+  .celebration-decorations {
+    .decoration-left,
+    .decoration-right,
+    .decoration-top {
+      font-size: 3rem;
+    }
+  }
+  
+  .party-poppers .popper {
+    font-size: 3.5rem;
+  }
+  
   .stats-grid-enhanced {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.3rem;
@@ -633,9 +823,35 @@
   .stat-text {
     font-size: 0.6rem;
   }
+  
+  .team-header {
+    padding: 0.5rem 0.75rem;
+    gap: 0.4rem;
+  }
+  
+  .team-budget {
+    font-size: 1.1rem;
+    padding: 0.35rem 0.7rem;
+  }
+  
+  .team-max-bid.full-team {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .celebration-decorations {
+    .decoration-left,
+    .decoration-right,
+    .decoration-top {
+      font-size: 2.2rem;
+    }
+  }
+  
+  .party-poppers .popper {
+    font-size: 2.8rem;
+  }
+  
   .stats-grid-enhanced {
     grid-template-columns: 1fr;
     max-width: 200px;
@@ -645,39 +861,55 @@
     justify-content: center;
     text-align: center;
   }
+}
 
-    .celebration-decorations {
-    .decoration-left,
-    .decoration-right,
-    .decoration-bottom {
-      font-size: 2.2rem; /* Even smaller on very small screens */
-    }
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  .confetti-piece,
+  .celebration-message,
+  .sold-badge,
+  .celebration-player-name,
+  .celebration-team-name,
+  .celebration-price .amount,
+  .decoration-left,
+  .decoration-right,
+  .decoration-top,
+  .party-poppers .popper {
+    animation: none !important;
   }
   
-  .party-poppers .popper {
-    font-size: 2.8rem; /* Even smaller on very small screens */
+  .celebration-overlay::before {
+    display: none;
   }
 }
 
-.decoration-left {
-  animation: decoration-bounce-rotate 3s ease-in-out infinite;
+.teams-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  border-radius: 24px;
+  padding: 2.5rem;
+  margin-top: 2rem;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.08),
+    0 10px 30px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #f59e0b, #ef4444, #8b5cf6, #3b82f6, #10b981);
+    background-size: 300% 100%;
+    border-radius: 24px 24px 0 0;
+    animation: team-gradient-flow 4s ease infinite;
+  }
 }
 
-.decoration-right {
-  animation: decoration-bounce-rotate 3s ease-in-out infinite 0.5s;
-}
-
-@keyframes decoration-bounce-rotate {
-  0%, 100% { 
-    transform: translateY(0) scale(1) rotate(0deg); 
-  }
-  25% { 
-    transform: translateY(-8px) scale(1.1) rotate(-5deg); 
-  }
-  50% { 
-    transform: translateY(-15px) scale(1.15) rotate(0deg); 
-  }
-  75% { 
-    transform: translateY(-8px) scale(1.1) rotate(5deg); 
-  }
+@keyframes team-gradient-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }

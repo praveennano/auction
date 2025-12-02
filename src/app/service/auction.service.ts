@@ -775,14 +775,14 @@ private initialPlayers: Player[] = [
       {
         id: 1,
         name: 'Premium Pool',
-        playerIds: [1,2,3, 32, 5], // Pool 1: 5 players - Sharan M, Praveen, Saravanan, Sarath, LOKI
+        playerIds: [1,28,18, 31,32], 
         isActive: true,
         isCompleted: false
       },
       {
         id: 2,
         name: 'Pool A',
-        playerIds: [ 4,6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34, 35], // Pool 2: 10 players
+        playerIds: [ 2,3,4,5.6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23 , 24, 25, 26, 27, 29, 30, 33, 34, 35], // Pool 2: 10 players
         isActive: false,
         isCompleted: false
       }

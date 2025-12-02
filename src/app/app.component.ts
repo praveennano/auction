@@ -612,17 +612,26 @@ getBidButtonTooltip(team: Team): string {
 }
 
  playSuccessSound(): void {
-    try {
-      const audio = new Audio('assets/sounds/celebration.mp3');
-      audio.volume = 0.3;
-      audio.play().catch(() => {
-        // Sound file not found, that's ok
-      });
-    } catch (error) {
-      // No audio support, that's ok
+  try {
+    const audio = new Audio('assets/fireworks.mp3'); // Update path to your file
+    audio.volume = 1.0;
+    audio.preload = 'auto';
+    
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          console.log('Fireworks sound played successfully');
+        })
+        .catch((error) => {
+          console.log('Audio play failed:', error);
+        });
     }
+  } catch (error) {
+    console.log('Audio not supported or file missing:', error);
   }
-
+}
   // Helper method for template
   trackByIndex(index: number): number {
     return index;
@@ -641,7 +650,7 @@ sellPlayer(): void {
     
     // Use the service method to handle the sale
     this.auctionService.sellPlayer();
-    
+     this.playSuccessSound();
     // Trigger celebration after service handles the sale
     this.triggerCelebration({
       playerName: playerToSell.name,
@@ -671,7 +680,7 @@ triggerCelebration(data: any): void {
   setTimeout(() => {
     console.log('⏰ Auto-hiding celebration');
     this.showCelebration = false;
-  }, 4000);
+  }, 5000);
 }
 
 generateContinuousConfetti(): void {
