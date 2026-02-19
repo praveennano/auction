@@ -1,0 +1,224 @@
+<p-toast position="top-center"></p-toast>
+
+<div class="pg-container">
+
+    <!-- ======================== JOIN SCREEN ======================== -->
+    <div *ngIf="!isLoggedIn" class="join-screen">
+        <div class="join-card">
+            <div class="join-header">
+                <div class="join-logo">🏏</div>
+                <h1>CWF Prediction Game</h1>
+                <p>Enter your details to start predicting!</p>
+            </div>
+
+            <form [formGroup]="joinForm" (ngSubmit)="onJoin()" class="join-form">
+
+                <div class="form-field">
+                    <label>Your Name</label>
+                    <input type="text" formControlName="display_name" placeholder="e.g. Ravi Kumar" class="pg-input"
+                        autocomplete="name">
+                    <span class="field-error"
+                        *ngIf="joinForm.get('display_name')?.touched && joinForm.get('display_name')?.invalid">
+                        Name must be at least 2 characters
+                    </span>
+                </div>
+
+                <div class="form-field">
+                    <label>Mobile Number</label>
+                    <div class="phone-input-wrapper">
+                        <span class="phone-prefix">+91</span>
+                        <input type="tel" formControlName="phone_number" placeholder="10-digit mobile number"
+                            class="pg-input phone-input" maxlength="10" inputmode="numeric" autocomplete="tel">
+                    </div>
+                    <span class="field-error"
+                        *ngIf="joinForm.get('phone_number')?.touched && joinForm.get('phone_number')?.invalid">
+                        Enter a valid 10-digit mobile number
+                    </span>
+                    <span class="field-hint">
+                        📱 Already joined? Enter the same number to continue
+                    </span>
+                </div>
+
+                <!-- Token Slider (only for new users, existing users keep their balance) -->
+                <div class="form-field token-slider-field">
+                    <label>Starting Tokens <span class="token-value">{{ tokenSliderValue }}</span></label>
+                    <div class="slider-wrapper">
+                        <span class="slider-label">20</span>
+                        <input type="range" class="token-slider" [(ngModel)]="tokenSliderValue"
+                            [ngModelOptions]="{standalone: true}" min="20" max="200" step="5">
+                        <span class="slider-label">200</span>
+                    </div>
+                    <div class="token-preview">
+                        <span class="token-chip">🪙 {{ tokenSliderValue }} tokens to start</span>
+                    </div>
+                    <span class="field-hint">Only applies if you're new. Returning players keep their balance.</span>
+                </div>
+
+                <button type="submit" class="btn-join" [disabled]="joinForm.invalid || joinLoading">
+                    <span *ngIf="!joinLoading">🚀 Join / Continue</span>
+                    <span *ngIf="joinLoading" class="btn-loading">
+                        <span class="spinner-sm"></span> Loading...
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================== GAME SCREEN ======================== -->
+    <div *ngIf="isLoggedIn" class="game-screen">
+
+        <!-- Top Bar -->
+        <div class="pg-topbar">
+            <div class="user-info">
+                <div class="user-avatar">{{ userProfile?.display_name?.charAt(0)?.toUpperCase() || '?' }}</div>
+                <div class="user-details">
+                    <div class="user-name">{{ userProfile?.display_name }}</div>
+                    <div class="user-phone">📱 {{ userProfile?.phone_number }}</div>
+                </div>
+            </div>
+
+            <div class="pg-stats">
+                <div class="pg-stat">
+                    <div class="stat-icon">🪙</div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ userProfile?.token_balance || 0 }}</div>
+                        <div class="stat-label">Balance</div>
+                    </div>
+                </div>
+                <div class="pg-stat">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ userProfile?.correct_predictions || 0 }}/{{
+                            userProfile?.total_predictions || 0 }}</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pg-actions">
+                <div class="sub-tabs">
+                    <button class="sub-tab" [class.active]="activeSubTab === 'predictions'"
+                        (click)="activeSubTab = 'predictions'">
+                        🏏 Bets
+                    </button>
+                    <button class="sub-tab" [class.active]="activeSubTab === 'leaderboard'"
+                        (click)="activeSubTab = 'leaderboard'">
+                        🏆 Board
+                    </button>
+                </div>
+                <button class="btn-logout" (click)="onLogout()" title="Switch user">
+                    <i class="pi pi-sign-out"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- PREDICTIONS TABLE -->
+        <div *ngIf="activeSubTab === 'predictions'" class="predictions-view">
+
+            <div *ngIf="loading" class="pg-loading">
+                <div class="loading-spinner"></div>
+                <p>Loading players...</p>
+            </div>
+
+            <ng-container *ngIf="!loading">
+
+
+                <!-- Mobile scroll hint -->
+                <div class="scroll-hint">← Scroll right to see all teams →</div>
+
+                <!-- Table -->
+                <div class="table-wrapper">
+                    <table class="prediction-table">
+                        <thead>
+                            <tr>
+                                <th class="col-num">#</th>
+                                <th class="col-player">Player</th>
+                                <th *ngFor="let team of teams; trackBy: trackByTeamId" class="col-team"
+                                    [style.border-bottom-color]="team.team_color">
+                                    <span class="team-short" [style.color]="team.team_color">{{ team.team_short_name
+                                        }}</span>
+                                </th>
+                                <th class="col-total">Used</th>
+                                <th class="col-pool">Pool</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let player of filteredPlayers; let i = index; trackBy: trackByPlayerId"
+                                class="player-row" [class.has-bet]="hasAnyBet(player.id)"
+                                [class.sold]="player.auction_status === 'sold'"
+                                [class.unsold]="player.auction_status === 'unsold'">
+
+                                <td class="col-num">{{ i + 1 }}</td>
+
+                                <td class="col-player">
+                                    <div class="player-cell">
+                                        <div class="player-name">{{ player.player_name }}</div>
+                                        <div class="player-status-badge" *ngIf="player.auction_status !== 'upcoming'"
+                                            [class.sold-badge]="player.auction_status === 'sold'"
+                                            [class.unsold-badge]="player.auction_status === 'unsold'">
+                                            {{ getStatusBadge(player) }}
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Team token steppers -->
+                                <td *ngFor="let team of teams; trackBy: trackByTeamId" class="col-team"
+                                    [class.has-tokens]="getTokens(player.id, team.id) > 0">
+                                    <div class="stepper" [class.disabled]="player.auction_status !== 'upcoming'">
+                                        <button class="stepper-btn minus"
+                                            [disabled]="!canDecrement(player.id, team.id) || player.auction_status !== 'upcoming' || isLoading(player.id, team.id)"
+                                            (click)="decrement(player.id, team.id)">−</button>
+                                        <span class="stepper-count"
+                                            [class.has-value]="getTokens(player.id, team.id) > 0"
+                                            [style.color]="getTokens(player.id, team.id) > 0 ? team.team_color : ''">
+                                            {{ getTokens(player.id, team.id) }}
+                                        </span>
+                                        <button class="stepper-btn plus"
+                                            [disabled]="!canIncrement(player.id, team.id) || player.auction_status !== 'upcoming' || isLoading(player.id, team.id)"
+                                            (click)="increment(player.id, team.id)">+</button>
+                                    </div>
+                                </td>
+
+                                <td class="col-total">
+                                    <div class="total-cell" [class.maxed]="isPlayerMaxed(player.id)">
+                                        <span class="total-count">{{ getTotalForPlayer(player.id) }}/5</span>
+                                        <span *ngIf="isPlayerMaxed(player.id)" class="max-badge">MAX</span>
+                                    </div>
+                                </td>
+
+                                <td class="col-pool">
+                                    <div class="pool-cell" *ngIf="getPoolTotal(player.id) > 0">
+                                        <span class="pool-total">{{ getPoolTotal(player.id) }}</span>
+                                        <span class="pool-multiplier" *ngIf="getBestMultiplier(player.id) > 0">
+                                            {{ getBestMultiplier(player.id) }}×
+                                        </span>
+                                    </div>
+                                    <div class="pool-cell empty" *ngIf="getPoolTotal(player.id) === 0">—</div>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="filteredPlayers.length === 0">
+                                <td [attr.colspan]="teams.length + 4" class="empty-row">
+                                    <div class="empty-state">🔍 No players found</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Legend -->
+                <div class="pg-legend">
+                    <div class="legend-item"><span class="legend-dot green"></span> You have bets</div>
+                    <div class="legend-item"><span class="max-badge small">MAX</span> 5 tokens used</div>
+                    <div class="legend-item">Pool = all bets. Multiplier = payout if that team wins.</div>
+                </div>
+            </ng-container>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div *ngIf="activeSubTab === 'leaderboard'" class="leaderboard-view">
+            <app-prediction-leaderboard></app-prediction-leaderboard>
+        </div>
+
+    </div>
+</div>

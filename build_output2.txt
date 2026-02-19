@@ -1,0 +1,197 @@
+﻿npx : - Building...
+At line:1 char:1
++ npx ng build --configuration development 2>&1 | Out-File -FilePath "b ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (- Building...:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+≡ƒÄ» Service initialized with team captains and manual pool system
+≡ƒææ Team captains assigned to their teams
+≡ƒôè Pool structure: [
+  {
+    id: 1,
+    name: 'Premium Pool',
+    playerCount: 5,
+    players: [ 'Sharan M', 'Ashok', 'Karthikeyan', 'Guna', 'Satz' ],
+    isActive: true,
+    isCompleted: false
+  },
+  {
+    id: 2,
+    name: 'Pool A',
+    playerCount: 29,
+    players: [
+      'Sriram MP',           'Gopal',
+      'Siddhartha',          'Nageshwaran',
+      'Pradeep',             'Saravanan',
+      'Aravind DG',          'Sarath Kumar',
+      'Mahesh',              'S S Deepak',
+      'Naveen',              'Dg',
+      'Arun S',              'Ravi',
+      'Saravanan Shanmugam', 'Shiva',
+      'Ajay',                'Logesh',
+      'Aravind Ganesh A R',  'Umesh',
+      'Vignesh S',           'Muthu',
+      'Vishnu',              'Akshay',
+      'Arumugam',            'Gopi',
+      'Venkat',              'Sharan(Sarath) '
+    ],
+    isActive: false,
+    isCompleted: false
+  }
+]
+≡ƒÄ» Service initialized with team captains and manual pool system
+≡ƒææ Team captains assigned to their teams
+≡ƒôè Pool structure: [
+  {
+    id: 1,
+    name: 'Premium Pool',
+    playerCount: 5,
+    players: [ 'Sharan M', 'Ashok', 'Karthikeyan', 'Guna', 'Satz' ],
+    isActive: true,
+    isCompleted: false
+  },
+  {
+    id: 2,
+    name: 'Pool A',
+    playerCount: 29,
+    players: [
+      'Sriram MP',           'Gopal',
+      'Siddhartha',          'Nageshwaran',
+      'Pradeep',             'Saravanan',
+      'Aravind DG',          'Sarath Kumar',
+      'Mahesh',              'S S Deepak',
+      'Naveen',              'Dg',
+      'Arun S',              'Ravi',
+      'Saravanan Shanmugam', 'Shiva',
+      'Ajay',                'Logesh',
+      'Aravind Ganesh A R',  'Umesh',
+      'Vignesh S',           'Muthu',
+      'Vishnu',              'Akshay',
+      'Arumugam',            'Gopi',
+      'Venkat',              'Sharan(Sarath) '
+    ],
+    isActive: false,
+    isCompleted: false
+  }
+]
+Browser bundles        
+Initial chunk files     | Names               |  Raw size
+main.js                 | main                |   2.35 MB | 
+styles.css              | styles              | 685.92 kB | 
+polyfills.js            | polyfills           |  88.09 kB | 
+chunk-IEMOZLTW.js       | -                   |   3.48 kB | 
+chunk-J6LDGLHU.js       | -                   |   1.14 kB | 
+
+                        | Initial total       |   3.11 MB
+
+Lazy chunk files        | Names               |  Raw size
+chunk-OZTX3F24.js       | browser             | 492 bytes | 
+chunk-7VT7CNEM.js       | browser             | 289 bytes | 
+
+
+Server bundles         
+Initial chunk files     | Names               |  Raw size
+chunk-TTN3RFRT.mjs      | -                   |   1.89 MB | 
+server.mjs              | server              |   1.64 MB | 
+chunk-JCVDE7WG.mjs      | -                   | 988.87 kB | 
+polyfills.server.mjs    | polyfills.server    | 559.49 kB | 
+chunk-QDLZDK3Z.mjs      | -                   | 386.72 kB | 
+chunk-24VIC3GD.mjs      | -                   |   5.51 kB | 
+render-utils.server.mjs | render-utils.server |   3.84 kB | 
+main.server.mjs         | main.server         | 274 bytes | 
+
+Lazy chunk files        | Names               |  Raw size
+chunk-6PDNVTRG.mjs      | wrapper             | 122.90 kB | 
+chunk-LGGHX3RK.mjs      | xhr2                |  39.09 kB | 
+chunk-VOCZJX76.mjs      | index               | 192 bytes | 
+
+Prerendered 1 static route.
+Output location: C:\Users\Kiruthika\Auction\auction\dist\auction
+
+Application bundle generation complete. [6.482 seconds]
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain operation does not 
+include 'null' or 'undefined' in its type, therefore the '?.' operator can be 
+replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/app.component.html:210:42:
+      210 Γöé ...     [min]="currentPlayer?.basePrice || 100" 
+[max]="getMaxPoss...
+          Γò╡                               ~~~~~~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain operation does not 
+include 'null' or 'undefined' in its type, therefore the '?.' operator can be 
+replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/app.component.html:228:48:
+      228 Γöé                   Minimum bid: {{currentPlayer?.basePrice || 
+100}}
+          Γò╡                                                 ~~~~~~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain operation does not 
+include 'null' or 'undefined' in its type, therefore the '?.' operator can be 
+replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/app.component.html:251:81:
+      251 Γöé ...entTeam !== null && currentBid > (currentPlayer?.basePrice 
+|| 0)"
+          Γò╡                                                     ~~~~~~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain operation does not 
+include 'null' or 'undefined' in its type, therefore the '?.' operator can be 
+replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/app.component.html:257:60:
+      257 Γöé ...auction for {{currentPlayer?.name}}" 
+(click)="rebidCurrentPlay...
+          Γò╡                                 ~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain operation does not 
+include 'null' or 'undefined' in its type, therefore the '?.' operator can be 
+replaced with the '.' operator. [plugin angular-compiler]
+
+    src/app/component/prediction-leaderboard/prediction-leaderboard.component.
+html:35:50:
+      35 Γöé ...                 {{ 
+user.display_name?.charAt(0)?.toUpperCase() }}
+         Γò╡                                           ~~~~~~
+
+  Error occurs in the template of component PredictionLeaderboardComponent.
+
+    src/app/component/prediction-leaderboard/prediction-leaderboard.component.
+ts:9:17:
+      9 Γöé     templateUrl: './prediction-leaderboard.component.html',
+        Γò╡                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

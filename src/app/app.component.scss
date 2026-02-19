@@ -28,20 +28,20 @@
   border-radius: 2px;
   opacity: 0.9;
   animation: confetti-fall-enhanced linear forwards;
-  
+
   &:nth-child(4n) {
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   }
-  
+
   &:nth-child(4n+1) {
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   }
-  
+
   &:nth-child(4n+2) {
     clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
   }
-  
+
   &:nth-child(4n+3) {
     border-radius: 50%;
     transform-origin: center;
@@ -53,18 +53,22 @@
     transform: translateY(-50px) rotate(0deg) scale(1);
     opacity: 1;
   }
+
   25% {
     opacity: 1;
     transform: translateY(25vh) rotate(90deg) scale(1.2);
   }
+
   50% {
     opacity: 0.8;
     transform: translateY(50vh) rotate(180deg) scale(0.8);
   }
+
   75% {
     opacity: 0.6;
     transform: translateY(75vh) rotate(270deg) scale(1.1);
   }
+
   100% {
     transform: translateY(calc(100vh + 50px)) rotate(360deg) scale(0.5);
     opacity: 0;
@@ -78,17 +82,17 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  background: linear-gradient(145deg, 
-    rgba(255, 255, 255, 0.98) 0%, 
-    rgba(248, 250, 252, 0.99) 30%,
-    rgba(240, 245, 251, 0.98) 70%,
-    rgba(255, 255, 255, 0.98) 100%);
+  background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(248, 250, 252, 0.99) 30%,
+      rgba(240, 245, 251, 0.98) 70%,
+      rgba(255, 255, 255, 0.98) 100%);
   backdrop-filter: blur(25px);
   border-radius: 28px;
   padding: 3.5rem 3rem;
   min-width: 400px;
   max-width: 90vw;
-  box-shadow: 
+  box-shadow:
     0 35px 70px -12px rgba(0, 0, 0, 0.4),
     0 15px 35px -5px rgba(0, 0, 0, 0.2),
     0 0 0 1px rgba(255, 255, 255, 0.2),
@@ -96,7 +100,7 @@
   border: 3px solid rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: visible;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -104,15 +108,15 @@
     left: -4px;
     right: -4px;
     bottom: -4px;
-    background: linear-gradient(45deg, 
-      #10b981, #3b82f6, #8b5cf6, #f59e0b, #ef4444, #10b981);
+    background: linear-gradient(45deg,
+        #10b981, #3b82f6, #8b5cf6, #f59e0b, #ef4444, #10b981);
     background-size: 300% 300%;
     border-radius: 32px;
     z-index: -1;
     opacity: 0.3;
     animation: gradient-border 4s ease infinite;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -127,8 +131,15 @@
 }
 
 @keyframes gradient-border {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes pulse-ring {
@@ -136,6 +147,7 @@
     transform: scale(0.8);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.2);
     opacity: 0;
@@ -155,7 +167,7 @@
   font-size: 2.4rem;
   font-weight: 900;
   margin-bottom: 2.5rem;
-  box-shadow: 
+  box-shadow:
     0 20px 45px rgba(16, 185, 129, 0.5),
     0 10px 25px rgba(16, 185, 129, 0.3),
     inset 0 2px 0 rgba(255, 255, 255, 0.3),
@@ -164,7 +176,7 @@
   text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
   letter-spacing: 0.1em;
   position: relative;
-  
+
   &::before {
     content: '✨';
     position: absolute;
@@ -173,7 +185,7 @@
     font-size: 1.5rem;
     animation: sparkle-top-left 2s ease-in-out infinite;
   }
-  
+
   &::after {
     content: '✨';
     position: absolute;
@@ -182,13 +194,13 @@
     font-size: 1.5rem;
     animation: sparkle-bottom-right 2s ease-in-out infinite 0.5s;
   }
-  
+
   i {
     font-size: 2rem;
     animation: icon-celebration 2.5s ease-in-out infinite;
     filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
   }
-  
+
   .celebration-emoji {
     font-size: 1.8rem;
     animation: emoji-party 1.2s ease-in-out infinite;
@@ -200,13 +212,16 @@
     transform: scale(0) rotate(-360deg);
     opacity: 0;
   }
+
   30% {
     transform: scale(1.3) rotate(-10deg);
     opacity: 1;
   }
+
   60% {
     transform: scale(0.9) rotate(5deg);
   }
+
   100% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
@@ -214,50 +229,65 @@
 }
 
 @keyframes sparkle-top-left {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: scale(1) rotate(0deg);
     opacity: 0.7;
   }
-  50% { 
+
+  50% {
     transform: scale(1.5) rotate(180deg);
     opacity: 1;
   }
 }
 
 @keyframes sparkle-bottom-right {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: scale(1) rotate(0deg);
     opacity: 0.7;
   }
-  50% { 
+
+  50% {
     transform: scale(1.5) rotate(-180deg);
     opacity: 1;
   }
 }
 
 @keyframes icon-celebration {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: scale(1) rotate(0deg);
   }
-  25% { 
+
+  25% {
     transform: scale(1.2) rotate(-10deg);
   }
-  50% { 
+
+  50% {
     transform: scale(1.1) rotate(0deg);
   }
-  75% { 
+
+  75% {
     transform: scale(1.2) rotate(10deg);
   }
 }
 
 @keyframes emoji-party {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: rotate(0deg) scale(1);
   }
-  25% { 
+
+  25% {
     transform: rotate(-15deg) scale(1.2);
   }
-  75% { 
+
+  75% {
     transform: rotate(15deg) scale(1.2);
   }
 }
@@ -281,7 +311,7 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
-  
+
   &::before {
     content: attr(data-text);
     position: absolute;
@@ -295,20 +325,34 @@
 }
 
 @keyframes name-rainbow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes glow-pulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 /* TEAM INFO */
 .celebration-team-info {
   margin-bottom: 2rem;
   position: relative;
-  
+
   span {
     display: block;
     font-size: 1.3rem;
@@ -327,7 +371,7 @@
   text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   animation: team-celebration 2.5s ease-in-out infinite;
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -346,6 +390,7 @@
     transform: translateY(30px);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -353,17 +398,25 @@
 }
 
 @keyframes team-celebration {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: scale(1) rotate(0deg);
   }
-  50% { 
+
+  50% {
     transform: scale(1.05) rotate(1deg);
   }
 }
 
 @keyframes underline-grow {
-  0% { width: 0; }
-  100% { width: 80%; }
+  0% {
+    width: 0;
+  }
+
+  100% {
+    width: 80%;
+  }
 }
 
 /* PRICE DISPLAY */
@@ -374,7 +427,7 @@
   gap: 0.5rem;
   margin-top: 2rem;
   position: relative;
-  
+
   &::before,
   &::after {
     content: '💰';
@@ -382,17 +435,17 @@
     font-size: 1.5rem;
     animation: money-float 3s ease-in-out infinite;
   }
-  
+
   &::before {
     left: -60px;
     animation-delay: 0s;
   }
-  
+
   &::after {
     right: -60px;
     animation-delay: 1s;
   }
-  
+
   .amount {
     font-size: 4rem;
     font-weight: 900;
@@ -403,7 +456,7 @@
     -webkit-text-fill-color: transparent;
     animation: price-celebration 2.5s ease-in-out infinite;
     position: relative;
-    
+
     &::before {
       content: '₹';
       position: absolute;
@@ -417,36 +470,46 @@
 }
 
 @keyframes money-float {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg) scale(1);
     opacity: 0.7;
   }
-  33% { 
+
+  33% {
     transform: translateY(-20px) rotate(-15deg) scale(1.2);
     opacity: 1;
   }
-  66% { 
+
+  66% {
     transform: translateY(10px) rotate(15deg) scale(0.9);
     opacity: 0.8;
   }
 }
 
 @keyframes price-celebration {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: scale(1);
     background-position: 0% 50%;
   }
-  50% { 
+
+  50% {
     transform: scale(1.1);
     background-position: 100% 50%;
   }
 }
 
 @keyframes currency-bounce {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: translateY(0) scale(1);
   }
-  50% { 
+
+  50% {
     transform: translateY(-10px) scale(1.1);
   }
 }
@@ -459,7 +522,7 @@
   top: 0;
   left: 0;
   pointer-events: none;
-  
+
   .decoration-left,
   .decoration-right,
   .decoration-top {
@@ -468,19 +531,19 @@
     opacity: 0.9;
     text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   }
-  
+
   .decoration-left {
     top: 15%;
     left: -2rem;
     animation: decoration-bounce-rotate 3s ease-in-out infinite;
   }
-  
+
   .decoration-right {
     top: 20%;
     right: -2rem;
     animation: decoration-bounce-rotate 3s ease-in-out infinite 0.5s;
   }
-  
+
   .decoration-top {
     top: -1rem;
     left: 50%;
@@ -490,27 +553,35 @@
 }
 
 @keyframes decoration-bounce-rotate {
-  0%, 100% { 
-    transform: translateY(0) scale(1) rotate(0deg); 
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
   }
-  25% { 
-    transform: translateY(-8px) scale(1.1) rotate(-5deg); 
+
+  25% {
+    transform: translateY(-8px) scale(1.1) rotate(-5deg);
   }
-  50% { 
-    transform: translateY(-15px) scale(1.15) rotate(0deg); 
+
+  50% {
+    transform: translateY(-15px) scale(1.15) rotate(0deg);
   }
-  75% { 
-    transform: translateY(-8px) scale(1.1) rotate(5deg); 
+
+  75% {
+    transform: translateY(-8px) scale(1.1) rotate(5deg);
   }
 }
 
 @keyframes decoration-star-twinkle {
-  0%, 100% { 
-    opacity: 0.9; 
+
+  0%,
+  100% {
+    opacity: 0.9;
     transform: translateX(-50%) scale(1) rotate(0deg);
   }
-  50% { 
-    opacity: 1; 
+
+  50% {
+    opacity: 1;
     transform: translateX(-50%) scale(1.4) rotate(90deg);
   }
 }
@@ -521,32 +592,32 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  
+
   .popper {
     position: absolute;
     font-size: 5rem;
     animation: popper-mega-celebration 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
     filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
   }
-  
+
   .top-left {
     top: 5%;
     left: 5%;
     animation-delay: 0.2s;
   }
-  
+
   .top-right {
     top: 8%;
     right: 5%;
     animation-delay: 0.6s;
   }
-  
+
   .bottom-left {
     bottom: 15%;
     left: 8%;
     animation-delay: 1s;
   }
-  
+
   .bottom-right {
     bottom: 10%;
     right: 8%;
@@ -559,14 +630,17 @@
     transform: scale(0) rotate(-360deg);
     opacity: 0;
   }
+
   40% {
     transform: scale(1.6) rotate(25deg);
     opacity: 1;
   }
+
   70% {
     transform: scale(0.8) rotate(-10deg);
     opacity: 1;
   }
+
   100% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
@@ -593,6 +667,7 @@
     height: 10px;
     opacity: 1;
   }
+
   100% {
     width: 800px;
     height: 800px;
@@ -764,76 +839,77 @@
     min-width: 320px;
     border-radius: 20px;
   }
-  
+
   .celebration-player-name {
     font-size: 2.4rem;
   }
-  
+
   .celebration-team-name {
     font-size: 1.8rem;
   }
-  
+
   .celebration-price .amount {
     font-size: 3rem;
-    
+
     &::before {
       font-size: 2rem;
       left: -2rem;
     }
   }
-  
+
   .sold-badge {
     font-size: 2rem;
     padding: 1.2rem 2.5rem;
   }
-  
+
   .celebration-decorations {
+
     .decoration-left,
     .decoration-right,
     .decoration-top {
       font-size: 3rem;
     }
   }
-  
+
   .party-poppers .popper {
     font-size: 3.5rem;
   }
-  
+
   .stats-grid-enhanced {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.3rem;
     max-width: 280px;
   }
-  
+
   .spotlight-stat {
     padding: 0.3rem;
     min-height: 50px;
   }
-  
+
   .stat-icon {
     width: 1.5rem;
     height: 1.5rem;
     font-size: 0.85rem;
   }
-  
+
   .stat-number {
     font-size: 0.75rem;
   }
-  
+
   .stat-text {
     font-size: 0.6rem;
   }
-  
+
   .team-header {
     padding: 0.5rem 0.75rem;
     gap: 0.4rem;
   }
-  
+
   .team-budget {
     font-size: 1.1rem;
     padding: 0.35rem 0.7rem;
   }
-  
+
   .team-max-bid.full-team {
     font-size: 0.9rem;
   }
@@ -841,22 +917,23 @@
 
 @media (max-width: 480px) {
   .celebration-decorations {
+
     .decoration-left,
     .decoration-right,
     .decoration-top {
       font-size: 2.2rem;
     }
   }
-  
+
   .party-poppers .popper {
     font-size: 2.8rem;
   }
-  
+
   .stats-grid-enhanced {
     grid-template-columns: 1fr;
     max-width: 200px;
   }
-  
+
   .spotlight-stat {
     justify-content: center;
     text-align: center;
@@ -865,6 +942,7 @@
 
 /* ACCESSIBILITY */
 @media (prefers-reduced-motion: reduce) {
+
   .confetti-piece,
   .celebration-message,
   .sold-badge,
@@ -877,7 +955,7 @@
   .party-poppers .popper {
     animation: none !important;
   }
-  
+
   .celebration-overlay::before {
     display: none;
   }
@@ -888,13 +966,13 @@
   border-radius: 24px;
   padding: 2.5rem;
   margin-top: 2rem;
-  box-shadow: 
+  box-shadow:
     0 25px 50px rgba(0, 0, 0, 0.08),
     0 10px 30px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -910,6 +988,62 @@
 }
 
 @keyframes team-gradient-flow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ===================== APP TAB BAR ===================== */
+.app-tab-bar {
+  display: flex;
+  background: linear-gradient(135deg, #0a0e1a 0%, #0f1420 100%);
+  border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+  padding: 0 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  &.active {
+    color: #a78bfa;
+    border-bottom-color: #6366f1;
+    background: rgba(99, 102, 241, 0.08);
+  }
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.prediction-tab-wrapper {
+  height: calc(100vh - 50px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }

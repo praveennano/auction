@@ -1,0 +1,316 @@
+﻿npx : - Building...
+At line:1 char:1
++ npx ng build --configuration development 2>&1 
+| Out-File -FilePath "b ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (- 
+Building...:String) [], Remote    Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+≡ƒÄ» Service initialized with team captains and manual pool system
+ERROR ReferenceError: localStorage is not 
+defined
+    at _PredictionGameComponent.ngOnInit (C:\Use
+rs\Kiruthika\Auction\auction\.angular\prerender-
+root\8046fcd3-4de1-4ac9-8dbe-b01e630c4caf\src\ap
+p\component\prediction-game\prediction-game.comp
+onent.ts:74:28)
+    at callHookInternal (C:\Users\Kiruthika\Auct
+ion\auction\.angular\prerender-root\8046fcd3-4de
+1-4ac9-8dbe-b01e630c4caf\node_modules\@angular\c
+ore\fesm2022\core.mjs:5136:14)
+    at callHook (C:\Users\Kiruthika\Auction\auct
+ion\.angular\prerender-root\8046fcd3-4de1-4ac9-8
+dbe-b01e630c4caf\node_modules\@angular\core\fesm
+2022\core.mjs:5163:13)
+    at callHooks (C:\Users\Kiruthika\Auction\auc
+tion\.angular\prerender-root\8046fcd3-4de1-4ac9-
+8dbe-b01e630c4caf\node_modules\@angular\core\fes
+m2022\core.mjs:5118:17)
+    at executeInitAndCheckHooks (C:\Users\Kiruth
+ika\Auction\auction\.angular\prerender-root\8046
+fcd3-4de1-4ac9-8dbe-b01e630c4caf\node_modules\@a
+ngular\core\fesm2022\core.mjs:5068:9)
+    at refreshView (C:\Users\Kiruthika\Auction\a
+uction\.angular\prerender-root\8046fcd3-4de1-4ac
+9-8dbe-b01e630c4caf\node_modules\@angular\core\f
+esm2022\core.mjs:12806:21)
+    at detectChangesInView$1 (C:\Users\Kiruthika
+\Auction\auction\.angular\prerender-root\8046fcd
+3-4de1-4ac9-8dbe-b01e630c4caf\node_modules\@angu
+lar\core\fesm2022\core.mjs:13015:9)
+    at detectChangesInViewIfAttached (C:\Users\K
+iruthika\Auction\auction\.angular\prerender-root
+\8046fcd3-4de1-4ac9-8dbe-b01e630c4caf\node_modul
+es\@angular\core\fesm2022\core.mjs:12978:5)
+    at detectChangesInEmbeddedViews (C:\Users\Ki
+ruthika\Auction\auction\.angular\prerender-root\
+8046fcd3-4de1-4ac9-8dbe-b01e630c4caf\node_module
+s\@angular\core\fesm2022\core.mjs:12935:13)
+    at refreshView (C:\Users\Kiruthika\Auction\a
+uction\.angular\prerender-root\8046fcd3-4de1-4ac
+9-8dbe-b01e630c4caf\node_modules\@angular\core\f
+esm2022\core.mjs:12815:9)
+≡ƒææ Team captains assigned to their teams
+≡ƒôè Pool structure: [
+  {
+    id: 1,
+    name: 'Premium Pool',
+    playerCount: 5,
+    players: [ 'Sharan M', 'Ashok', 'Karthikeyan', 'Guna', 'Satz' ],
+    isActive: true,
+    isCompleted: false
+  },
+  {
+    id: 2,
+    name: 'Pool A',
+    playerCount: 29,
+    players: [
+      'Sriram MP',           'Gopal',
+      'Siddhartha',          'Nageshwaran',
+      'Pradeep',             'Saravanan',
+      'Aravind DG',          'Sarath Kumar',
+      'Mahesh',              'S S Deepak',
+      'Naveen',              'Dg',
+      'Arun S',              'Ravi',
+      'Saravanan Shanmugam', 'Shiva',
+      'Ajay',                'Logesh',
+      'Aravind Ganesh A R',  'Umesh',
+      'Vignesh S',           'Muthu',
+      'Vishnu',              'Akshay',
+      'Arumugam',            'Gopi',
+      'Venkat',              'Sharan(Sarath) '
+    ],
+    isActive: false,
+    isCompleted: false
+  }
+]
+≡ƒÄ» Service initialized with team captains and manual pool system
+ERROR ReferenceError: localStorage is not 
+defined
+    at _PredictionGameComponent.ngOnInit (C:\Use
+rs\Kiruthika\Auction\auction\.angular\prerender-
+root\24455006-9542-4db5-bbb8-46483bf7baf1\src\ap
+p\component\prediction-game\prediction-game.comp
+onent.ts:74:28)
+    at callHookInternal (C:\Users\Kiruthika\Auct
+ion\auction\.angular\prerender-root\24455006-954
+2-4db5-bbb8-46483bf7baf1\node_modules\@angular\c
+ore\fesm2022\core.mjs:5136:14)
+    at callHook (C:\Users\Kiruthika\Auction\auct
+ion\.angular\prerender-root\24455006-9542-4db5-b
+bb8-46483bf7baf1\node_modules\@angular\core\fesm
+2022\core.mjs:5163:13)
+    at callHooks (C:\Users\Kiruthika\Auction\auc
+tion\.angular\prerender-root\24455006-9542-4db5-
+bbb8-46483bf7baf1\node_modules\@angular\core\fes
+m2022\core.mjs:5118:17)
+    at executeInitAndCheckHooks (C:\Users\Kiruth
+ika\Auction\auction\.angular\prerender-root\2445
+5006-9542-4db5-bbb8-46483bf7baf1\node_modules\@a
+ngular\core\fesm2022\core.mjs:5068:9)
+    at refreshView (C:\Users\Kiruthika\Auction\a
+uction\.angular\prerender-root\24455006-9542-4db
+5-bbb8-46483bf7baf1\node_modules\@angular\core\f
+esm2022\core.mjs:12806:21)
+    at detectChangesInView$1 (C:\Users\Kiruthika
+\Auction\auction\.angular\prerender-root\2445500
+6-9542-4db5-bbb8-46483bf7baf1\node_modules\@angu
+lar\core\fesm2022\core.mjs:13015:9)
+    at detectChangesInViewIfAttached (C:\Users\K
+iruthika\Auction\auction\.angular\prerender-root
+\24455006-9542-4db5-bbb8-46483bf7baf1\node_modul
+es\@angular\core\fesm2022\core.mjs:12978:5)
+    at detectChangesInEmbeddedViews (C:\Users\Ki
+ruthika\Auction\auction\.angular\prerender-root\
+24455006-9542-4db5-bbb8-46483bf7baf1\node_module
+s\@angular\core\fesm2022\core.mjs:12935:13)
+    at refreshView (C:\Users\Kiruthika\Auction\a
+uction\.angular\prerender-root\24455006-9542-4db
+5-bbb8-46483bf7baf1\node_modules\@angular\core\f
+esm2022\core.mjs:12815:9)
+≡ƒææ Team captains assigned to their teams
+≡ƒôè Pool structure: [
+  {
+    id: 1,
+    name: 'Premium Pool',
+    playerCount: 5,
+    players: [ 'Sharan M', 'Ashok', 'Karthikeyan', 'Guna', 'Satz' ],
+    isActive: true,
+    isCompleted: false
+  },
+  {
+    id: 2,
+    name: 'Pool A',
+    playerCount: 29,
+    players: [
+      'Sriram MP',           'Gopal',
+      'Siddhartha',          'Nageshwaran',
+      'Pradeep',             'Saravanan',
+      'Aravind DG',          'Sarath Kumar',
+      'Mahesh',              'S S Deepak',
+      'Naveen',              'Dg',
+      'Arun S',              'Ravi',
+      'Saravanan Shanmugam', 'Shiva',
+      'Ajay',                'Logesh',
+      'Aravind Ganesh A R',  'Umesh',
+      'Vignesh S',           'Muthu',
+      'Vishnu',              'Akshay',
+      'Arumugam',            'Gopi',
+      'Venkat',              'Sharan(Sarath) '
+    ],
+    isActive: false,
+    isCompleted: false
+  }
+]
+Browser bundles        
+Initial chunk files     | Names               |  Raw size
+main.js                 | main                |   2.35 MB | 
+styles.css              | styles              | 685.92 kB | 
+polyfills.js            | polyfills           |  88.09 kB | 
+chunk-IEMOZLTW.js       | -                   |   3.48 kB | 
+chunk-J6LDGLHU.js       | -                   |   1.14 kB | 
+
+                        | Initial total       |   3.11 MB
+
+Lazy chunk files        | Names               |  Raw size
+chunk-OZTX3F24.js       | browser             | 492 bytes | 
+chunk-7VT7CNEM.js       | browser             | 289 bytes | 
+
+
+Server bundles         
+Initial chunk files     | Names               |  Raw size
+chunk-TTN3RFRT.mjs      | -                   |   1.89 MB | 
+server.mjs              | server              |   1.64 MB | 
+chunk-XX5APCLP.mjs      | -                   | 988.48 kB | 
+polyfills.server.mjs    | polyfills.server    | 559.49 kB | 
+chunk-QDLZDK3Z.mjs      | -                   | 386.72 kB | 
+chunk-24VIC3GD.mjs      | -                   |   5.51 kB | 
+render-utils.server.mjs | render-utils.server |   3.84 kB | 
+main.server.mjs         | main.server         | 274 bytes | 
+
+Lazy chunk files        | Names               |  Raw size
+chunk-6PDNVTRG.mjs      | wrapper             | 122.90 kB | 
+chunk-LGGHX3RK.mjs      | xhr2                |  39.09 kB | 
+chunk-VOCZJX76.mjs      | index               | 192 bytes | 
+
+Prerendered 1 static route.
+Output location: C:\Users\Kiruthika\Auction\auction\dist\auction
+
+Application bundle generation complete. [6.602 seconds]
+
+Γû▓ [WARNING] NG8107: The left side of this 
+optional chain operation does not include 
+'null' or 'undefined' in its type, therefore 
+the '?.' operator can be replaced with the '.' 
+operator. [plugin angular-compiler]
+
+    src/app/app.component.html:210:42:
+      210 Γöé ...     
+[min]="currentPlayer?.basePrice || 100" 
+[max]="getMaxPoss...
+          Γò╡                               
+~~~~~~~~~
+
+  Error occurs in the template of component 
+AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: 
+'./app.component.html',
+         Γò╡                
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this 
+optional chain operation does not include 
+'null' or 'undefined' in its type, therefore 
+the '?.' operator can be replaced with the '.' 
+operator. [plugin angular-compiler]
+
+    src/app/app.component.html:228:48:
+      228 Γöé                   Minimum bid: 
+{{currentPlayer?.basePrice || 100}}
+          Γò╡                                   
+              ~~~~~~~~~
+
+  Error occurs in the template of component 
+AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: 
+'./app.component.html',
+         Γò╡                
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this 
+optional chain operation does not include 
+'null' or 'undefined' in its type, therefore 
+the '?.' operator can be replaced with the '.' 
+operator. [plugin angular-compiler]
+
+    src/app/app.component.html:251:81:
+      251 Γöé ...entTeam !== null && currentBid 
+> (currentPlayer?.basePrice || 0)"
+          Γò╡                                   
+                  ~~~~~~~~~
+
+  Error occurs in the template of component 
+AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: 
+'./app.component.html',
+         Γò╡                
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this 
+optional chain operation does not include 
+'null' or 'undefined' in its type, therefore 
+the '?.' operator can be replaced with the '.' 
+operator. [plugin angular-compiler]
+
+    src/app/app.component.html:257:60:
+      257 Γöé ...auction for 
+{{currentPlayer?.name}}" 
+(click)="rebidCurrentPlay...
+          Γò╡                                 
+~~~~
+
+  Error occurs in the template of component 
+AppComponent.
+
+    src/app/app.component.ts:56:15:
+      56 Γöé   templateUrl: 
+'./app.component.html',
+         Γò╡                
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this 
+optional chain operation does not include 
+'null' or 'undefined' in its type, therefore 
+the '?.' operator can be replaced with the '.' 
+operator. [plugin angular-compiler]
+
+    src/app/component/prediction-leaderboard/pre
+diction-leaderboard.component.html:35:50:
+      35 Γöé ...                 {{ 
+user.display_name?.charAt(0)?.toUpperCase() }}
+         Γò╡                                    
+       ~~~~~~
+
+  Error occurs in the template of component 
+PredictionLeaderboardComponent.
+
+    src/app/component/prediction-leaderboard/pre
+diction-leaderboard.component.ts:9:17:
+      9 Γöé     templateUrl: 
+'./prediction-leaderboard.component.html',
+        Γò╡                  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

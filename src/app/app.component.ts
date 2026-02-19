@@ -21,6 +21,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PlayerWordcloudComponent } from './player-wordcloud/player-wordcloud.component';
 import { FormsModule } from '@angular/forms';
+import { PredictionGameComponent } from './component/prediction-game/prediction-game.component';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -35,7 +36,7 @@ interface CelebrationData {
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, 
+    RouterOutlet,
     CommonModule,
     AuctionComponent,
     AuctionStatsComponent,
@@ -48,12 +49,13 @@ interface CelebrationData {
     InputTextModule,
     TagModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    PredictionGameComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-    animations: [
+  animations: [
     trigger('fadeInOut', [
       transition(':enter', [
         style({ opacity: 0 }),
@@ -63,11 +65,11 @@ interface CelebrationData {
         animate('500ms ease-out', style({ opacity: 0 }))
       ])
     ]),
-    
+
     trigger('bounceIn', [
       transition(':enter', [
         style({ transform: 'translate(-50%, -50%) scale(0)', opacity: 0 }),
-        animate('600ms cubic-bezier(0.68, -0.55, 0.265, 1.55)', 
+        animate('600ms cubic-bezier(0.68, -0.55, 0.265, 1.55)',
           style({ transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }))
       ])
     ]),
@@ -75,7 +77,7 @@ interface CelebrationData {
     trigger('slideUp', [
       transition(':enter', [
         style({ transform: 'translateY(50px)', opacity: 0 }),
-        animate('400ms cubic-bezier(0.68, -0.55, 0.265, 1.55)', 
+        animate('400ms cubic-bezier(0.68, -0.55, 0.265, 1.55)',
           style({ transform: 'translateY(0)', opacity: 1 }))
       ])
     ])
@@ -83,20 +85,21 @@ interface CelebrationData {
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Cricket Player Auction';
-  
+  activeAppTab: 'auction' | 'prediction' = 'prediction';
+
   // Basic auction properties (visible to UI)
   teams: Team[] = [];
   availablePlayers: Player[] = [];
   soldPlayers: Player[] = [];
   unsoldPlayers: Player[] = [];
-   isEditingBid: boolean = false;
+  isEditingBid: boolean = false;
   editBidAmount: number = 0;
   currentPlayer: Player | null = null;
   auctionInProgress: boolean = false;
   currentBid: number = 0;
   currentTeam: Team | null = null;
 
-   showCelebration = false;
+  showCelebration = false;
   celebrationData: CelebrationData = {
     playerName: '',
     teamName: '',
@@ -104,11 +107,11 @@ export class AppComponent implements OnInit, OnDestroy {
     soldPrice: 0
   };
   confettiPieces: any[] = [];
-  
+
   // PRIVATE: Pool-related properties (hidden from UI, used internally)
   private pools: PlayerPool[] = [];
   private currentPool: PlayerPool | null = null;
-  
+
   // System properties
   private subscriptions: Subscription = new Subscription();
   private autoSaveInterval: any;
@@ -124,11 +127,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
-  
+
   ngOnInit(): void {
     // Initialize subscription to auction updates first
     this.subscribeToAuctionUpdates();
-    
+
     // Load saved state only in browser
     if (this.isBrowser) {
       setTimeout(() => {
@@ -184,7 +187,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const savedState = this.auctionService.loadAuctionState();
       if (savedState) {
         console.log('📂 Loading saved auction state...');
-        
+
         this.auctionService.restoreState(
           savedState.teams,
           savedState.availablePlayers,
@@ -196,9 +199,9 @@ export class AppComponent implements OnInit, OnDestroy {
           savedState.pools,
           savedState.currentPool
         );
-        
+
         this.hasLoadedFromStorage = true;
-        
+
         const playerNames = savedState.availablePlayers?.map((p: any) => p.name).slice(0, 3).join(', ') || 'custom players';
         this.messageService.add({
           severity: 'success',
@@ -208,17 +211,17 @@ export class AppComponent implements OnInit, OnDestroy {
       } else {
         console.log('🆕 Starting fresh auction');
         this.hasLoadedFromStorage = true;
-        
+
         this.messageService.add({
           severity: 'info',
-          summary: 'Fresh Auction', 
+          summary: 'Fresh Auction',
           detail: 'Starting new auction with all players'
         });
       }
     } catch (error) {
       console.error('❌ Error during loadSavedState:', error);
       this.hasLoadedFromStorage = true;
-      
+
       this.messageService.add({
         severity: 'warn',
         summary: 'Storage Error',
@@ -232,18 +235,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.auctionService.teams$.subscribe(teams => {
         this.teams = teams;
-        
+
         this.soldPlayers = [];
         teams.forEach(team => {
           this.soldPlayers = [...this.soldPlayers, ...team.players];
         });
-        
+
         if (this.hasLoadedFromStorage && this.isBrowser) {
           this.saveCurrentState();
         }
       })
     );
-    
+
     // Subscribe to available players
     this.subscriptions.add(
       this.auctionService.availablePlayers$.subscribe(players => {
@@ -253,7 +256,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       })
     );
-    
+
     // Subscribe to unsold players
     this.subscriptions.add(
       this.auctionService.unsoldPlayers$.subscribe(players => {
@@ -263,7 +266,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       })
     );
-    
+
     // Subscribe to current auction state
     this.subscriptions.add(
       combineLatest([
@@ -276,7 +279,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.currentBid = bid;
         this.currentTeam = team;
         this.auctionInProgress = inProgress;
-        
+
         if (this.hasLoadedFromStorage && this.isBrowser) {
           this.saveCurrentState();
         }
@@ -316,7 +319,7 @@ export class AppComponent implements OnInit, OnDestroy {
         currentPool: this.currentPool,
         lastUpdated: new Date().toISOString()
       };
-      
+
       this.auctionService.saveAuctionState(currentState);
     } catch (error) {
       console.error('❌ Error saving current state:', error);
@@ -343,7 +346,7 @@ export class AppComponent implements OnInit, OnDestroy {
       rejectLabel: 'Cancel',
       accept: () => {
         this.setButtonLoading('reset', true);
-        
+
         try {
           this.messageService.add({
             severity: 'info',
@@ -351,7 +354,7 @@ export class AppComponent implements OnInit, OnDestroy {
             detail: 'Clearing data and restarting...',
             life: 2000
           });
-          
+
           if (this.isBrowser) {
             try {
               localStorage.removeItem('cwf_auction_data');
@@ -360,10 +363,10 @@ export class AppComponent implements OnInit, OnDestroy {
               console.error('Error clearing localStorage:', error);
             }
           }
-          
+
           this.auctionService.resetAuction();
           this.hasLoadedFromStorage = true;
-          
+
           setTimeout(() => {
             this.messageService.add({
               severity: 'success',
@@ -371,10 +374,10 @@ export class AppComponent implements OnInit, OnDestroy {
               detail: 'Auction reset with all players ready',
               life: 5000
             });
-            
+
             this.setButtonLoading('reset', false);
           }, 1000);
-          
+
         } catch (error) {
           console.error('❌ Error during reset:', error);
           this.messageService.add({
@@ -419,7 +422,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
 
       this.saveCurrentState();
-      
+
       setTimeout(() => {
         this.messageService.add({
           severity: 'success',
@@ -427,10 +430,10 @@ export class AppComponent implements OnInit, OnDestroy {
           detail: `Auction saved at ${new Date().toLocaleTimeString()}`,
           life: 3000
         });
-        
+
         this.setButtonLoading('save', false);
       }, 800);
-      
+
     } catch (error) {
       console.error('❌ Error during manual save:', error);
       this.messageService.add({
@@ -450,26 +453,26 @@ export class AppComponent implements OnInit, OnDestroy {
   getBidIncrement(currentBid: number): number {
     if (currentBid < 1000) {
       return 10;
-    }  else {
+    } else {
       return 10;
     }
   }
 
   getMaxBidForTeam(team: Team): number {
-  const teamCapacity = this.getTeamCapacityInfo(team);
-  
-  // If team is full, they can't bid
-  if (teamCapacity.full) {
-    return 0;
+    const teamCapacity = this.getTeamCapacityInfo(team);
+
+    // If team is full, they can't bid
+    if (teamCapacity.full) {
+      return 0;
+    }
+
+    const remainingSlotsAfterBid = teamCapacity.remainingSlots - 1;
+    const minimumNeededForRemainingSlots = remainingSlotsAfterBid * 100; // Base price is 100
+    const maxBid = team.budget - minimumNeededForRemainingSlots;
+
+    // Ensure it's at least 0
+    return Math.max(maxBid, 0);
   }
-  
-  const remainingSlotsAfterBid = teamCapacity.remainingSlots - 1;
-  const minimumNeededForRemainingSlots = remainingSlotsAfterBid * 100; // Base price is 100
-  const maxBid = team.budget - minimumNeededForRemainingSlots;
-  
-  // Ensure it's at least 0
-  return Math.max(maxBid, 0);
-}
 
 
   getNextBidAmount(): number {
@@ -477,18 +480,18 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.isEditingBid) {
       return this.editBidAmount;
     }
-  // Special case: if no one has bid yet (currentTeam is null) and currentBid is base price (100)
-  // then the first bid should be the same as base price (100)
-  if (!this.currentTeam && this.currentBid === this.currentPlayer?.basePrice) {
-    return this.currentBid; // First bid is exactly base price (100)
-  }
+    // Special case: if no one has bid yet (currentTeam is null) and currentBid is base price (100)
+    // then the first bid should be the same as base price (100)
+    if (!this.currentTeam && this.currentBid === this.currentPlayer?.basePrice) {
+      return this.currentBid; // First bid is exactly base price (100)
+    }
     return this.currentBid + this.getBidIncrement(this.currentBid);
-}
-  
+  }
+
 
   placeBid(teamId: number, amount?: number): void {
 
-     if (this.isEditingBid) {
+    if (this.isEditingBid) {
       this.messageService.add({
         severity: 'info',
         summary: 'Finish Editing',
@@ -501,237 +504,237 @@ export class AppComponent implements OnInit, OnDestroy {
     this.auctionService.placeBid(teamId, bidAmount);
   }
 
-canTeamAffordNextBid(team: Team): boolean {
+  canTeamAffordNextBid(team: Team): boolean {
 
-     if (this.isEditingBid) {
+    if (this.isEditingBid) {
       return false;
     }
 
-  const nextBidAmount = this.getNextBidAmount();
-  const maxBid = this.getMaxBidForTeam(team);
-  const teamCapacity = this.getTeamCapacityInfo(team);
-  
-  // Team is full
-  if (teamCapacity.full) {
-    return false;
-  }
-  
-  // Check if team can afford the next bid amount
-  return maxBid >= nextBidAmount;
-}
+    const nextBidAmount = this.getNextBidAmount();
+    const maxBid = this.getMaxBidForTeam(team);
+    const teamCapacity = this.getTeamCapacityInfo(team);
 
-getBidButtonText(team: Team): string {
-  if (this.isEditingBid) {
-    return 'Editing...';
+    // Team is full
+    if (teamCapacity.full) {
+      return false;
+    }
+
+    // Check if team can afford the next bid amount
+    return maxBid >= nextBidAmount;
   }
 
-  const teamCapacity = this.getTeamCapacityInfo(team);
-  const nextBidAmount = this.getNextBidAmount();
-  const maxBid = this.getMaxBidForTeam(team);
-  
-  // Team is full
-  if (teamCapacity.full) {
-    return 'FULL (8/8)';
-  }
-  
-  // Team can't afford next bid - show their maximum possible bid
-  if (maxBid < nextBidAmount) {
-    return `Max Bid: ${maxBid}`;
-  }
-  
-  // Normal bid - show next bid amount
-  return `Bid ${nextBidAmount}`;
-}
+  getBidButtonText(team: Team): string {
+    if (this.isEditingBid) {
+      return 'Editing...';
+    }
 
-getTeamBidStatus(team: Team): {
-  canBid: boolean;
-  reason: string;
-  maxBid: number;
-  nextBid: number;
-  slotsRemaining: number;
-} {
-  const teamCapacity = this.getTeamCapacityInfo(team);
-  const maxBid = this.getMaxBidForTeam(team);
-  const nextBid = this.getNextBidAmount();
-  
-  if (teamCapacity.full) {
+    const teamCapacity = this.getTeamCapacityInfo(team);
+    const nextBidAmount = this.getNextBidAmount();
+    const maxBid = this.getMaxBidForTeam(team);
+
+    // Team is full
+    if (teamCapacity.full) {
+      return 'FULL (8/8)';
+    }
+
+    // Team can't afford next bid - show their maximum possible bid
+    if (maxBid < nextBidAmount) {
+      return `Max Bid: ${maxBid}`;
+    }
+
+    // Normal bid - show next bid amount
+    return `Bid ${nextBidAmount}`;
+  }
+
+  getTeamBidStatus(team: Team): {
+    canBid: boolean;
+    reason: string;
+    maxBid: number;
+    nextBid: number;
+    slotsRemaining: number;
+  } {
+    const teamCapacity = this.getTeamCapacityInfo(team);
+    const maxBid = this.getMaxBidForTeam(team);
+    const nextBid = this.getNextBidAmount();
+
+    if (teamCapacity.full) {
+      return {
+        canBid: false,
+        reason: 'Team is at maximum capacity',
+        maxBid: 0,
+        nextBid,
+        slotsRemaining: 0
+      };
+    }
+
+    if (maxBid < nextBid) {
+      return {
+        canBid: false,
+        reason: `Insufficient budget for next bid (${nextBid}). Need to reserve budget for remaining slots.`,
+        maxBid,
+        nextBid,
+        slotsRemaining: teamCapacity.remainingSlots
+      };
+    }
+
     return {
-      canBid: false,
-      reason: 'Team is at maximum capacity',
-      maxBid: 0,
-      nextBid,
-      slotsRemaining: 0
-    };
-  }
-  
-  if (maxBid < nextBid) {
-    return {
-      canBid: false,
-      reason: `Insufficient budget for next bid (${nextBid}). Need to reserve budget for remaining slots.`,
+      canBid: true,
+      reason: 'Team can place bid',
       maxBid,
       nextBid,
       slotsRemaining: teamCapacity.remainingSlots
     };
   }
-  
-  return {
-    canBid: true,
-    reason: 'Team can place bid',
-    maxBid,
-    nextBid,
-    slotsRemaining: teamCapacity.remainingSlots
-  };
-}
 
-getRemainingBudgetForSlots(team: Team): number {
-  const teamCapacity = this.getTeamCapacityInfo(team);
-  const remainingSlotsAfterCurrentBid = teamCapacity.remainingSlots - 1;
-  return Math.max(remainingSlotsAfterCurrentBid * 100, 0); // Base price is 100
-}
+  getRemainingBudgetForSlots(team: Team): number {
+    const teamCapacity = this.getTeamCapacityInfo(team);
+    const remainingSlotsAfterCurrentBid = teamCapacity.remainingSlots - 1;
+    return Math.max(remainingSlotsAfterCurrentBid * 100, 0); // Base price is 100
+  }
 
-getBidButtonTooltip(team: Team): string {
+  getBidButtonTooltip(team: Team): string {
 
-   if (this.isEditingBid) {
+    if (this.isEditingBid) {
       return 'Please finish editing the bid amount first';
     }
 
     const teamCapacity = this.getTeamCapacityInfo(team);
-  const maxBid = this.getMaxBidForTeam(team);
-  const nextBidAmount = this.getNextBidAmount();
-  const remainingBudget = this.getRemainingBudgetForSlots(team);
-  
-  if (teamCapacity.full) {
-    return 'Team Full (8/8 players) - Cannot bid anymore';
-  }
-  
-  if (maxBid < nextBidAmount) {
-    return `Cannot afford ${nextBidAmount}. Maximum possible bid: ${maxBid}. Need ${remainingBudget} for remaining ${teamCapacity.remainingSlots - 1} players.`;
-  }
-  
-  return `Next bid: ${nextBidAmount}. Team can bid up to: ${maxBid} (Budget: ${team.budget}, Slots: ${teamCapacity.remainingSlots})`;
-}
+    const maxBid = this.getMaxBidForTeam(team);
+    const nextBidAmount = this.getNextBidAmount();
+    const remainingBudget = this.getRemainingBudgetForSlots(team);
 
- playSuccessSound(): void {
-  try {
-    const audio = new Audio('assets/fireworks.mp3'); // Update path to your file
-    audio.volume = 1.0;
-    audio.preload = 'auto';
-    
-    const playPromise = audio.play();
-    
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          console.log('Fireworks sound played successfully');
-        })
-        .catch((error) => {
-          console.log('Audio play failed:', error);
-        });
+    if (teamCapacity.full) {
+      return 'Team Full (8/8 players) - Cannot bid anymore';
     }
-  } catch (error) {
-    console.log('Audio not supported or file missing:', error);
+
+    if (maxBid < nextBidAmount) {
+      return `Cannot afford ${nextBidAmount}. Maximum possible bid: ${maxBid}. Need ${remainingBudget} for remaining ${teamCapacity.remainingSlots - 1} players.`;
+    }
+
+    return `Next bid: ${nextBidAmount}. Team can bid up to: ${maxBid} (Budget: ${team.budget}, Slots: ${teamCapacity.remainingSlots})`;
   }
-}
+
+  playSuccessSound(): void {
+    try {
+      const audio = new Audio('assets/fireworks.mp3'); // Update path to your file
+      audio.volume = 1.0;
+      audio.preload = 'auto';
+
+      const playPromise = audio.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('Fireworks sound played successfully');
+          })
+          .catch((error) => {
+            console.log('Audio play failed:', error);
+          });
+      }
+    } catch (error) {
+      console.log('Audio not supported or file missing:', error);
+    }
+  }
   // Helper method for template
   trackByIndex(index: number): number {
     return index;
   }
 
-sellPlayer(): void {
-  console.log('🔍 sellPlayer() called');
-  console.log('Current Player:', this.currentPlayer);
-  console.log('Current Team:', this.currentTeam);
-  
-  if (this.currentPlayer && this.currentTeam) {
-    // Store references for celebration
-    const playerToSell = this.currentPlayer;
-    const buyingTeam = this.currentTeam;
-    const finalPrice = this.currentBid;
-    
-    // Use the service method to handle the sale
-    this.auctionService.sellPlayer();
-     this.playSuccessSound();
-    // Trigger celebration after service handles the sale
-    this.triggerCelebration({
-      playerName: playerToSell.name,
-      teamName: buyingTeam.shortName,
-      teamColor: buyingTeam.color,
-      soldPrice: finalPrice
-    });
-    
-    console.log('✅ sellPlayer() completed');
-  } else {
-    console.log('❌ sellPlayer() failed - missing player or team');
+  sellPlayer(): void {
+    console.log('🔍 sellPlayer() called');
+    console.log('Current Player:', this.currentPlayer);
+    console.log('Current Team:', this.currentTeam);
+
+    if (this.currentPlayer && this.currentTeam) {
+      // Store references for celebration
+      const playerToSell = this.currentPlayer;
+      const buyingTeam = this.currentTeam;
+      const finalPrice = this.currentBid;
+
+      // Use the service method to handle the sale
+      this.auctionService.sellPlayer();
+      this.playSuccessSound();
+      // Trigger celebration after service handles the sale
+      this.triggerCelebration({
+        playerName: playerToSell.name,
+        teamName: buyingTeam.shortName,
+        teamColor: buyingTeam.color,
+        soldPrice: finalPrice
+      });
+
+      console.log('✅ sellPlayer() completed');
+    } else {
+      console.log('❌ sellPlayer() failed - missing player or team');
+    }
   }
-}
 
-triggerCelebration(data: any): void {
-  console.log('🎉 triggerCelebration() called with:', data);
-  
-  this.celebrationData = data;
-  this.generateConfetti();
-  this.showCelebration = true;
-  
-  console.log('🎊 showCelebration set to:', this.showCelebration);
-  console.log('🎨 confettiPieces generated:', this.confettiPieces.length);
-  console.log('🎨 First few confetti pieces:', this.confettiPieces.slice(0, 3));
-  
-  // Auto-hide after 6 seconds
-  setTimeout(() => {
-    console.log('⏰ Auto-hiding celebration');
-    this.showCelebration = false;
-  }, 5000);
-}
+  triggerCelebration(data: any): void {
+    console.log('🎉 triggerCelebration() called with:', data);
 
-generateContinuousConfetti(): void {
-  // Generate initial wave
-  this.generateConfetti();
-  
-  // Generate second wave after 1.5 seconds
-  setTimeout(() => {
-    const secondWave = [];
+    this.celebrationData = data;
+    this.generateConfetti();
+    this.showCelebration = true;
+
+    console.log('🎊 showCelebration set to:', this.showCelebration);
+    console.log('🎨 confettiPieces generated:', this.confettiPieces.length);
+    console.log('🎨 First few confetti pieces:', this.confettiPieces.slice(0, 3));
+
+    // Auto-hide after 6 seconds
+    setTimeout(() => {
+      console.log('⏰ Auto-hiding celebration');
+      this.showCelebration = false;
+    }, 5000);
+  }
+
+  generateContinuousConfetti(): void {
+    // Generate initial wave
+    this.generateConfetti();
+
+    // Generate second wave after 1.5 seconds
+    setTimeout(() => {
+      const secondWave = [];
+      const colors = [
+        this.celebrationData.teamColor,
+        '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b',
+        '#eb4d4b', '#6c5ce7', '#a29bfe', '#fd79a8'
+      ];
+
+      for (let i = 0; i < 40; i++) {
+        secondWave.push({
+          x: Math.random() * 100,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          delay: Math.random() * 1000, // Shorter delay for second wave
+          duration: 4000 + Math.random() * 2000,
+          size: 6 + Math.random() * 8
+        });
+      }
+
+      // Add second wave to existing confetti
+      this.confettiPieces = [...this.confettiPieces, ...secondWave];
+    }, 1500);
+  }
+
+  generateConfetti(): void {
+    this.confettiPieces = [];
     const colors = [
-      this.celebrationData.teamColor,
-      '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', 
+      this.celebrationData.teamColor || '#e74c3c', // Fallback color
+      '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b',
       '#eb4d4b', '#6c5ce7', '#a29bfe', '#fd79a8'
     ];
-    
-    for (let i = 0; i < 40; i++) {
-      secondWave.push({
+
+    // Generate 60 confetti pieces with consistent settings
+    for (let i = 0; i < 60; i++) {
+      this.confettiPieces.push({
         x: Math.random() * 100,
         color: colors[Math.floor(Math.random() * colors.length)],
-        delay: Math.random() * 1000, // Shorter delay for second wave
-        duration: 4000 + Math.random() * 2000,
-        size: 6 + Math.random() * 8
+        delay: Math.random() * 2000, // 0-2 seconds delay
+        duration: 4000, // Fixed 4 second duration for all pieces
+        size: 8 + Math.random() * 4 // 8-12px size
       });
     }
-    
-    // Add second wave to existing confetti
-    this.confettiPieces = [...this.confettiPieces, ...secondWave];
-  }, 1500);
-}
 
-generateConfetti(): void {
-  this.confettiPieces = [];
-  const colors = [
-    this.celebrationData.teamColor || '#e74c3c', // Fallback color
-    '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', 
-    '#eb4d4b', '#6c5ce7', '#a29bfe', '#fd79a8'
-  ];
-
-  // Generate 60 confetti pieces with consistent settings
-  for (let i = 0; i < 60; i++) {
-    this.confettiPieces.push({
-      x: Math.random() * 100,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      delay: Math.random() * 2000, // 0-2 seconds delay
-      duration: 4000, // Fixed 4 second duration for all pieces
-      size: 8 + Math.random() * 4 // 8-12px size
-    });
+    console.log(`🎊 Generated ${this.confettiPieces.length} confetti pieces`);
   }
-
-  console.log(`🎊 Generated ${this.confettiPieces.length} confetti pieces`);
-}
 
   markUnsold(): void {
     this.auctionService.markUnsold();
@@ -789,19 +792,19 @@ generateConfetti(): void {
 
   getPlayerRating(player: Player): string {
     let rating = 0;
-    
+
     if (player.mvpRanking) {
       rating += (30 - player.mvpRanking) / 30 * 40;
     }
-    
+
     const strikeRatePoints = Math.min(player.battingStats.strikeRate / 100 * 30, 30);
     rating += strikeRatePoints;
-    
+
     if (player.bowlingStats) {
       const economyPoints = Math.max(0, (8 - player.bowlingStats.economy) / 8 * 30);
       rating += economyPoints;
     }
-    
+
     if (rating >= 80) return 'Excellent';
     if (rating >= 60) return 'Good';
     if (rating >= 40) return 'Average';
@@ -815,53 +818,53 @@ generateConfetti(): void {
         if (value >= 100) return 'stat-good';
         if (value >= 80) return 'stat-average';
         return 'stat-poor';
-      
+
       case 'economy':
         if (value <= 3) return 'stat-excellent';
         if (value <= 4) return 'stat-good';
         if (value <= 5) return 'stat-average';
         return 'stat-poor';
-      
+
       case 'mvpRanking':
         if (value <= 5) return 'stat-excellent';
         if (value <= 10) return 'stat-good';
         if (value <= 20) return 'stat-average';
         return 'stat-poor';
-      
+
       default:
         return '';
     }
   }
 
   isPremiumPlayer(player: Player): boolean {
-    return player.mvpRanking <= 10 || 
-           player.battingStats.strikeRate >= 150 || 
-           (player.bowlingStats?.economy !== undefined && player.bowlingStats.economy <= 8);
+    return player.mvpRanking <= 10 ||
+      player.battingStats.strikeRate >= 150 ||
+      (player.bowlingStats?.economy !== undefined && player.bowlingStats.economy <= 8);
   }
 
   getTeamStrength(team: Team): { batting: number, bowling: number, overall: string } {
     if (team.players.length === 0) {
       return { batting: 0, bowling: 0, overall: 'No Players' };
     }
-    
+
     const battingStrength = team.players.reduce((sum, player) => {
       return sum + (player.battingStats.strikeRate / 100);
     }, 0) / team.players.length * 100;
-    
+
     const bowlers = team.players.filter(p => p.bowlingStats);
-    const bowlingStrength = bowlers.length > 0 
+    const bowlingStrength = bowlers.length > 0
       ? bowlers.reduce((sum, player) => {
-          return sum + (8 - (player.bowlingStats?.economy || 8));
-        }, 0) / bowlers.length * 100 / 8 * 100
+        return sum + (8 - (player.bowlingStats?.economy || 8));
+      }, 0) / bowlers.length * 100 / 8 * 100
       : 50;
-    
+
     const overall = (battingStrength + bowlingStrength) / 2;
-    
+
     let overallText = 'Developing';
     if (overall >= 80) overallText = 'Strong';
     else if (overall >= 60) overallText = 'Balanced';
     else if (overall >= 40) overallText = 'Growing';
-    
+
     return {
       batting: Math.round(battingStrength),
       bowling: Math.round(bowlingStrength),
@@ -876,7 +879,7 @@ generateConfetti(): void {
 
   selectPlayerForAuction(player: Player): void {
     const availablePlayersList = this.availablePlayers.filter(p => p.id !== player.id);
-    
+
     this.currentPlayer = player;
     this.currentBid = player.basePrice;
     this.currentTeam = null;
@@ -885,23 +888,23 @@ generateConfetti(): void {
   }
 
   // NEW METHOD: Get team capacity info
- getTeamCapacityInfo(team: Team): { 
-  current: number; 
-  max: number; 
-  full: boolean;
-  remainingSlots: number;
-} {
-  const current = team.players.length;
-  const max = 8;
-  const remainingSlots = max - current;
-  
-  return {
-    current,
-    max,
-    full: current >= max,
-    remainingSlots
-  };
-}
+  getTeamCapacityInfo(team: Team): {
+    current: number;
+    max: number;
+    full: boolean;
+    remainingSlots: number;
+  } {
+    const current = team.players.length;
+    const max = 8;
+    const remainingSlots = max - current;
+
+    return {
+      current,
+      max,
+      full: current >= max,
+      remainingSlots
+    };
+  }
 
   // NEW METHOD: Check if auction should end (all teams full)
   shouldEndAuction(): boolean {
@@ -910,7 +913,7 @@ generateConfetti(): void {
 
   setButtonLoading(buttonType: string, loading: boolean): void {
     this.buttonLoadingStates[buttonType] = loading;
-    
+
     const buttonElement = document.querySelector(`.btn-${buttonType}`);
     if (buttonElement) {
       if (loading) {
@@ -967,19 +970,19 @@ generateConfetti(): void {
 
   getSoldPlayersCount(): number {
     return this.teams.reduce(
-      (count, team) => count + team.players.length, 
+      (count, team) => count + team.players.length,
       0
     );
   }
 
-   startEditingBid(): void {
+  startEditingBid(): void {
     if (!this.currentPlayer || !this.auctionInProgress) {
       return;
     }
-    
+
     this.isEditingBid = true;
     this.editBidAmount = this.currentBid;
-    
+
     // Focus the input after the view updates
     setTimeout(() => {
       const inputElement = document.querySelector('.bid-input') as HTMLInputElement;
@@ -989,7 +992,7 @@ generateConfetti(): void {
       }
     }, 100);
   }
-  
+
   confirmBidEdit(): void {
     if (!this.isValidBidAmount(this.editBidAmount)) {
       this.messageService.add({
@@ -1001,16 +1004,16 @@ generateConfetti(): void {
       return;
     }
     this.currentBid = this.editBidAmount;
-      if (this.currentTeam && this.editBidAmount > this.currentBid) {
+    if (this.currentTeam && this.editBidAmount > this.currentBid) {
       this.currentTeam = null;
       this.auctionService['currentTeam'].next(null);
     }
-    
+
     // Update the auction service with the new bid
     this.auctionService['currentBid'].next(this.editBidAmount);
-    
+
     this.isEditingBid = false;
-    
+
     this.messageService.add({
       severity: 'success',
       summary: 'Bid Updated',
@@ -1023,53 +1026,53 @@ generateConfetti(): void {
     this.isEditingBid = false;
     this.editBidAmount = this.currentBid;
   }
-  
+
   isValidBidAmount(amount: number): boolean {
     if (!this.currentPlayer) return false;
-    
+
     const minBid = this.currentPlayer.basePrice;
     const maxBid = this.getMaxPossibleBid();
-    
+
     return amount >= minBid && amount <= maxBid && Number.isInteger(amount);
   }
 
   getMaxPossibleBid(): number {
     if (!this.currentPlayer) return 0;
-    
+
     // Find the team with the highest budget that can still afford players
     let maxPossibleBid = 0;
-    
+
     this.teams.forEach(team => {
       const teamCapacity = this.getTeamCapacityInfo(team);
-      
+
       // Skip teams that are already full
       if (teamCapacity.full) return;
-      
+
       const maxBidForTeam = this.getMaxBidForTeam(team);
       maxPossibleBid = Math.max(maxPossibleBid, maxBidForTeam);
     });
-    
+
     return maxPossibleBid;
   }
 
-rebidCurrentPlayer(): void {
-  if (!this.currentPlayer || !this.auctionInProgress) {
-    return;
-  }
+  rebidCurrentPlayer(): void {
+    if (!this.currentPlayer || !this.auctionInProgress) {
+      return;
+    }
 
-  if (this.isEditingBid) {
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Finish Editing',
-      detail: 'Please confirm or cancel the bid edit first',
-      life: 2000
-    });
-    return;
-  }
+    if (this.isEditingBid) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Finish Editing',
+        detail: 'Please confirm or cancel the bid edit first',
+        life: 2000
+      });
+      return;
+    }
 
-  // Enhanced confirmation dialog with better styling
-  this.confirmationService.confirm({
-    message: `
+    // Enhanced confirmation dialog with better styling
+    this.confirmationService.confirm({
+      message: `
       <div class="rebid-confirmation-content">
         <div class="rebid-player-info">
           <div class="rebid-player-name">${this.currentPlayer.name}</div>
@@ -1092,63 +1095,63 @@ rebidCurrentPlayer(): void {
         </div>
       </div>
     `,
-    header: '🔄 Restart Player Auction',
-    acceptButtonStyleClass: 'p-button-warning p-button-lg rebid-confirm-btn',
-    rejectButtonStyleClass: 'p-button-secondary p-button-lg rebid-cancel-btn',
-    acceptLabel: ' Yes, Restart Auction',
-    rejectLabel: ' Cancel',
-    defaultFocus: 'reject', // Focus on cancel by default for safety
-    accept: () => {
-      this.performRebidCurrentPlayer();
-    },
-    reject: () => {
+      header: '🔄 Restart Player Auction',
+      acceptButtonStyleClass: 'p-button-warning p-button-lg rebid-confirm-btn',
+      rejectButtonStyleClass: 'p-button-secondary p-button-lg rebid-cancel-btn',
+      acceptLabel: ' Yes, Restart Auction',
+      rejectLabel: ' Cancel',
+      defaultFocus: 'reject', // Focus on cancel by default for safety
+      accept: () => {
+        this.performRebidCurrentPlayer();
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Rebid Cancelled',
+          detail: `Auction for ${this.currentPlayer?.name} continues`,
+          life: 2000
+        });
+      }
+    });
+  }
+
+  // PRIVATE METHOD: Perform the rebid for current player
+  private performRebidCurrentPlayer(): void {
+    if (!this.currentPlayer) {
+      return;
+    }
+
+    try {
+      const playerName = this.currentPlayer.name;
+
+      // Reset the auction for the current player
+      this.currentBid = this.currentPlayer.basePrice;
+      this.currentTeam = null;
+
+      // Update the auction service observables
+      this.auctionService['currentBid'].next(this.currentPlayer.basePrice);
+      this.auctionService['currentTeam'].next(null);
+
+      // Keep the same player in auction, just reset the bidding
+      // No need to change currentPlayer or auctionInProgress
+
       this.messageService.add({
-        severity: 'info',
-        summary: 'Rebid Cancelled',
-        detail: `Auction for ${this.currentPlayer?.name} continues`,
-        life: 2000
+        severity: 'success',
+        summary: '🔄 Auction Restarted',
+        detail: `Bidding for ${playerName} has been reset to base price ${this.currentPlayer.basePrice}`,
+        life: 3000
+      });
+
+      console.log(`🔄 Auction restarted for ${playerName} at base price ${this.currentPlayer.basePrice}`);
+
+    } catch (error) {
+      console.error('❌ Error during rebid:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: '❌ Rebid Failed',
+        detail: 'Could not restart the auction. Please try again.',
+        life: 3000
       });
     }
-  });
-}
-
-// PRIVATE METHOD: Perform the rebid for current player
-private performRebidCurrentPlayer(): void {
-  if (!this.currentPlayer) {
-    return;
   }
-
-  try {
-    const playerName = this.currentPlayer.name;
-    
-    // Reset the auction for the current player
-    this.currentBid = this.currentPlayer.basePrice;
-    this.currentTeam = null;
-    
-    // Update the auction service observables
-    this.auctionService['currentBid'].next(this.currentPlayer.basePrice);
-    this.auctionService['currentTeam'].next(null);
-    
-    // Keep the same player in auction, just reset the bidding
-    // No need to change currentPlayer or auctionInProgress
-    
-    this.messageService.add({
-      severity: 'success',
-      summary: '🔄 Auction Restarted',
-      detail: `Bidding for ${playerName} has been reset to base price ${this.currentPlayer.basePrice}`,
-      life: 3000
-    });
-    
-    console.log(`🔄 Auction restarted for ${playerName} at base price ${this.currentPlayer.basePrice}`);
-    
-  } catch (error) {
-    console.error('❌ Error during rebid:', error);
-    this.messageService.add({
-      severity: 'error',
-      summary: '❌ Rebid Failed',
-      detail: 'Could not restart the auction. Please try again.',
-      life: 3000
-    });
-  }
-}
 }
