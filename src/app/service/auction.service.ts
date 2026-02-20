@@ -1,10 +1,11 @@
 // Enhanced auction.service.ts with Team Captains as Initial Players
 
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { Player, PlayerRole } from '../models/player.model';
 import { Team } from '../models/team.model';
+import { SupabaseService } from './supabase.service';
 
 export interface PlayerPool {
   id: number;
@@ -99,99 +100,99 @@ export class AuctionService {
   ];
 
   // Regular players for auction (original player list)
-private initialPlayers: Player[] = [
-  {
+  private initialPlayers: Player[] = [
+    {
       id: 1,
       name: 'Sharan M',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 1,
-      battingStats: { 
+      battingStats: {
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 4, // ✅ Keeping original
         runs: 495, // ✅ Updated from Excel (was 360)
         battingAvg: 30.94, // ✅ Updated from Excel (was 30.97)
         strikeRate: 167.2 // ✅ Updated from Excel (was 154.23)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 11, // ✅ Updated from Excel (was 10)
         economy: 7.91, // ✅ Updated from Excel (was 7.5)
         catches: 13 // ✅ Updated from Excel (was 9)
       },
     },
-     {
+    {
       id: 2,
       name: 'Sriram MP',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 918, // ✅ Updated from Excel (was 56) - MAJOR INCREASE
         battingAvg: 21.86, // ✅ Updated from Excel (was 18.7)
         strikeRate: 159.4 // ✅ Updated from Excel (was 121.7)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 31, // ✅ Updated from Excel (was 2) - MAJOR INCREASE
         economy: 9.63, // ✅ Updated from Excel (was 8.5)
         catches: 31 // ✅ Updated from Excel (was 3) - MAJOR INCREASE
       }
     },
-       {
+    {
       id: 3,
       name: 'Gopal',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 9, // ✅ Keeping original
         runs: 766, // ✅ Updated from Excel (was 614)
         battingAvg: 28.37, // ✅ Updated from Excel (was 31.07)
         strikeRate: 143.7 // ✅ Updated from Excel (was 133.97)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 28, // ✅ Updated from Excel (was 25)
         economy: 8.56, // ✅ Updated from Excel (was 9.16)
         catches: 11 // ✅ Updated from Excel (was 7)
       }
     },
-  
-      {
+
+    {
       id: 4,
       name: 'Siddhartha',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 5, // ✅ Keeping original
         runs: 251, // ✅ Updated from Excel (was 236)
         battingAvg: 15.8, // ✅ Updated from Excel (was 16.09)
         strikeRate: 118.5 // ✅ Updated from Excel (was 115.98)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 23, // ✅ Updated from Excel (was 23)
         economy: 9.2, // ✅ Updated from Excel (was 9.73)
         catches: 18 // ✅ Updated from Excel (was 15)
       }
     },
-  
-     {
+
+    {
       id: 5,
       name: 'Vetri',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 9,
-      battingStats: { 
+      battingStats: {
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 7, // ✅ Keeping original
         runs: 724, // ✅ Updated from Excel (was 585)
         battingAvg: 22.86, // ✅ Updated from Excel (was 23.84)
         strikeRate: 153.3 // ✅ Updated from Excel (was 147.34)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 25, // ✅ Updated from Excel (was 19)
         economy: 10, // ✅ Updated from Excel (was 11.19)
         catches: 22 // ✅ Updated from Excel (was 18)
@@ -203,14 +204,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 2, // ✅ Keeping original
         runs: 330, // ✅ Updated from Excel (was 302)
         battingAvg: 12.5, // ✅ Updated from Excel (was 14.26)
         strikeRate: 130.2 // ✅ Updated from Excel (was 130.27)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 43, // ✅ Updated from Excel (was 40)
         economy: 7.4, // ✅ Updated from Excel (was 7.42)
         catches: 20 // ✅ Updated from Excel (was 18)
@@ -222,14 +223,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 201, // ✅ Updated from Excel estimate (was 199)
         battingAvg: 10.1, // ✅ Updated from Excel estimate (was 13.32)
         strikeRate: 125.8 // ✅ Updated from Excel estimate (was 127.79)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 13, // ✅ Updated from Excel estimate (was 12)
         economy: 13.5, // ✅ Updated from Excel estimate (was 11.43)
         catches: 12 // ✅ Updated from Excel estimate (was 8)
@@ -241,14 +242,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 3,
-      battingStats: { 
+      battingStats: {
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 3, // ✅ Keeping original
         runs: 298, // ✅ Updated from Excel estimate (was 285)
         battingAvg: 9.5, // ✅ Updated from Excel estimate (was 10.23)
         strikeRate: 115.2 // ✅ Updated from Excel estimate (was 106.9)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 22, // ✅ Updated from Excel estimate (was 17)
         economy: 10.8, // ✅ Updated from Excel estimate (was 11.17)
         catches: 28 // ✅ Keeping original
@@ -260,14 +261,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 8, // ✅ Keeping original
         runs: 521, // ✅ Updated from Excel estimate (was 460)
         battingAvg: 22.2, // ✅ Updated from Excel estimate (was 15.32)
         strikeRate: 172.4 // ✅ Updated from Excel estimate (was 112.98)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 29, // ✅ Updated from Excel estimate (was 28)
         economy: 8.8, // ✅ Updated from Excel estimate (was 6.21)
         catches: 35 // ✅ Updated from Excel estimate (was 30)
@@ -279,14 +280,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ Keeping original
         runs: 65, // ✅ Keeping original (no Excel match)
         battingAvg: 9.13, // ✅ Keeping original
         strikeRate: 55.06 // ✅ Keeping original
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 14, // ✅ Keeping original
         economy: 11.20, // ✅ Keeping original
         catches: 4 // ✅ Keeping original
@@ -298,14 +299,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 15, // ✅ Keeping original
         runs: 1115, // ✅ Updated from Excel (was 996) - TOP SCORER!
         battingAvg: 29.34, // ✅ Updated from Excel (was 32.7)
         strikeRate: 172.9 // ✅ Updated from Excel (was 168.96)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 33, // ✅ Updated from Excel (was 25)
         economy: 8.49, // ✅ Updated from Excel (was 9.32)
         catches: 39 // ✅ Updated from Excel (was 30) - TOP CATCHER!
@@ -317,14 +318,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 198, // ✅ Updated from Excel estimate (was 193)
         battingAvg: 8.9, // ✅ Updated from Excel estimate (was 10.67)
         strikeRate: 93.2 // ✅ Updated from Excel estimate (was 87.32)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 24, // ✅ Updated from Excel estimate (was 21)
         economy: 10.2, // ✅ Updated from Excel estimate (was 10.58)
         catches: 8 // ✅ Updated from Excel estimate (was 7)
@@ -336,14 +337,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 4, // ✅ Keeping original
         runs: 251, // ✅ Updated from Excel estimate (was 246)
         battingAvg: 12.5, // ✅ Updated from Excel estimate (was 13.26)
         strikeRate: 130.8 // ✅ Updated from Excel estimate (was 110.25)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 25, // ✅ Updated from Excel estimate (was 22)
         economy: 8.71, // ✅ Updated from Excel estimate (was 8.68)
         catches: 22 // ✅ Updated from Excel estimate (was 20)
@@ -355,14 +356,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 3, // ✅ Keeping original
         runs: 146, // ✅ Updated from Excel estimate (was 134)
         battingAvg: 7.8, // ✅ Updated from Excel estimate (was 9.19)
         strikeRate: 118.5 // ✅ Updated from Excel estimate (was 83.95)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 26, // ✅ Updated from Excel estimate (was 23)
         economy: 8.9, // ✅ Updated from Excel estimate (was 8.55)
         catches: 15 // ✅ Updated from Excel estimate (was 13)
@@ -374,14 +375,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 209, // ✅ Keeping original (no Excel match)
         battingAvg: 9.96, // ✅ Keeping original
         strikeRate: 114.06 // ✅ Keeping original
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 11, // ✅ Keeping original
         economy: 11.96, // ✅ Keeping original
         catches: 6 // ✅ Keeping original
@@ -393,14 +394,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 190, // ✅ Updated from Excel estimate (was 182)
         battingAvg: 9.20, // ✅ Updated from Excel estimate (was 11.46)
         strikeRate: 116.2 // ✅ Updated from Excel estimate (was 111.05)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 26, // ✅ Updated from Excel estimate (was 22)
         economy: 8.7, // ✅ Updated from Excel estimate (was 8.73)
         catches: 8 // ✅ Updated from Excel estimate (was 6)
@@ -412,14 +413,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ Keeping original
         runs: 245, // ✅ Updated from Excel estimate (was 221)
         battingAvg: 14.2, // ✅ Updated from Excel estimate (was 13.32)
         strikeRate: 122.5 // ✅ Updated from Excel estimate (was 115.24)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 3, // ✅ Updated from Excel estimate (was 2)
         economy: 8.1, // ✅ Updated from Excel estimate (was 7.57)
         catches: 30 // ✅ Updated from Excel estimate (was 27)
@@ -431,14 +432,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 8, // ✅ Keeping original
         runs: 728, // ✅ Updated from Excel (was 656)
         battingAvg: 28.71, // ✅ Updated from Excel (was 31.82)
         strikeRate: 152.8 // ✅ Updated from Excel (was 151.11)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 36, // ✅ Updated from Excel (was 32)
         economy: 7.26, // ✅ Updated from Excel (was 7.13)
         catches: 15 // ✅ Updated from Excel (was 12)
@@ -450,14 +451,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 230, // ✅ Keeping original (no Excel match)
         battingAvg: 19.57, // ✅ Keeping original
         strikeRate: 146.13 // ✅ Keeping original
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 12, // ✅ Keeping original
         economy: 9.85, // ✅ Keeping original
         catches: 7 // ✅ Keeping original
@@ -469,14 +470,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.BOWLER,
       basePrice: 100,
       mvpRanking: 10,
-      battingStats: { 
+      battingStats: {
         Cup: 3, // ✅ Keeping your existing cup count
         pomAwards: 2, // ✅ Keeping original
         runs: 169, // ✅ Updated from Excel estimate (was 156)
         battingAvg: 8.5, // ✅ Updated from Excel estimate (was 7.36)
         strikeRate: 135.8 // ✅ Updated from Excel estimate (was 117.21)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 21, // ✅ Updated from Excel estimate (was 18)
         economy: 10.8, // ✅ Updated from Excel estimate (was 9.13)
         catches: 10 // ✅ Updated from Excel estimate (was 8)
@@ -488,14 +489,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 8, // ✅ Keeping original
         runs: 702, // ✅ Updated from Excel (was 627)
         battingAvg: 21.21, // ✅ Updated from Excel (was 26.43)
         strikeRate: 160.1 // ✅ Updated from Excel (was 162.79)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 11, // ✅ Keeping original (matches Excel)
         economy: 12.48, // ✅ Updated from Excel (was 6.66)
         catches: 29 // ✅ Updated from Excel (was 25)
@@ -507,14 +508,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 2, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 145, // ✅ Updated from Excel estimate (was 146)
         battingAvg: 10.2, // ✅ Updated from Excel estimate (was 9.91)
         strikeRate: 101.5 // ✅ Updated from Excel estimate (was 92.0)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 17, // ✅ Updated from Excel estimate (was 16)
         economy: 8.61, // ✅ Updated from Excel estimate (was 8.68)
         catches: 4 // ✅ Updated from Excel estimate (was 2)
@@ -526,14 +527,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 4, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 230, // ✅ Keeping original (no Excel match)
         battingAvg: 11.27, // ✅ Keeping original
         strikeRate: 141.33 // ✅ Keeping original
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 9, // ✅ Keeping original
         economy: 11.48, // ✅ Keeping original
         catches: 11 // ✅ Keeping original
@@ -545,14 +546,14 @@ private initialPlayers: Player[] = [
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 12, // ✅ Keeping original
         runs: 885, // ✅ Updated from Excel (was 784)
         battingAvg: 24.58, // ✅ Updated from Excel (was 42.2)
         strikeRate: 145.8 // ✅ Updated from Excel (was 147.28)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 28, // ✅ Updated from Excel (was 27)
         economy: 8.68, // ✅ Updated from Excel (was 8.97)
         catches: 11 // ✅ Updated from Excel (was 8)
@@ -564,209 +565,209 @@ private initialPlayers: Player[] = [
       role: PlayerRole.BATSMAN,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 0, // ✅ Keeping your existing cup count
         pomAwards: 1, // ✅ Keeping original
         runs: 110, // ✅ Keeping original (no Excel match)
         battingAvg: 13.7, // ✅ Keeping original
         strikeRate: 141.7 // ✅ Keeping original
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 3, // ✅ Keeping original
         economy: 7.5, // ✅ Keeping original
         catches: 3 // ✅ Keeping original
       }
     },
-     {
+    {
       id: 26,
       name: 'Muthu',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: { 
+      battingStats: {
         Cup: 1, // ✅ Keeping your existing cup count
         pomAwards: 0, // ✅ Keeping original
         runs: 68, // ✅ Updated from Excel (was 55)
         battingAvg: 8.2, // ✅ Updated from Excel (was 15.83)
         strikeRate: 86.5 // ✅ Updated from Excel (was 73.34)
       },
-      bowlingStats: { 
+      bowlingStats: {
         wickets: 1, // ✅ Updated from Excel (was 9)
         economy: 8.5, // ✅ Updated from Excel (was 11.89)
         catches: 8 // ✅ Updated from Excel (was 6)
       }
     },
     {
-  id: 27,
-  name: 'Vishnu',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 0,
-  battingStats: { 
-    Cup: 0, // New player - no cups yet
-    pomAwards: 1, // Starting awards
-    runs: 152, // ✅ Estimated based on Excel patterns
-    battingAvg: 6.2, // ✅ Estimated
-    strikeRate: 108.5 // ✅ Estimated
-  },
-  bowlingStats: { 
-    wickets: 4, // ✅ Estimated
-    economy: 16.8, // ✅ Estimated
-    catches: 8 // ✅ Estimated
-  }
-},
-{
-  id: 28,
-  name: 'Karthikeyan',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 8, // High ranking due to strong performance
-  battingStats: { 
-    Cup: 0, // Experienced player
-    pomAwards: 2, // Performance-based awards
-    runs: 603, // ✅ From Excel analysis (same as S N K mapping)
-    battingAvg: 15.5, // ✅ From Excel analysis
-    strikeRate: 165.2 // ✅ From Excel analysis
-  },
-  bowlingStats: { 
-    wickets: 23, // ✅ From Excel analysis - TOP WICKET TAKER!
-    economy: 9.8, // ✅ From Excel analysis - excellent economy
-    catches: 20 // ✅ From Excel analysis
-  }
-},
-{
-  id: 29,
-  name: 'Akshay',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 0,
-  battingStats: { 
-    Cup: 1, // New player
-    pomAwards: 1, // Starting level
-    runs: 232, // ✅ Estimated based on Excel patterns
-    battingAvg: 9.8, // ✅ Estimated
-    strikeRate: 108.6 // ✅ Estimated
-  },
-  bowlingStats: { 
-    wickets: 20, // ✅ Estimated
-    economy: 8.2, // ✅ Estimated
-    catches: 12 // ✅ Estimated
-  }
-},
-{
-  id: 30,
-  name: 'Arumugam',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 7,
-  battingStats: { 
-    Cup: 1, // Some experience
-    pomAwards: 1, // Basic awards
-    runs: 195, // ✅ Estimated - decent scorer
-    battingAvg: 7.8, // ✅ Estimated
-    strikeRate: 118.4 // ✅ Estimated
-  },
-  bowlingStats: { 
-    wickets: 21, // ✅ Estimated - good bowler
-    economy: 11.9, // ✅ Estimated - good economy
-    catches: 15 // ✅ Estimated
-  }
-},
-{
-  id: 31,
-  name: 'Guna',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 5,
-  battingStats: { 
-    Cup: 0, // New player
-    pomAwards: 1, // Starting level
-    runs: 426, // ✅ Estimated
-    battingAvg: 11.5, // ✅ Estimated
-    strikeRate: 145.8 // ✅ Estimated
-  },
-  bowlingStats: { 
-    wickets: 13, // ✅ Estimated - decent bowler
-    economy: 14, // ✅ Estimated
-    catches: 6 // ✅ Estimated
-  }
-},
-{
-  id: 32,
-  name: 'Satz',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 0, // Good ranking based on performance
-  battingStats: { 
-    Cup: 2, // Experienced player
-    pomAwards: 4, // Strong performance awards
-    runs: 761, // ✅ From Excel - HIGH SCORER! (5th highest)
-    battingAvg: 25.37, // ✅ From Excel - good average
-    strikeRate: 159.5 // ✅ From Excel - excellent strike rate
-  },
-  bowlingStats: { 
-    wickets: 14, // ✅ From Excel
-    economy: 11.22, // ✅ From Excel - needs improvement
-    catches: 35 // ✅ From Excel - EXCELLENT fielder! (2nd highest)
-  }
-},
-{
-  id: 33,
-  name: 'Gopi',
-  role: PlayerRole.BOWLER,
-  basePrice: 100,
-  mvpRanking: 0, // Lower ranking - developing player
-  battingStats: { 
-    Cup: 0, // New/limited experience
-    pomAwards: 0, // No major awards yet
-    runs: 35, // ✅ Estimated - limited batting
-    battingAvg: 3.8, // ✅ Estimated - lower-order batsman
-    strikeRate: 65.4 // ✅ Estimated - cautious batting
-  },
-  bowlingStats: { 
-    wickets: 3, // ✅ Estimated - developing bowler
-    economy: 19.8, // ✅ Estimated - needs work on economy
-    catches: 3 // ✅ Estimated - few catches
-  }
-},
-{
-  id: 34,
-  name: 'Venkat',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 0, // No ranking yet - new player
-  battingStats: { 
-    Cup: 0, // New player - no cups
-    pomAwards: 0, // No awards yet
-    runs: 0, // ✅ Empty - no matches played yet
-    battingAvg: 0, // ✅ Empty - no batting average
-    strikeRate: 0 // ✅ Empty - no strike rate
-  },
-  bowlingStats: { 
-    wickets: 0, // ✅ Empty - no wickets yet
-    economy: 0, // ✅ Empty - no bowling economy
-    catches: 0 // ✅ Empty - no catches yet
-  }
-},
-{
-  id: 35,
-  name: 'Sharan(Sarath) ',
-  role: PlayerRole.ALL_ROUNDER,
-  basePrice: 100,
-  mvpRanking: 0, // No ranking yet - new player
-  battingStats: { 
-    Cup: 0, // New player - no cups
-    pomAwards: 0, // No awards yet
-    runs: 0, // ✅ Empty - no matches played yet
-    battingAvg: 0, // ✅ Empty - no batting average
-    strikeRate: 0 // ✅ Empty - no strike rate
-  },
-  bowlingStats: { 
-    wickets: 0, // ✅ Empty - no wickets yet
-    economy: 0, // ✅ Empty - no bowling economy
-    catches: 0 // ✅ Empty - no catches yet
-  }
-}
+      id: 27,
+      name: 'Vishnu',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0,
+      battingStats: {
+        Cup: 0, // New player - no cups yet
+        pomAwards: 1, // Starting awards
+        runs: 152, // ✅ Estimated based on Excel patterns
+        battingAvg: 6.2, // ✅ Estimated
+        strikeRate: 108.5 // ✅ Estimated
+      },
+      bowlingStats: {
+        wickets: 4, // ✅ Estimated
+        economy: 16.8, // ✅ Estimated
+        catches: 8 // ✅ Estimated
+      }
+    },
+    {
+      id: 28,
+      name: 'Karthikeyan',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 8, // High ranking due to strong performance
+      battingStats: {
+        Cup: 0, // Experienced player
+        pomAwards: 2, // Performance-based awards
+        runs: 603, // ✅ From Excel analysis (same as S N K mapping)
+        battingAvg: 15.5, // ✅ From Excel analysis
+        strikeRate: 165.2 // ✅ From Excel analysis
+      },
+      bowlingStats: {
+        wickets: 23, // ✅ From Excel analysis - TOP WICKET TAKER!
+        economy: 9.8, // ✅ From Excel analysis - excellent economy
+        catches: 20 // ✅ From Excel analysis
+      }
+    },
+    {
+      id: 29,
+      name: 'Akshay',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0,
+      battingStats: {
+        Cup: 1, // New player
+        pomAwards: 1, // Starting level
+        runs: 232, // ✅ Estimated based on Excel patterns
+        battingAvg: 9.8, // ✅ Estimated
+        strikeRate: 108.6 // ✅ Estimated
+      },
+      bowlingStats: {
+        wickets: 20, // ✅ Estimated
+        economy: 8.2, // ✅ Estimated
+        catches: 12 // ✅ Estimated
+      }
+    },
+    {
+      id: 30,
+      name: 'Arumugam',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 7,
+      battingStats: {
+        Cup: 1, // Some experience
+        pomAwards: 1, // Basic awards
+        runs: 195, // ✅ Estimated - decent scorer
+        battingAvg: 7.8, // ✅ Estimated
+        strikeRate: 118.4 // ✅ Estimated
+      },
+      bowlingStats: {
+        wickets: 21, // ✅ Estimated - good bowler
+        economy: 11.9, // ✅ Estimated - good economy
+        catches: 15 // ✅ Estimated
+      }
+    },
+    {
+      id: 31,
+      name: 'Guna',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 5,
+      battingStats: {
+        Cup: 0, // New player
+        pomAwards: 1, // Starting level
+        runs: 426, // ✅ Estimated
+        battingAvg: 11.5, // ✅ Estimated
+        strikeRate: 145.8 // ✅ Estimated
+      },
+      bowlingStats: {
+        wickets: 13, // ✅ Estimated - decent bowler
+        economy: 14, // ✅ Estimated
+        catches: 6 // ✅ Estimated
+      }
+    },
+    {
+      id: 32,
+      name: 'Satz',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0, // Good ranking based on performance
+      battingStats: {
+        Cup: 2, // Experienced player
+        pomAwards: 4, // Strong performance awards
+        runs: 761, // ✅ From Excel - HIGH SCORER! (5th highest)
+        battingAvg: 25.37, // ✅ From Excel - good average
+        strikeRate: 159.5 // ✅ From Excel - excellent strike rate
+      },
+      bowlingStats: {
+        wickets: 14, // ✅ From Excel
+        economy: 11.22, // ✅ From Excel - needs improvement
+        catches: 35 // ✅ From Excel - EXCELLENT fielder! (2nd highest)
+      }
+    },
+    {
+      id: 33,
+      name: 'Gopi',
+      role: PlayerRole.BOWLER,
+      basePrice: 100,
+      mvpRanking: 0, // Lower ranking - developing player
+      battingStats: {
+        Cup: 0, // New/limited experience
+        pomAwards: 0, // No major awards yet
+        runs: 35, // ✅ Estimated - limited batting
+        battingAvg: 3.8, // ✅ Estimated - lower-order batsman
+        strikeRate: 65.4 // ✅ Estimated - cautious batting
+      },
+      bowlingStats: {
+        wickets: 3, // ✅ Estimated - developing bowler
+        economy: 19.8, // ✅ Estimated - needs work on economy
+        catches: 3 // ✅ Estimated - few catches
+      }
+    },
+    {
+      id: 34,
+      name: 'Venkat',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0, // No ranking yet - new player
+      battingStats: {
+        Cup: 0, // New player - no cups
+        pomAwards: 0, // No awards yet
+        runs: 0, // ✅ Empty - no matches played yet
+        battingAvg: 0, // ✅ Empty - no batting average
+        strikeRate: 0 // ✅ Empty - no strike rate
+      },
+      bowlingStats: {
+        wickets: 0, // ✅ Empty - no wickets yet
+        economy: 0, // ✅ Empty - no bowling economy
+        catches: 0 // ✅ Empty - no catches yet
+      }
+    },
+    {
+      id: 35,
+      name: 'Sharan(Sarath) ',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0, // No ranking yet - new player
+      battingStats: {
+        Cup: 0, // New player - no cups
+        pomAwards: 0, // No awards yet
+        runs: 0, // ✅ Empty - no matches played yet
+        battingAvg: 0, // ✅ Empty - no batting average
+        strikeRate: 0 // ✅ Empty - no strike rate
+      },
+      bowlingStats: {
+        wickets: 0, // ✅ Empty - no wickets yet
+        economy: 0, // ✅ Empty - no bowling economy
+        catches: 0 // ✅ Empty - no catches yet
+      }
+    }
   ];
 
   // MANUAL POOL CONFIGURATION - Updated to exclude captain IDs
@@ -775,14 +776,14 @@ private initialPlayers: Player[] = [
       {
         id: 1,
         name: 'Premium Pool',
-        playerIds: [1,28,18, 31,32], 
+        playerIds: [1, 28, 18, 31, 32],
         isActive: true,
         isCompleted: false
       },
       {
         id: 2,
         name: 'Pool A',
-        playerIds: [ 2,3,4,5.6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23 , 24, 25, 26, 27, 29, 30, 33, 34, 35], // Pool 2: 10 players
+        playerIds: [2, 3, 4, 5.6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 33, 34, 35], // Pool 2: 10 players
         isActive: false,
         isCompleted: false
       }
@@ -804,50 +805,50 @@ private initialPlayers: Player[] = [
   }
 
   // Teams with captains already assigned and budget adjusted
-private createInitialTeams(): Team[] {
-  return [
-    {
-      id: 1,
-      name: 'Keshav',
-      shortName: 'Keshav',
-      color: '#F39C12', // Vibrant Red - Bold & Powerful
-      budget: 2350,
-      players: [this.teamCaptains[0]] // Vishnu as captain
-    },
-    {
-      id: 2,
-      name: 'Loki',
-      shortName: 'Loki',
-      color: '#3498DB', // Royal Blue - Classic & Professional
-      budget: 2150,
-      players: [this.teamCaptains[1]] // Karthikeyan as captain
-    },
-    {
-      id: 3,
-      name: 'Praveen',
-      shortName: 'Praveen',
-      color: '#E74C3C', // Golden Orange - Energetic & Dynamic
-      budget: 2180,
-      players: [this.teamCaptains[2]] // Akshay as captain
-    },
-    {
-      id: 4,
-      name: 'Kabeer',
-      shortName: 'Kabeer',
-      color: '#27AE60', // Forest Green - Fresh & Strong
-      budget: 2320,
-      players: [this.teamCaptains[3]] // Arumugam as captain
-    },
-    {
-      id: 5,
-      name: 'Sowrish',
-      shortName: 'Sowrish',
-      color: '#8E44AD', // Purple - Regal & Distinctive
-      budget: 2100,
-      players: [this.teamCaptains[4]] // Guna as captain
-    },
-  ];
-}
+  private createInitialTeams(): Team[] {
+    return [
+      {
+        id: 1,
+        name: 'Keshav',
+        shortName: 'Keshav',
+        color: '#F39C12', // Vibrant Red - Bold & Powerful
+        budget: 2350,
+        players: [this.teamCaptains[0]] // Vishnu as captain
+      },
+      {
+        id: 2,
+        name: 'Loki',
+        shortName: 'Loki',
+        color: '#3498DB', // Royal Blue - Classic & Professional
+        budget: 2150,
+        players: [this.teamCaptains[1]] // Karthikeyan as captain
+      },
+      {
+        id: 3,
+        name: 'Praveen',
+        shortName: 'Praveen',
+        color: '#E74C3C', // Golden Orange - Energetic & Dynamic
+        budget: 2180,
+        players: [this.teamCaptains[2]] // Akshay as captain
+      },
+      {
+        id: 4,
+        name: 'Kabeer',
+        shortName: 'Kabeer',
+        color: '#27AE60', // Forest Green - Fresh & Strong
+        budget: 2320,
+        players: [this.teamCaptains[3]] // Arumugam as captain
+      },
+      {
+        id: 5,
+        name: 'Sowrish',
+        shortName: 'Sowrish',
+        color: '#8E44AD', // Purple - Regal & Distinctive
+        budget: 2100,
+        players: [this.teamCaptains[4]] // Guna as captain
+      },
+    ];
+  }
 
   // BehaviorSubjects
   private availablePlayers = new BehaviorSubject<Player[]>([...this.initialPlayers]);
@@ -857,7 +858,7 @@ private createInitialTeams(): Team[] {
   private currentBid = new BehaviorSubject<number>(0);
   private currentTeam = new BehaviorSubject<Team | null>(null);
   private auctionInProgress = new BehaviorSubject<boolean>(false);
-  
+
   // Pool-related subjects
   private pools = new BehaviorSubject<PlayerPool[]>(this.createManualPools());
   private currentPool = new BehaviorSubject<PlayerPool | null>(null);
@@ -873,62 +874,164 @@ private createInitialTeams(): Team[] {
   pools$ = this.pools.asObservable();
   currentPool$ = this.currentPool.asObservable();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private supabaseService: SupabaseService
+  ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
-    
+
     // Initialize pools and set first pool as active
     const initialPools = this.createManualPools();
     this.pools.next(initialPools);
     this.currentPool.next(initialPools[0]);
-    
-    console.log('🎯 Service initialized with team captains and manual pool system');
-    console.log('👑 Team captains assigned to their teams');
-    console.log('📊 Pool structure:', this.getPoolSummary());
+
+    // Load teams & players from Supabase (async, won't block UI)
+    this.loadFromSupabase();
+
+    console.log('🎯 Service initialized — loading data from Supabase');
   }
 
-  // ENHANCED AUCTION METHODS
+  // ── Supabase loader ──────────────────────────────────────────────────────
+  async loadFromSupabase(): Promise<void> {
+    try {
+      // 1. Load teams
+      const { data: dbTeams } = await this.supabaseService.client
+        .from('teams')
+        .select('id,team_name,team_short_name,team_color')
+        .order('team_name');
+
+      if (dbTeams && dbTeams.length > 0) {
+        // Build lookup: DB team_name -> supabaseId + color
+        const dbTeamMap = new Map<string, { supabaseId: string; color: string }>(
+          dbTeams.map((t: any) => [t.team_name.toLowerCase(), { supabaseId: t.id, color: t.team_color }])
+        );
+
+        // Update supabaseId & color on the existing in-memory teams
+        const updatedTeams = this.teams.value.map(t => {
+          const dbEntry = dbTeamMap.get(t.name.toLowerCase());
+          if (dbEntry) {
+            return { ...t, supabaseId: dbEntry.supabaseId, color: dbEntry.color };
+          }
+          return t;
+        });
+        this.teams.next(updatedTeams);
+        console.log('✅ Teams synced with Supabase colors + IDs');
+      }
+
+      // 2. Load players (order by auction_order)
+      const { data: dbPlayers } = await this.supabaseService.client
+        .from('auction_players')
+        .select('id,player_name,player_role,base_price,auction_order,auction_status,final_team_id')
+        .order('auction_order');
+
+      if (dbPlayers && dbPlayers.length > 0) {
+        // Build stats lookup from hardcoded list
+        const statsMap = new Map<string, Player>(
+          [...this.initialPlayers, ...this.teamCaptains]
+            .map(p => [p.name.toLowerCase().trim(), p])
+        );
+
+        // Remap initialPlayers list with supabaseIds
+        const remapped: Player[] = [];
+        const pool1Ids: number[] = [];
+        const pool2Ids: number[] = [];
+
+        dbPlayers.forEach((dbP: any, idx: number) => {
+          const localId = idx + 1;
+          const stats = statsMap.get(dbP.player_name.toLowerCase().trim());
+          const player: Player = {
+            ...(stats ?? {
+              id: localId,
+              name: dbP.player_name,
+              role: dbP.player_role as PlayerRole,
+              basePrice: dbP.base_price,
+              mvpRanking: idx,
+              battingStats: { runs: 0, strikeRate: 0 },
+              bowlingStats: { wickets: 0, economy: 0 }
+            }),
+            id: localId,
+            supabaseId: dbP.id,
+            name: dbP.player_name,
+            basePrice: dbP.base_price ?? stats?.basePrice ?? 100,
+            isSold: dbP.auction_status === 'sold',
+            isUnsold: dbP.auction_status === 'unsold'
+          };
+
+          // Pool 1 = auction_order 1-5, Pool 2 = rest
+          if (dbP.auction_order >= 1 && dbP.auction_order <= 5) {
+            pool1Ids.push(localId);
+          } else {
+            pool2Ids.push(localId);
+          }
+
+          if (dbP.auction_status === 'upcoming') {
+            remapped.push(player);
+          }
+        });
+
+        // Update players and pools
+        this.initialPlayers = remapped.map(p => ({ ...p })) as Player[];
+        this.availablePlayers.next(remapped);
+
+        // Rebuild pools with DB-derived IDs
+        const newPools = [
+          { id: 1, name: 'Premium Pool', playerIds: pool1Ids, isActive: true, isCompleted: false },
+          { id: 2, name: 'Pool A', playerIds: pool2Ids, isActive: false, isCompleted: false }
+        ];
+        this.pools.next(newPools);
+        this.currentPool.next(newPools[0]);
+        console.log('✅ Players loaded from Supabase:', remapped.length, 'upcoming');
+      }
+    } catch (err) {
+      console.warn('⚠️ Supabase load failed, using hardcoded data:', err);
+    }
+  }
+
+  // Subject to notify app.component when a player is sold (for processAuctionResult)
+  readonly soldPlayerNotifier$ = new Subject<{ player: Player; team: Team; finalBid: number }>();
+
 
   startPlayerAuction(): void {
     const currentPoolValue = this.currentPool.value;
     const availablePlayersValue = this.availablePlayers.value;
-    
+
     if (!currentPoolValue) {
       console.log('❌ No active pool available');
       return;
     }
-    
+
     // Get available players from current pool
-    const currentPoolAvailablePlayers = availablePlayersValue.filter(player => 
+    const currentPoolAvailablePlayers = availablePlayersValue.filter(player =>
       currentPoolValue.playerIds.includes(player.id)
     );
-    
+
     if (currentPoolAvailablePlayers.length === 0) {
       console.log(`✅ Pool ${currentPoolValue.name} completed, moving to next pool`);
       this.moveToNextPool();
       return;
     }
-    
+
     // Select random player from current pool
     const randomIndex = Math.floor(Math.random() * currentPoolAvailablePlayers.length);
     const selectedPlayer = currentPoolAvailablePlayers[randomIndex];
-    
+
     // Set current player and bid
     this.currentPlayer.next(selectedPlayer);
-    this.currentBid.next(selectedPlayer.basePrice );
+    this.currentBid.next(selectedPlayer.basePrice);
     this.currentTeam.next(null);
     this.auctionInProgress.next(true);
-    
+
     console.log(`🎲 Selected player: ${selectedPlayer.name} from ${currentPoolValue.name}`);
   }
 
-  
+
 
   private moveToNextPool(): void {
     const currentPools = this.pools.value;
     const currentPoolValue = this.currentPool.value;
-    
+
     if (!currentPoolValue) return;
-    
+
     // Mark current pool as completed
     const updatedPools = currentPools.map(pool => {
       if (pool.id === currentPoolValue.id) {
@@ -936,12 +1039,12 @@ private createInitialTeams(): Team[] {
       }
       return pool;
     });
-    
+
     // Find next pool
-    const nextPool = updatedPools.find(pool => 
+    const nextPool = updatedPools.find(pool =>
       pool.id === currentPoolValue.id + 1 && !pool.isCompleted
     );
-    
+
     if (nextPool) {
       // Activate next pool
       const finalPools = updatedPools.map(pool => {
@@ -950,10 +1053,10 @@ private createInitialTeams(): Team[] {
         }
         return pool;
       });
-      
+
       this.pools.next(finalPools);
       this.currentPool.next({ ...nextPool, isActive: true });
-      
+
       console.log(`➡️ Moved to ${nextPool.name}`);
     } else {
       // All pools completed
@@ -961,17 +1064,17 @@ private createInitialTeams(): Team[] {
       console.log('🏁 All pools completed!');
     }
   }
-  
+
 
   sellPlayer(): void {
     const currentPlayerValue = this.currentPlayer.value;
     const currentTeamValue = this.currentTeam.value;
     const currentBidValue = this.currentBid.value;
-    
+
     if (!currentPlayerValue || !currentTeamValue) {
       return;
     }
-    
+
     // Update the player
     const soldPlayer: Player = {
       ...currentPlayerValue,
@@ -980,7 +1083,7 @@ private createInitialTeams(): Team[] {
       isSold: true,
       isUnsold: false
     };
-    
+
     // Update teams
     const updatedTeams = this.teams.value.map(team => {
       if (team.id === currentTeamValue.id) {
@@ -992,44 +1095,51 @@ private createInitialTeams(): Team[] {
       }
       return team;
     });
-    
+
     // Remove from available players
     const updatedAvailablePlayers = this.availablePlayers.value.filter(
       player => player.id !== currentPlayerValue.id
     );
-    
+
     // Reset current auction
     this.teams.next(updatedTeams);
     this.availablePlayers.next(updatedAvailablePlayers);
+
+    // Notify app.component so it can call process_player_auction in Supabase
+    this.soldPlayerNotifier$.next({
+      player: currentPlayerValue,
+      team: currentTeamValue,
+      finalBid: currentBidValue
+    });
+
     this.currentPlayer.next(null);
     this.currentBid.next(0);
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
-    
   }
 
   markUnsold(): void {
     const currentPlayerValue = this.currentPlayer.value;
-    
+
     if (!currentPlayerValue) {
       return;
     }
-    
+
     // Update player as unsold
     const unsoldPlayer: Player = {
       ...currentPlayerValue,
       isUnsold: true,
       isSold: false
     };
-    
+
     // Update unsold players list
     const updatedUnsoldPlayers = [...this.unsoldPlayers.value, unsoldPlayer];
-    
+
     // Remove from available players
     const updatedAvailablePlayers = this.availablePlayers.value.filter(
       player => player.id !== currentPlayerValue.id
     );
-    
+
     // Reset current auction
     this.unsoldPlayers.next(updatedUnsoldPlayers);
     this.availablePlayers.next(updatedAvailablePlayers);
@@ -1037,7 +1147,7 @@ private createInitialTeams(): Team[] {
     this.currentBid.next(0);
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
-    
+
     console.log(`❌ Player ${currentPlayerValue.name} marked as unsold`);
   }
 
@@ -1057,13 +1167,13 @@ private createInitialTeams(): Team[] {
   getCurrentPoolInfo(): { poolName: string; remainingPlayers: number; totalPlayers: number } | null {
     const currentPoolValue = this.currentPool.value;
     const availablePlayersValue = this.availablePlayers.value;
-    
+
     if (!currentPoolValue) return null;
-    
-    const remainingPlayers = availablePlayersValue.filter(player => 
+
+    const remainingPlayers = availablePlayersValue.filter(player =>
       currentPoolValue.playerIds.includes(player.id)
     ).length;
-    
+
     return {
       poolName: currentPoolValue.name,
       remainingPlayers: remainingPlayers,
@@ -1075,7 +1185,7 @@ private createInitialTeams(): Team[] {
     const currentPools = this.pools.value;
     const completedPools = currentPools.filter(pool => pool.isCompleted).length;
     const currentPoolValue = this.currentPool.value;
-    
+
     return {
       completed: completedPools,
       total: currentPools.length,
@@ -1101,7 +1211,7 @@ private createInitialTeams(): Team[] {
   // METHOD TO UPDATE POOL CONFIGURATION
   updatePoolConfiguration(pools: { poolId: number; playerIds: number[] }[]): void {
     const currentPools = this.pools.value;
-    
+
     const updatedPools = currentPools.map(pool => {
       const poolUpdate = pools.find(p => p.poolId === pool.id);
       if (poolUpdate) {
@@ -1109,7 +1219,7 @@ private createInitialTeams(): Team[] {
       }
       return pool;
     });
-    
+
     this.pools.next(updatedPools);
     console.log('🔄 Pool configuration updated');
   }
@@ -1118,13 +1228,13 @@ private createInitialTeams(): Team[] {
 
   resetAuction(): void {
     console.log('🔄 Resetting auction with team captains and manual pool system...');
-    
+
     // Reset all teams with captains
     const resetTeams = this.createInitialTeams();
-    
+
     // Reset pools
     const resetPools = this.createManualPools();
-    
+
     // Reset all state
     this.availablePlayers.next([...this.initialPlayers]);
     this.unsoldPlayers.next([]);
@@ -1135,25 +1245,25 @@ private createInitialTeams(): Team[] {
     this.currentBid.next(0);
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
-    
+
     console.log('✅ Auction reset completed with team captains and manual pool system');
     console.log('👑 All team captains assigned to their respective teams');
     console.log('📊 Pool summary:', this.getPoolSummary());
   }
 
   restoreState(
-    teams: Team[], 
-    availablePlayers: Player[], 
-    unsoldPlayers: Player[], 
-    currentPlayer: Player | null, 
-    currentBid: number, 
-    currentTeam: Team | null, 
+    teams: Team[],
+    availablePlayers: Player[],
+    unsoldPlayers: Player[],
+    currentPlayer: Player | null,
+    currentBid: number,
+    currentTeam: Team | null,
     auctionInProgress: boolean,
     pools?: PlayerPool[],
     currentPool?: PlayerPool | null
   ): void {
     console.log('🔄 Restoring auction state with captains and manual pools...');
-    
+
     this.teams.next(teams);
     this.availablePlayers.next(availablePlayers);
     this.unsoldPlayers.next(unsoldPlayers);
@@ -1161,7 +1271,7 @@ private createInitialTeams(): Team[] {
     this.currentBid.next(currentBid);
     this.currentTeam.next(currentTeam);
     this.auctionInProgress.next(auctionInProgress);
-    
+
     // Restore pools if available, otherwise create fresh pools
     if (pools && currentPool !== undefined) {
       this.pools.next(pools);
@@ -1170,39 +1280,39 @@ private createInitialTeams(): Team[] {
       // Fallback: reconstruct pools from current state
       this.reconstructPoolsFromState(availablePlayers);
     }
-    
+
     console.log('✅ Auction state with captains and manual pools restored successfully');
   }
 
   private reconstructPoolsFromState(availablePlayers: Player[]): void {
     const freshPools = this.createManualPools();
-    
+
     // Find which pool should be active based on remaining players
     let activePool = freshPools[0];
     for (const pool of freshPools) {
-      const hasPlayersInPool = pool.playerIds.some(playerId => 
+      const hasPlayersInPool = pool.playerIds.some(playerId =>
         availablePlayers.some(availablePlayer => availablePlayer.id === playerId)
       );
-      
+
       if (hasPlayersInPool) {
         activePool = pool;
         break;
       }
     }
-    
+
     // Update pool states
     const updatedPools = freshPools.map(pool => {
-      const remainingPlayersInPool = pool.playerIds.filter(playerId => 
+      const remainingPlayersInPool = pool.playerIds.filter(playerId =>
         availablePlayers.some(availablePlayer => availablePlayer.id === playerId)
       );
-      
+
       return {
         ...pool,
         isActive: pool.id === activePool.id,
         isCompleted: remainingPlayersInPool.length === 0 && pool.id < activePool.id
       };
     });
-    
+
     this.pools.next(updatedPools);
     this.currentPool.next(activePool);
   }
@@ -1211,27 +1321,27 @@ private createInitialTeams(): Team[] {
   placeBid(teamId: number, bidAmount: number): void {
     const teamsList = this.teams.value;
     const team = teamsList.find(t => t.id === teamId);
-    
+
     if (!team || team.budget < bidAmount) {
       return;
     }
-    
+
     this.currentBid.next(bidAmount);
     this.currentTeam.next(team);
   }
 
   startNextRound(): void {
     const unsoldPlayersList = this.unsoldPlayers.value;
-    
+
     // Move all unsold players back to available players
     const updatedAvailablePlayers = [
       ...this.availablePlayers.value,
       ...unsoldPlayersList
     ];
-    
+
     this.availablePlayers.next(updatedAvailablePlayers);
     this.unsoldPlayers.next([]);
-    
+
     // Reconstruct pools with unsold players
     this.reconstructPoolsFromState(updatedAvailablePlayers);
   }
@@ -1286,7 +1396,7 @@ private createInitialTeams(): Team[] {
     try {
       localStorage.removeItem(this.STORAGE_KEY);
       console.log('🗑️ Auction state cleared successfully');
-      
+
       // Reset to initial state with captains and manual pools
       this.resetAuction();
     } catch (error) {
@@ -1309,15 +1419,15 @@ private createInitialTeams(): Team[] {
   }
 
   resetAuctionState(): void {
-  this.currentPlayer.next(null);
-  this.currentBid.next(0);
-  this.currentTeam.next(null);
-  this.auctionInProgress.next(false);
-}
+    this.currentPlayer.next(null);
+    this.currentBid.next(0);
+    this.currentTeam.next(null);
+    this.auctionInProgress.next(false);
+  }
   // UTILITY METHODS
   getSoldPlayersCount(): number {
     return this.teams.value.reduce(
-      (count, team) => count + team.players.length, 
+      (count, team) => count + team.players.length,
       0
     );
   }
@@ -1334,7 +1444,7 @@ private createInitialTeams(): Team[] {
     const soldPlayers = teams.reduce((acc, team) => acc + team.players.length, 0);
     const poolProgress = this.getPoolProgress();
     const currentPoolInfo = this.getCurrentPoolInfo();
-    
+
     return {
       totalTeams: teams.length,
       totalPlayers: this.initialPlayers.length,
@@ -1375,7 +1485,7 @@ private createInitialTeams(): Team[] {
   getPlayersByPool(poolId: number): Player[] {
     const pool = this.pools.value.find(p => p.id === poolId);
     if (!pool) return [];
-    
+
     return pool.playerIds
       .map(id => this.getPlayerById(id))
       .filter(player => player !== undefined) as Player[];
@@ -1396,7 +1506,7 @@ private createInitialTeams(): Team[] {
     if (!state) return null;
 
     const soldPlayers = state.teams.reduce((acc, team) => acc + team.players.length, 0);
-    
+
     return {
       totalTeams: state.teams.length,
       availablePlayers: state.availablePlayers.length,
@@ -1409,22 +1519,22 @@ private createInitialTeams(): Team[] {
   }
 
   rebidCurrentPlayer(): void {
-  const currentPlayerValue = this.currentPlayer.value;
-  
-  if (!currentPlayerValue || !this.auctionInProgress.value) {
-    console.log('❌ No current player to rebid or auction not in progress');
-    return;
+    const currentPlayerValue = this.currentPlayer.value;
+
+    if (!currentPlayerValue || !this.auctionInProgress.value) {
+      console.log('❌ No current player to rebid or auction not in progress');
+      return;
+    }
+
+    // Reset the bidding for the current player
+    this.currentBid.next(currentPlayerValue.basePrice);
+    this.currentTeam.next(null);
+
+    // Keep the same player in auction, just reset the bidding state
+    // currentPlayer and auctionInProgress remain unchanged
+
+    console.log(`🔄 Auction restarted for ${currentPlayerValue.name} at base price ${currentPlayerValue.basePrice}`);
   }
-  
-  // Reset the bidding for the current player
-  this.currentBid.next(currentPlayerValue.basePrice);
-  this.currentTeam.next(null);
-  
-  // Keep the same player in auction, just reset the bidding state
-  // currentPlayer and auctionInProgress remain unchanged
-  
-  console.log(`🔄 Auction restarted for ${currentPlayerValue.name} at base price ${currentPlayerValue.basePrice}`);
-}
 
   // DEBUGGING METHODS
   logCurrentState(): void {

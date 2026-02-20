@@ -2,23 +2,101 @@
 
 <div class="pg-container">
 
-    <!-- ======================== JOIN SCREEN ======================== -->
-    <div *ngIf="!isLoggedIn" class="join-screen">
-        <div class="join-card">
-            <div class="join-header">
-                <div class="join-logo">🏏</div>
+    <!-- ======================== AUTH SCREEN ======================== -->
+    <div *ngIf="!isLoggedIn" class="auth-screen">
+        <div class="auth-card">
+
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="auth-logo">🏏</div>
                 <h1>CWF Prediction Game</h1>
-                <p>Enter your details to start predicting!</p>
+                <p>Predict. Bet. Win!</p>
             </div>
 
-            <form [formGroup]="joinForm" (ngSubmit)="onJoin()" class="join-form">
+            <!-- Tab Switcher -->
+            <div class="auth-tabs">
+                <button class="auth-tab-btn" [class.active]="authTab === 'signin'" (click)="authTab = 'signin'">Sign
+                    In</button>
+                <button class="auth-tab-btn" [class.active]="authTab === 'signup'" (click)="authTab = 'signup'">Sign
+                    Up</button>
+            </div>
+
+            <!-- ── SIGN IN ── -->
+            <form *ngIf="authTab === 'signin'" [formGroup]="signInForm" (ngSubmit)="onSignIn()" class="auth-form">
 
                 <div class="form-field">
-                    <label>Your Name</label>
+                    <label>Username</label>
+                    <input type="text" formControlName="username" placeholder="Your username" class="pg-input"
+                        autocomplete="username" autocapitalize="none">
+                    <span class="field-error"
+                        *ngIf="signInForm.get('username')?.touched && signInForm.get('username')?.invalid">
+                        Enter your username
+                    </span>
+                </div>
+
+                <div class="form-field">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input [type]="showSignInPassword ? 'text' : 'password'" formControlName="password"
+                            placeholder="Your password" class="pg-input pw-input" autocomplete="current-password">
+                        <button type="button" class="show-pw-btn" (click)="showSignInPassword = !showSignInPassword">
+                            {{ showSignInPassword ? '🙈' : '👁️' }}
+                        </button>
+                    </div>
+                    <span class="field-error"
+                        *ngIf="signInForm.get('password')?.touched && signInForm.get('password')?.invalid">
+                        Password is required
+                    </span>
+                </div>
+
+                <button type="submit" class="btn-auth" [disabled]="signInForm.invalid || authLoading">
+                    <span *ngIf="!authLoading">🚀 Sign In</span>
+                    <span *ngIf="authLoading" class="btn-loading">
+                        <span class="spinner-sm"></span> Signing in...
+                    </span>
+                </button>
+
+                <p class="auth-switch">
+                    New here? <button type="button" class="link-btn" (click)="authTab = 'signup'">Create
+                        account</button>
+                </p>
+            </form>
+
+            <!-- ── SIGN UP ── -->
+            <form *ngIf="authTab === 'signup'" [formGroup]="signUpForm" (ngSubmit)="onSignUp()" class="auth-form">
+
+                <div class="form-field">
+                    <label>Username</label>
+                    <input type="text" formControlName="username" placeholder="e.g. ravi_kumar" class="pg-input"
+                        autocomplete="username" autocapitalize="none">
+                    <span class="field-hint">Lowercase letters, numbers, underscores only</span>
+                    <span class="field-error"
+                        *ngIf="signUpForm.get('username')?.touched && signUpForm.get('username')?.invalid">
+                        Min 3 chars — letters, numbers, underscores only
+                    </span>
+                </div>
+
+                <div class="form-field">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input [type]="showSignUpPassword ? 'text' : 'password'" formControlName="password"
+                            placeholder="Min 6 characters" class="pg-input pw-input" autocomplete="new-password">
+                        <button type="button" class="show-pw-btn" (click)="showSignUpPassword = !showSignUpPassword">
+                            {{ showSignUpPassword ? '🙈' : '👁️' }}
+                        </button>
+                    </div>
+                    <span class="field-error"
+                        *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.invalid">
+                        Password must be at least 6 characters
+                    </span>
+                </div>
+
+                <div class="form-field">
+                    <label>Display Name</label>
                     <input type="text" formControlName="display_name" placeholder="e.g. Ravi Kumar" class="pg-input"
                         autocomplete="name">
                     <span class="field-error"
-                        *ngIf="joinForm.get('display_name')?.touched && joinForm.get('display_name')?.invalid">
+                        *ngIf="signUpForm.get('display_name')?.touched && signUpForm.get('display_name')?.invalid">
                         Name must be at least 2 characters
                     </span>
                 </div>
@@ -27,19 +105,15 @@
                     <label>Mobile Number</label>
                     <div class="phone-input-wrapper">
                         <span class="phone-prefix">+91</span>
-                        <input type="tel" formControlName="phone_number" placeholder="10-digit mobile number"
+                        <input type="tel" formControlName="phone_number" placeholder="10-digit number"
                             class="pg-input phone-input" maxlength="10" inputmode="numeric" autocomplete="tel">
                     </div>
                     <span class="field-error"
-                        *ngIf="joinForm.get('phone_number')?.touched && joinForm.get('phone_number')?.invalid">
-                        Enter a valid 10-digit mobile number
-                    </span>
-                    <span class="field-hint">
-                        📱 Already joined? Enter the same number to continue
+                        *ngIf="signUpForm.get('phone_number')?.touched && signUpForm.get('phone_number')?.invalid">
+                        Enter a valid 10-digit number
                     </span>
                 </div>
 
-                <!-- Token Slider (only for new users, existing users keep their balance) -->
                 <div class="form-field token-slider-field">
                     <label>Starting Tokens <span class="token-value">{{ tokenSliderValue }}</span></label>
                     <div class="slider-wrapper">
@@ -48,19 +122,22 @@
                             [ngModelOptions]="{standalone: true}" min="20" max="200" step="5">
                         <span class="slider-label">200</span>
                     </div>
-                    <div class="token-preview">
-                        <span class="token-chip">🪙 {{ tokenSliderValue }} tokens to start</span>
-                    </div>
-                    <span class="field-hint">Only applies if you're new. Returning players keep their balance.</span>
+                    <span class="field-hint">New account only. Returning users keep their balance.</span>
                 </div>
 
-                <button type="submit" class="btn-join" [disabled]="joinForm.invalid || joinLoading">
-                    <span *ngIf="!joinLoading">🚀 Join / Continue</span>
-                    <span *ngIf="joinLoading" class="btn-loading">
-                        <span class="spinner-sm"></span> Loading...
+                <button type="submit" class="btn-auth" [disabled]="signUpForm.invalid || authLoading">
+                    <span *ngIf="!authLoading">✨ Create Account</span>
+                    <span *ngIf="authLoading" class="btn-loading">
+                        <span class="spinner-sm"></span> Creating...
                     </span>
                 </button>
+
+                <p class="auth-switch">
+                    Already have an account? <button type="button" class="link-btn" (click)="authTab = 'signin'">Sign
+                        in</button>
+                </p>
             </form>
+
         </div>
     </div>
 
@@ -73,7 +150,7 @@
                 <div class="user-avatar">{{ userProfile?.display_name?.charAt(0)?.toUpperCase() || '?' }}</div>
                 <div class="user-details">
                     <div class="user-name">{{ userProfile?.display_name }}</div>
-                    <div class="user-phone">📱 {{ userProfile?.phone_number }}</div>
+                    <div class="user-meta">&#64;{{ userProfile?.username }}</div>
                 </div>
             </div>
 
@@ -106,10 +183,63 @@
                         🏆 Board
                     </button>
                 </div>
-                <button class="btn-logout" (click)="onLogout()" title="Switch user">
+                <button class="btn-topup-trigger" (click)="openTopUp()" title="Add tokens">
+                    🪙 Top Up
+                </button>
+                <button class="btn-logout" (click)="onLogout()" title="Sign out">
                     <i class="pi pi-sign-out"></i>
                 </button>
             </div>
+        </div>
+
+        <!-- TOP-UP PANEL -->
+        <div class="topup-panel" *ngIf="showTopUp">
+
+            <!-- Step 1: Pick amount -->
+            <div *ngIf="topUpStep === 'pick'" class="topup-step">
+                <div class="topup-title">🪙 Add Tokens to Your Balance</div>
+                <div class="topup-current">Current balance: <strong>{{ userProfile?.token_balance }}</strong> tokens
+                </div>
+                <div class="topup-slider-row">
+                    <span class="slider-label">10</span>
+                    <input type="range" class="token-slider" [(ngModel)]="topUpAmount" min="10" max="200" step="10">
+                    <span class="slider-label">200</span>
+                </div>
+                <div class="topup-preview">
+                    Adding <span class="topup-amount">+{{ topUpAmount }}</span> tokens →
+                    New balance: <span class="topup-new-balance">{{ (userProfile?.token_balance || 0) + topUpAmount
+                        }}</span>
+                </div>
+                <div class="topup-actions">
+                    <button class="btn-topup-cancel" (click)="cancelTopUp()">Cancel</button>
+                    <button class="btn-topup-next" (click)="topUpStep = 'confirm'">
+                        Continue →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Confirm -->
+            <div *ngIf="topUpStep === 'confirm'" class="topup-step topup-confirm">
+                <div class="topup-confirm-icon">🤔</div>
+                <div class="topup-confirm-title">Are you sure?</div>
+                <div class="topup-confirm-msg">
+                    You are about to add <strong>{{ topUpAmount }} tokens</strong> to your balance.<br>
+                    Your balance will become <strong>{{ (userProfile?.token_balance || 0) + topUpAmount }}
+                        tokens</strong>.
+                </div>
+                <div class="topup-actions">
+                    <button class="btn-topup-cancel" (click)="topUpStep = 'pick'" [disabled]="topUpLoading">
+                        ← Go Back
+                    </button>
+                    <button class="btn-topup-confirm" (click)="confirmTopUp()" [disabled]="topUpLoading">
+                        <span *ngIf="!topUpLoading">✅ Yes, Add Tokens!</span>
+                        <span *ngIf="topUpLoading" class="btn-loading">
+                            <span class="spinner-sm"></span> Adding...
+                        </span>
+                    </button>
+                </div>
+            </div>
+
         </div>
 
         <!-- PREDICTIONS TABLE -->
@@ -121,8 +251,6 @@
             </div>
 
             <ng-container *ngIf="!loading">
-
-
                 <!-- Mobile scroll hint -->
                 <div class="scroll-hint">← Scroll right to see all teams →</div>
 
@@ -143,7 +271,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let player of filteredPlayers; let i = index; trackBy: trackByPlayerId"
+                            <tr *ngFor="let player of players; let i = index; trackBy: trackByPlayerId"
                                 class="player-row" [class.has-bet]="hasAnyBet(player.id)"
                                 [class.sold]="player.auction_status === 'sold'"
                                 [class.unsold]="player.auction_status === 'unsold'">
@@ -197,9 +325,9 @@
                                 </td>
                             </tr>
 
-                            <tr *ngIf="filteredPlayers.length === 0">
+                            <tr *ngIf="players.length === 0">
                                 <td [attr.colspan]="teams.length + 4" class="empty-row">
-                                    <div class="empty-state">🔍 No players found</div>
+                                    <div class="empty-state">🔍 No players loaded</div>
                                 </td>
                             </tr>
                         </tbody>
@@ -210,7 +338,7 @@
                 <div class="pg-legend">
                     <div class="legend-item"><span class="legend-dot green"></span> You have bets</div>
                     <div class="legend-item"><span class="max-badge small">MAX</span> 5 tokens used</div>
-                    <div class="legend-item">Pool = all bets. Multiplier = payout if that team wins.</div>
+                    <div class="legend-item">Pool = all bets. Multiplier = payout if team wins.</div>
                 </div>
             </ng-container>
         </div>

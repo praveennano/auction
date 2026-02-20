@@ -1,163 +1,146 @@
-.stats-container {
-  padding: 0.5rem;
-}
-
-.stat-item {
-  margin-bottom: 1.5rem;
-}
-
-.stat-header {
+.prediction-stats {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 240px;
+  flex: 1;
+}
+
+// ── Label ────────────────────────────────────────────────
+.ps-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+// ── No player / No votes states ──────────────────────────
+.no-player-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.stat-title {
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.stat-value {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: var(--primary-color);
-}
-
-.progress-container {
-  margin-bottom: 1rem;
-}
-
-.progress-bar {
-  height: 8px;
-  background-color: #e9ecef;
-  border-radius: 4px;
-  overflow: hidden;
-  display: flex;
-}
-
-.progress-segment {
-  height: 100%;
-  transition: width 0.3s ease;
-  
-  &.sold {
-    background-color: #22c55e; // Green
-  }
-  
-  &.unsold {
-    background-color: #ef4444; // Red
-  }
-  
-  &.pending {
-    background-color: #3b82f6; // Blue
-  }
-}
-
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.stat-box {
-  padding: 1rem;
-  border-radius: 8px;
-  text-align: center;
-  transition: transform 0.2s;
-  
-  &:hover {
-    transform: translateY(-2px);
-  }
-  
-  &.sold {
-    background-color: rgba(34, 197, 94, 0.1);
-    border-left: 3px solid #22c55e;
-  }
-  
-  &.unsold {
-    background-color: rgba(239, 68, 68, 0.1);
-    border-left: 3px solid #ef4444;
-  }
-  
-  &.pending {
-    background-color: rgba(59, 130, 246, 0.1);
-    border-left: 3px solid #3b82f6;
-  }
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  color: var(--text-color-secondary);
-  margin-bottom: 0.25rem;
-}
-
-.stat-number {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-  
-  .sold & {
-    color: #15803d; // Darker green
-  }
-  
-  .unsold & {
-    color: #b91c1c; // Darker red
-  }
-  
-  .pending & {
-    color: #1d4ed8; // Darker blue
-  }
-}
-
-.stat-percentage {
-  font-size: 0.875rem;
-  color: var(--text-color-secondary);
-  font-weight: 600;
-}
-
-.legend {
-  display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
+  gap: 0.4rem;
+
+  .no-player-icon {
+    font-size: 2rem;
+    opacity: 0.3;
+  }
+
+  .no-player-text {
+    font-size: 0.82rem;
+    color: #94a3b8;
+  }
 }
 
-.legend-item {
+.no-votes {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-style: italic;
 }
 
-.color-box {
+// ── Bars ─────────────────────────────────────────────────
+.team-bars {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.team-bar-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 40px 40px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.team-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  .team-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .team-short {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #334155;
+    white-space: nowrap;
+  }
+}
+
+.bar-track {
+  height: 14px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  min-width: 3px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.team-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.team-multiplier {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-align: right;
+
+  &.high {
+    color: #f59e0b;
+  }
+
+  &.dim {
+    color: #cbd5e1;
+  }
+}
+
+// ── Loading ───────────────────────────────────────────────
+.loading-teams {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.spinner-sm {
   width: 12px;
   height: 12px;
-  border-radius: 3px;
-  
-  &.sold {
-    background-color: #22c55e;
-  }
-  
-  &.unsold {
-    background-color: #ef4444;
-  }
-  
-  &.pending {
-    background-color: #3b82f6;
-  }
+  border: 2px solid #e2e8f0;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
 }
 
-.legend-text {
-  font-size: 0.75rem;
-  color: var(--text-color-secondary);
-}
-
-@media screen and (max-width: 576px) {
-  .stat-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .legend {
-    flex-wrap: wrap;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

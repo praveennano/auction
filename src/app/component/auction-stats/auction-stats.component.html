@@ -1,60 +1,54 @@
-<p-card>
-  <ng-template pTemplate="header">
-    <div class="p-3 bg-primary text-white font-bold">
-      Auction Stats
+<div class="prediction-stats">
+
+  <!-- No current player -->
+  <ng-container *ngIf="!currentPlayer">
+    <div class="no-player-state">
+      <div class="no-player-icon">🏏</div>
+      <div class="no-player-text">Waiting for next player…</div>
     </div>
-  </ng-template>
-  
-  <div class="stats-container">
-    <div class="stat-item">
-      <div class="stat-header">
-        <div class="stat-title">Total Players</div>
-        <div class="stat-value">{{ totalPlayers }}</div>
-      </div>
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div class="progress-segment sold" [style.width.%]="soldPercentage" title="Sold: {{ soldPercentage }}%"></div>
-          <div class="progress-segment unsold" [style.width.%]="unsoldPercentage" title="Unsold: {{ unsoldPercentage }}%"></div>
-          <div class="progress-segment pending" [style.width.%]="pendingPercentage" title="Pending: {{ pendingPercentage }}%"></div>
-        </div>
-      </div>
+  </ng-container>
+
+  <!-- Current player up for auction -->
+  <ng-container *ngIf="currentPlayer">
+
+    <!-- Section label -->
+    <div class="ps-label">🎯 Prediction Split</div>
+
+    <!-- No teams loaded yet -->
+    <div *ngIf="pgTeams.length === 0" class="loading-teams">
+      <span class="spinner-sm"></span> Loading…
     </div>
-    
-    <div class="stat-grid">
-      <div class="stat-box sold">
-        <div class="stat-label">Sold</div>
-        <div class="stat-number">{{ soldPlayers.length }}</div>
-        <div class="stat-percentage">{{ soldPercentage }}%</div>
-      </div>
-      
-      <div class="stat-box unsold">
-        <div class="stat-label">Unsold</div>
-        <div class="stat-number">{{ unsoldPlayers.length }}</div>
-        <div class="stat-percentage">{{ unsoldPercentage }}%</div>
-      </div>
-      
-      <div class="stat-box pending">
-        <div class="stat-label">Pending</div>
-        <div class="stat-number">{{ availablePlayers.length }}</div>
-        <div class="stat-percentage">{{ pendingPercentage }}%</div>
-      </div>
+
+    <!-- No predictions yet -->
+    <div *ngIf="pgTeams.length > 0 && totalTokens === 0" class="no-votes">
+      No predictions placed yet
     </div>
-    
-    <div class="mt-3" *ngIf="totalPlayers > 0">
-      <div class="legend">
-        <div class="legend-item">
-          <div class="color-box sold"></div>
-          <div class="legend-text">Sold</div>
+
+    <!-- Team bars -->
+    <div *ngIf="pgTeams.length > 0 && totalTokens > 0" class="team-bars">
+      <div *ngFor="let tp of teamPredictions" class="team-bar-row">
+
+        <div class="team-label">
+          <span class="team-dot" [style.background]="tp.team.team_color"></span>
+          <span class="team-short">{{ tp.team.team_short_name }}</span>
         </div>
-        <div class="legend-item">
-          <div class="color-box unsold"></div>
-          <div class="legend-text">Unsold</div>
+
+        <div class="bar-track">
+          <div class="bar-fill" [style.width.%]="tp.percentage" [style.background]="tp.team.team_color">
+          </div>
         </div>
-        <div class="legend-item">
-          <div class="color-box pending"></div>
-          <div class="legend-text">Pending</div>
+
+        <div class="team-pct" [style.color]="tp.tokens > 0 ? tp.team.team_color : '#94a3b8'">
+          {{ tp.percentage }}%
         </div>
+
+        <div class="team-multiplier" *ngIf="tp.tokens > 0" [class.high]="tp.percentage < 20">
+          {{ getMultiplier(tp.tokens) }}
+        </div>
+        <div class="team-multiplier dim" *ngIf="tp.tokens === 0">—</div>
+
       </div>
     </div>
-  </div>
-</p-card>
+
+  </ng-container>
+</div>

@@ -1,12 +1,12 @@
 <div class="leaderboard-container">
     <div class="lb-header">
-        <h2>🏆 Leaderboard</h2>
-        <p>Rankings by token balance</p>
+        <h2>🏆 Prediction Leaderboard</h2>
+        <p>Ranked by profit/loss</p>
     </div>
 
     <div *ngIf="loading" class="lb-loading">
         <div class="loading-spinner"></div>
-        <p>Loading leaderboard...</p>
+        <p>Loading...</p>
     </div>
 
     <div *ngIf="error" class="lb-error">
@@ -17,45 +17,60 @@
         <table class="lb-table">
             <thead>
                 <tr>
-                    <th>Rank</th>
+                    <th>#</th>
                     <th>Player</th>
-                    <th>Balance</th>
-                    <th>Accuracy</th>
                     <th>Correct</th>
-                    <th>Won</th>
+                    <th>Accuracy</th>
+                    <th>P / L</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let user of leaderboard; let i = index" class="lb-row" [class.top-3]="i < 3">
+
+                    <!-- Rank -->
                     <td class="rank-cell">
                         <span class="rank-icon">{{ getRankIcon(i) }}</span>
                     </td>
+
+                    <!-- User -->
                     <td class="user-cell">
                         <div class="lb-avatar" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
                             {{ user.display_name?.charAt(0)?.toUpperCase() }}
                         </div>
                         <div class="lb-user-info">
                             <div class="lb-name">{{ user.display_name }}</div>
-                            <div class="lb-email">{{ user.email }}</div>
+                            <div class="lb-sub">&#64;{{ user.username }}</div>
                         </div>
                     </td>
-                    <td class="balance-cell">
-                        <span class="balance-value">🪙 {{ user.token_balance }}</span>
+
+                    <!-- Correct / Wrong -->
+                    <td class="correct-cell">
+                        <span class="correct-val">{{ user.correct_predictions }}</span>
+                        <span class="sep">/</span>
+                        <span class="wrong-val">{{ (user.total_predictions || 0) - (user.correct_predictions || 0)
+                            }}</span>
+                        <span class="pred-label">✅ / ❌</span>
                     </td>
+
+                    <!-- Accuracy -->
                     <td class="accuracy-cell">
                         <span class="accuracy-value" [style.color]="getAccuracyColor(user.accuracy_percentage)">
                             {{ (user.accuracy_percentage || 0) | number:'1.0-1' }}%
                         </span>
                     </td>
-                    <td class="correct-cell">
-                        {{ user.correct_predictions }}/{{ user.total_predictions }}
-                    </td>
-                    <td class="won-cell">
-                        <span class="won-value">+{{ user.tokens_won }}</span>
+
+                    <!-- Profit / Loss -->
+                    <td class="pl-cell">
+                        <span class="pl-value" [class.profit]="getProfitLoss(user) >= 0"
+                            [class.loss]="getProfitLoss(user) < 0">
+                            {{ getProfitLoss(user) >= 0 ? '+' : '' }}{{ getProfitLoss(user) }}
+                        </span>
+                        <span class="pl-token">🪙</span>
                     </td>
                 </tr>
+
                 <tr *ngIf="leaderboard.length === 0">
-                    <td colspan="6" class="empty-lb">No players yet. Be the first to register!</td>
+                    <td colspan="5" class="empty-lb">No players yet. Be the first!</td>
                 </tr>
             </tbody>
         </table>

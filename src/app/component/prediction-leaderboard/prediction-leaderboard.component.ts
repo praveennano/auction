@@ -38,4 +38,8 @@ export class PredictionLeaderboardComponent implements OnInit {
         if (accuracy >= 50) return '#f59e0b';
         return '#f87171';
     }
+
+    getProfitLoss(user: PgUserProfile): number {
+        return (user.token_balance ?? 0) - (user.initial_tokens ?? 0);
+    }
 }

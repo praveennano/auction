@@ -323,7 +323,7 @@
             <h2 class="panel-title">Unsold Players ({{unsoldPlayers.length}})</h2>
           </div>
 
-          <div class="unsold-wordcloud-section">
+          <div class="unsold-wordcloud-section" style="max-height: 130px; overflow: hidden; flex-shrink: 0;">
             <app-player-wordcloud [players]="unsoldPlayers" [isUnsoldMode]="true" title="Unsold">
             </app-player-wordcloud>
 
@@ -333,43 +333,10 @@
             </div>
           </div>
 
-          <!-- Clean Auction Stats (No Pool Info) -->
-          <div class="auction-stats">
-            <h3 class="stats-title">Auction Stats</h3>
 
-            <div class="stat-overview">
-              <div class="stat-total">
-                <span class="stat-label">Total Players</span>
-                <span class="stat-value">{{totalPlayers}}</span>
-              </div>
+          <!-- Live Prediction Stats for Current Player -->
+          <app-auction-stats [currentPlayer]="currentPlayer"></app-auction-stats>
 
-              <div class="progress-bar">
-                <div class="progress-segment sold" [style.width.%]="soldPercentage"></div>
-                <div class="progress-segment unsold" [style.width.%]="unsoldPercentage"></div>
-                <div class="progress-segment pending" [style.width.%]="pendingPercentage"></div>
-              </div>
-            </div>
-
-            <div class="stat-cards">
-              <div class="stat-card sold">
-                <div class="stat-number">{{soldPlayers.length}}</div>
-                <div class="stat-name">Sold</div>
-                <div class="stat-percent">{{soldPercentage}}%</div>
-              </div>
-
-              <div class="stat-card unsold">
-                <div class="stat-number">{{unsoldPlayers.length}}</div>
-                <div class="stat-name">Unsold</div>
-                <div class="stat-percent">{{unsoldPercentage}}%</div>
-              </div>
-
-              <div class="stat-card pending">
-                <div class="stat-number">{{availablePlayers.length}}</div>
-                <div class="stat-name">Pending</div>
-                <div class="stat-percent">{{pendingPercentage}}%</div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 

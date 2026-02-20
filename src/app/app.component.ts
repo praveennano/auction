@@ -22,6 +22,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { PlayerWordcloudComponent } from './player-wordcloud/player-wordcloud.component';
 import { FormsModule } from '@angular/forms';
 import { PredictionGameComponent } from './component/prediction-game/prediction-game.component';
+import { PredictionGameService } from './service/prediction-game.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -122,6 +123,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private auctionService: AuctionService,
+    private pgService: PredictionGameService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {
@@ -131,6 +133,19 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Initialize subscription to auction updates first
     this.subscribeToAuctionUpdates();
+
+    // Subscribe to sold-player events → trigger Supabase process_player_auction
+    this.subscriptions.add(
+      this.auctionService.soldPlayerNotifier$.subscribe(({ player, team, finalBid }) => {
+        if (player.supabaseId && team.supabaseId) {
+          this.pgService.processAuctionResult(player.supabaseId, team.supabaseId, finalBid)
+            .then(() => console.log(`✅ PG result recorded: ${player.name} → ${team.name}`))
+            .catch(err => console.error('❌ PG result error:', err));
+        } else {
+          console.warn('⚠️ Missing supabaseId for player or team — skipping processAuctionResult');
+        }
+      })
+    );
 
     // Load saved state only in browser
     if (this.isBrowser) {

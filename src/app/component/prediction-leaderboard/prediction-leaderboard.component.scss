@@ -1,5 +1,5 @@
 .leaderboard-container {
-    max-width: 900px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -8,19 +8,20 @@
     margin-bottom: 1.5rem;
 
     h2 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         font-weight: 700;
         color: #f1f5f9;
-        margin: 0 0 0.25rem;
+        margin: 0 0 0.2rem;
     }
 
     p {
         color: #64748b;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         margin: 0;
     }
 }
 
+// ── Loading / Error ──────────────────────────────────
 .lb-loading,
 .lb-error {
     display: flex;
@@ -32,8 +33,8 @@
     color: #64748b;
 
     .loading-spinner {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border: 3px solid rgba(99, 102, 241, 0.2);
         border-top-color: #6366f1;
         border-radius: 50%;
@@ -51,6 +52,7 @@
     }
 }
 
+// ── Table ────────────────────────────────────────────
 .lb-table-wrapper {
     overflow-x: auto;
 }
@@ -65,18 +67,18 @@
     }
 
     th {
-        padding: 0.75rem 1rem;
+        padding: 0.65rem 0.75rem;
         text-align: left;
         color: #64748b;
         font-weight: 600;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.06em;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     td {
-        padding: 0.75rem 1rem;
+        padding: 0.7rem 0.75rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         vertical-align: middle;
     }
@@ -94,26 +96,28 @@
     }
 }
 
+// ── Rank ─────────────────────────────────────────────
 .rank-cell {
-    width: 60px;
+    width: 48px;
     text-align: center;
 }
 
 .rank-icon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #64748b;
 }
 
+// ── User ─────────────────────────────────────────────
 .user-cell {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.65rem;
 }
 
 .lb-avatar {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: linear-gradient(135deg, #334155, #1e293b);
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -121,26 +125,26 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #94a3b8;
     flex-shrink: 0;
 
     &.gold {
         background: linear-gradient(135deg, #f59e0b, #d97706);
         border-color: #f59e0b;
-        color: white;
+        color: #fff;
     }
 
     &.silver {
         background: linear-gradient(135deg, #94a3b8, #64748b);
         border-color: #94a3b8;
-        color: white;
+        color: #fff;
     }
 
     &.bronze {
         background: linear-gradient(135deg, #b45309, #92400e);
         border-color: #b45309;
-        color: white;
+        color: #fff;
     }
 }
 
@@ -148,40 +152,73 @@
     .lb-name {
         font-weight: 600;
         color: #f1f5f9;
+        font-size: 0.875rem;
     }
 
-    .lb-email {
-        font-size: 0.75rem;
+    .lb-sub {
+        font-size: 0.7rem;
         color: #64748b;
     }
 }
 
-.balance-cell {
-    .balance-value {
+// ── Correct / Wrong ───────────────────────────────────
+.correct-cell {
+    white-space: nowrap;
+
+    .correct-val {
+        color: #4ade80;
         font-weight: 700;
-        color: #a78bfa;
-        font-size: 1rem;
+    }
+
+    .sep {
+        color: #475569;
+        margin: 0 2px;
+    }
+
+    .wrong-val {
+        color: #f87171;
+        font-weight: 700;
+    }
+
+    .pred-label {
+        font-size: 0.7rem;
+        color: #475569;
+        margin-left: 4px;
     }
 }
 
+// ── Accuracy ─────────────────────────────────────────
 .accuracy-cell {
     .accuracy-value {
         font-weight: 700;
+        font-size: 0.9rem;
+    }
+}
+
+// ── Profit / Loss ─────────────────────────────────────
+.pl-cell {
+    white-space: nowrap;
+
+    .pl-value {
+        font-weight: 800;
         font-size: 0.95rem;
+
+        &.profit {
+            color: #4ade80;
+        }
+
+        &.loss {
+            color: #f87171;
+        }
+    }
+
+    .pl-token {
+        font-size: 0.75rem;
+        margin-left: 2px;
     }
 }
 
-.correct-cell {
-    color: #94a3b8;
-}
-
-.won-cell {
-    .won-value {
-        color: #4ade80;
-        font-weight: 600;
-    }
-}
-
+// ── Empty ─────────────────────────────────────────────
 .empty-lb {
     text-align: center;
     color: #475569;
