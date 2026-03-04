@@ -47,7 +47,7 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
 
     // ── Token setup (after reset) ─────────────────────────────────────
     showTokenSetup = false;
-    selectedTokenAmount: 5 | 10 = 5;
+    selectedTokenAmount = 5;
     tokenSetupLoading = false;
 
     isLoggedIn = false;

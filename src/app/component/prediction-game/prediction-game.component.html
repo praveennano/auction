@@ -148,17 +148,17 @@
             <h2 class="token-setup-title">Pick Your Tokens</h2>
             <p class="token-setup-desc">New quarter! Choose your starting tokens for this auction round.</p>
 
-            <div class="token-options">
-                <button class="token-option" [class.selected]="selectedTokenAmount === 5"
-                    (click)="selectedTokenAmount = 5">
-                    <div class="token-option-amount">5</div>
-                    <div class="token-option-label">tokens</div>
-                </button>
-                <button class="token-option" [class.selected]="selectedTokenAmount === 10"
-                    (click)="selectedTokenAmount = 10">
-                    <div class="token-option-amount">10</div>
-                    <div class="token-option-label">tokens</div>
-                </button>
+            <div class="token-slider-field">
+                <label>Your Tokens: <span class="token-value">🪙 {{ selectedTokenAmount }}</span></label>
+                <div class="slider-wrapper">
+                    <span class="slider-label">5</span>
+                    <input type="range" class="token-slider" [(ngModel)]="selectedTokenAmount" min="5" max="200"
+                        step="5">
+                    <span class="slider-label">200</span>
+                </div>
+                <div class="token-preview">
+                    <span class="token-chip">{{ selectedTokenAmount }} tokens</span>
+                </div>
             </div>
 
             <button class="btn-auth" (click)="confirmTokenSetup()" [disabled]="tokenSetupLoading">

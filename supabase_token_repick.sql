@@ -55,8 +55,8 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-    IF p_tokens NOT IN (5, 10) THEN
-        RAISE EXCEPTION 'Tokens must be 5 or 10';
+    IF p_tokens < 5 OR p_tokens > 200 OR (p_tokens % 5) != 0 THEN
+        RAISE EXCEPTION 'Tokens must be between 5 and 200, in steps of 5';
     END IF;
 
     UPDATE users SET

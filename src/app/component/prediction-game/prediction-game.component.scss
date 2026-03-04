@@ -1214,3 +1214,100 @@
         cursor: not-allowed;
     }
 }
+
+// =====================
+// TOKEN SETUP SCREEN
+// =====================
+.token-setup-screen {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 70%), #0a0e1a;
+}
+
+.token-setup-card {
+    background: linear-gradient(135deg, #1a1f35 0%, #0f1420 100%);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.token-setup-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.token-setup-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0 0 0.5rem;
+}
+
+.token-setup-desc {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin: 0 0 1.5rem;
+}
+
+.token-options {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.token-option {
+    flex: 1;
+    max-width: 140px;
+    padding: 1.25rem 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+
+    &:hover {
+        border-color: rgba(99, 102, 241, 0.4);
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    &.selected {
+        border-color: #6366f1;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15));
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        transform: scale(1.05);
+    }
+}
+
+.token-option-amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #a78bfa;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+
+    .selected & {
+        color: #c4b5fd;
+        text-shadow: 0 0 15px rgba(167, 139, 250, 0.5);
+    }
+}
+
+.token-option-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+
+    .selected & {
+        color: #a78bfa;
+    }
+}
