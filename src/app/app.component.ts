@@ -87,6 +87,11 @@ interface CelebrationData {
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Cricket Player Auction';
   activeAppTab: 'auction' | 'prediction' = 'prediction';
+  isAdmin = false;
+
+  onAdminStatusChange(isAdmin: boolean): void {
+    this.isAdmin = isAdmin;
+  }
 
   // Basic auction properties (visible to UI)
   teams: Team[] = [];
@@ -147,12 +152,19 @@ export class AppComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Load saved state only in browser
+    // Wait for Supabase to load DB data (which now merges saved state internally),
+    // then enable auto-save. loadSavedState only runs as fallback if DB had no data.
     if (this.isBrowser) {
-      setTimeout(() => {
+      this.auctionService.supabaseReady.then(() => {
+        // DB loaded and merged saved state — just enable auto-save
+        this.hasLoadedFromStorage = true;
+        this.setupAutoSave();
+        console.log('✅ Supabase ready — auto-save enabled');
+      }).catch(() => {
+        // Supabase failed — fall back to localStorage-only restore
         this.loadSavedState();
         this.setupAutoSave();
-      }, 100);
+      });
     } else {
       this.hasLoadedFromStorage = true;
     }

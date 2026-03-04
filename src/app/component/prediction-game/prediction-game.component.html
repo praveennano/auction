@@ -141,8 +141,37 @@
         </div>
     </div>
 
+    <!-- ======================== TOKEN SETUP (after reset) ======================== -->
+    <div *ngIf="isLoggedIn && showTokenSetup" class="token-setup-screen">
+        <div class="token-setup-card">
+            <div class="token-setup-icon">🪙</div>
+            <h2 class="token-setup-title">Pick Your Tokens</h2>
+            <p class="token-setup-desc">New quarter! Choose your starting tokens for this auction round.</p>
+
+            <div class="token-options">
+                <button class="token-option" [class.selected]="selectedTokenAmount === 5"
+                    (click)="selectedTokenAmount = 5">
+                    <div class="token-option-amount">5</div>
+                    <div class="token-option-label">tokens</div>
+                </button>
+                <button class="token-option" [class.selected]="selectedTokenAmount === 10"
+                    (click)="selectedTokenAmount = 10">
+                    <div class="token-option-amount">10</div>
+                    <div class="token-option-label">tokens</div>
+                </button>
+            </div>
+
+            <button class="btn-auth" (click)="confirmTokenSetup()" [disabled]="tokenSetupLoading">
+                <span *ngIf="!tokenSetupLoading">Start with {{ selectedTokenAmount }} Tokens 🚀</span>
+                <span *ngIf="tokenSetupLoading" class="btn-loading">
+                    <span class="spinner-sm"></span> Setting up...
+                </span>
+            </button>
+        </div>
+    </div>
+
     <!-- ======================== GAME SCREEN ======================== -->
-    <div *ngIf="isLoggedIn" class="game-screen">
+    <div *ngIf="isLoggedIn && !showTokenSetup" class="game-screen">
 
         <!-- Top Bar -->
         <div class="pg-topbar">
@@ -188,6 +217,32 @@
                 </button>
                 <button class="btn-logout" (click)="onLogout()" title="Sign out">
                     <i class="pi pi-sign-out"></i>
+                </button>
+                <button *ngIf="pgService.isAdmin" class="btn-admin-reset" (click)="showResetConfirm = true"
+                    title="Admin: Reset all predictions">
+                    🔄 Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- ADMIN RESET CONFIRMATION -->
+        <div class="reset-confirm-panel" *ngIf="showResetConfirm">
+            <div class="reset-confirm-icon">⚠️</div>
+            <div class="reset-confirm-title">Reset All Predictions?</div>
+            <div class="reset-confirm-msg">
+                This will <strong>delete all predictions</strong>, <strong>reset all user balances</strong> to their
+                initial tokens, and <strong>reset all auction player statuses</strong> to "upcoming".
+                <br>This action cannot be undone!
+            </div>
+            <div class="reset-confirm-actions">
+                <button class="btn-topup-cancel" (click)="showResetConfirm = false" [disabled]="resetLoading">
+                    Cancel
+                </button>
+                <button class="btn-admin-confirm-reset" (click)="resetPredictions()" [disabled]="resetLoading">
+                    <span *ngIf="!resetLoading">🗑️ Yes, Reset Everything</span>
+                    <span *ngIf="resetLoading" class="btn-loading">
+                        <span class="spinner-sm"></span> Resetting...
+                    </span>
                 </button>
             </div>
         </div>
@@ -345,7 +400,7 @@
 
         <!-- LEADERBOARD -->
         <div *ngIf="activeSubTab === 'leaderboard'" class="leaderboard-view">
-            <app-prediction-leaderboard></app-prediction-leaderboard>
+            <app-prediction-leaderboard [currentUserId]="userProfile?.id || null"></app-prediction-leaderboard>
         </div>
 
     </div>

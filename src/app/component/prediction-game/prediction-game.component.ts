@@ -1,6 +1,6 @@
 import {
     Component, OnInit, OnDestroy, ChangeDetectorRef,
-    ChangeDetectionStrategy, PLATFORM_ID, Inject
+    ChangeDetectionStrategy, PLATFORM_ID, Inject, Output, EventEmitter
 } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import {
@@ -37,13 +37,18 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
     authLoading = false;
     showSignInPassword = false;
     showSignUpPassword = false;
-    tokenSliderValue = 100;
+    tokenSliderValue = 5;
 
     // ── Top-up state ─────────────────────────────────────────────────────
     showTopUp = false;
     topUpAmount = 50;
     topUpStep: 'pick' | 'confirm' = 'pick';
     topUpLoading = false;
+
+    // ── Token setup (after reset) ─────────────────────────────────────
+    showTokenSetup = false;
+    selectedTokenAmount: 5 | 10 = 5;
+    tokenSetupLoading = false;
 
     isLoggedIn = false;
     userProfile: PgUserProfile | null = null;
@@ -56,6 +61,11 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
     private localTokens = new Map<string, number>(); // 'playerId_teamId' → tokens
     private loadingStates = new Map<string, boolean>();
     private subscriptions = new Subscription();
+
+    // Admin event emitter
+    @Output() adminStatusChange = new EventEmitter<boolean>();
+    resetLoading = false;
+    showResetConfirm = false;
 
     constructor(
         public pgService: PredictionGameService,
@@ -111,7 +121,13 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
                     if (profile) {
                         this.pgService['userProfileSubject'].next(profile);
                         this.isLoggedIn = true;
-                        this.loadGameData(profile.id);
+                        this.userProfile = profile;
+                        this.adminStatusChange.emit(profile.role === 'admin');
+                        if (profile.needs_token_setup) {
+                            this.showTokenSetup = true;
+                        } else {
+                            this.loadGameData(profile.id);
+                        }
                     }
                     this.cdr.markForCheck();
                 });
@@ -134,12 +150,19 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
             const profile = await this.pgService.signIn(username, password);
             this.persistSession(profile.username);
             this.isLoggedIn = true;
-            this.messageService.add({
-                severity: 'success',
-                summary: `Welcome back, ${profile.display_name}! 🎉`,
-                detail: `You have ${profile.token_balance} tokens.`
-            });
-            await this.loadGameData(profile.id);
+            this.userProfile = profile;
+            this.adminStatusChange.emit(profile.role === 'admin');
+
+            if (profile.needs_token_setup) {
+                this.showTokenSetup = true;
+            } else {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: `Welcome back, ${profile.display_name}! 🎉`,
+                    detail: `You have ${profile.token_balance} tokens.`
+                });
+                await this.loadGameData(profile.id);
+            }
         } catch (err: any) {
             this.messageService.add({ severity: 'error', summary: 'Sign In Failed', detail: err.message });
         } finally {
@@ -182,7 +205,55 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
         this.localTokens.clear();
         this.signInForm.reset();
         this.signUpForm.reset();
+        this.adminStatusChange.emit(false);
         this.cdr.markForCheck();
+    }
+
+    // ── Admin: Reset All Predictions ──────────────────────────────────────
+    async resetPredictions(): Promise<void> {
+        if (!this.userProfile || !this.pgService.isAdmin) return;
+        this.resetLoading = true;
+        this.cdr.markForCheck();
+        try {
+            const result = await this.pgService.resetAllPredictions(this.userProfile.id);
+            this.messageService.add({
+                severity: 'success',
+                summary: '🔄 Predictions Reset',
+                detail: `${result.predictions_deleted} predictions cleared. All balances restored.`
+            });
+            // Reload game data
+            await this.loadGameData(this.userProfile.id);
+        } catch (err: any) {
+            this.messageService.add({ severity: 'error', summary: 'Reset Failed', detail: err.message });
+        } finally {
+            this.resetLoading = false;
+            this.showResetConfirm = false;
+            // Admin also needs to re-pick tokens
+            this.showTokenSetup = true;
+            this.cdr.markForCheck();
+        }
+    }
+
+    // ── Token Setup (after reset) ────────────────────────────────────
+    async confirmTokenSetup(): Promise<void> {
+        if (!this.userProfile) return;
+        this.tokenSetupLoading = true;
+        this.cdr.markForCheck();
+        try {
+            await this.pgService.setUserTokens(this.userProfile.id, this.selectedTokenAmount);
+            this.showTokenSetup = false;
+            this.messageService.add({
+                severity: 'success',
+                summary: '🪙 Tokens Set!',
+                detail: `You have ${this.selectedTokenAmount} tokens. Good luck!`
+            });
+            await this.loadGameData(this.userProfile.id);
+        } catch (err: any) {
+            this.messageService.add({ severity: 'error', summary: 'Failed', detail: err.message });
+        } finally {
+            this.tokenSetupLoading = false;
+            this.cdr.markForCheck();
+        }
     }
 
     // ── Top-Up ─────────────────────────────────────────────────────────

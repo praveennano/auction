@@ -3,14 +3,15 @@
   <button class="app-tab-btn" [class.active]="activeAppTab === 'prediction'" (click)="activeAppTab = 'prediction'">
     <span>🎯 Prediction Game</span>
   </button>
-  <button class="app-tab-btn" [class.active]="activeAppTab === 'auction'" (click)="activeAppTab = 'auction'">
+  <button *ngIf="isAdmin" class="app-tab-btn" [class.active]="activeAppTab === 'auction'"
+    (click)="activeAppTab = 'auction'">
     <span>🏏 Auction</span>
   </button>
 </div>
 
 <!-- Tab 1: Prediction Game -->
 <div *ngIf="activeAppTab === 'prediction'" class="prediction-tab-wrapper">
-  <app-prediction-game></app-prediction-game>
+  <app-prediction-game (adminStatusChange)="onAdminStatusChange($event)"></app-prediction-game>
 </div>
 
 <!-- Tab 2: Auction (existing content below) -->

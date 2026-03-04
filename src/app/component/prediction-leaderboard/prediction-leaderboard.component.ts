@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PredictionGameService, PgUserProfile } from '../../service/prediction-game.service';
 
@@ -7,23 +7,49 @@ import { PredictionGameService, PgUserProfile } from '../../service/prediction-g
     standalone: true,
     imports: [CommonModule],
     templateUrl: './prediction-leaderboard.component.html',
-    styleUrl: './prediction-leaderboard.component.scss'
+    styleUrl: './prediction-leaderboard.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PredictionLeaderboardComponent implements OnInit {
+    @Input() currentUserId: string | null = null;
+
     leaderboard: PgUserProfile[] = [];
     loading = true;
+    refreshing = false;
     error = '';
+    lastRefreshed: Date | null = null;
 
-    constructor(private pgService: PredictionGameService) { }
+    constructor(
+        private pgService: PredictionGameService,
+        private cdr: ChangeDetectorRef
+    ) { }
 
     async ngOnInit(): Promise<void> {
+        await this.loadData();
+    }
+
+    async refresh(): Promise<void> {
+        this.refreshing = true;
+        this.cdr.markForCheck();
+        await this.loadData();
+        this.refreshing = false;
+        this.cdr.markForCheck();
+    }
+
+    private async loadData(): Promise<void> {
         try {
             this.leaderboard = await this.pgService.loadLeaderboard();
+            this.lastRefreshed = new Date();
         } catch (err: any) {
             this.error = err.message;
         } finally {
             this.loading = false;
+            this.cdr.markForCheck();
         }
+    }
+
+    isCurrentUser(user: PgUserProfile): boolean {
+        return !!this.currentUserId && user.id === this.currentUserId;
     }
 
     getRankIcon(index: number): string {

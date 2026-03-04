@@ -1,7 +1,19 @@
 <div class="leaderboard-container">
     <div class="lb-header">
-        <h2>🏆 Prediction Leaderboard</h2>
-        <p>Ranked by profit/loss</p>
+        <div class="lb-title-row">
+            <div>
+                <h2>🏆 Prediction Leaderboard</h2>
+                <p>Ranked by profit/loss</p>
+            </div>
+            <button class="btn-refresh" (click)="refresh()" [disabled]="refreshing" title="Refresh leaderboard">
+                <span class="refresh-icon" [class.spinning]="refreshing">🔄</span>
+                <span *ngIf="!refreshing">Refresh</span>
+                <span *ngIf="refreshing">Loading...</span>
+            </button>
+        </div>
+        <div class="lb-last-updated" *ngIf="lastRefreshed">
+            Updated {{ lastRefreshed | date:'shortTime' }}
+        </div>
     </div>
 
     <div *ngIf="loading" class="lb-loading">
@@ -25,7 +37,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of leaderboard; let i = index" class="lb-row" [class.top-3]="i < 3">
+                <tr *ngFor="let user of leaderboard; let i = index" class="lb-row" [class.top-3]="i < 3"
+                    [class.current-user]="isCurrentUser(user)">
 
                     <!-- Rank -->
                     <td class="rank-cell">
@@ -34,11 +47,15 @@
 
                     <!-- User -->
                     <td class="user-cell">
-                        <div class="lb-avatar" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
+                        <div class="lb-avatar" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2"
+                            [class.me]="isCurrentUser(user)">
                             {{ user.display_name?.charAt(0)?.toUpperCase() }}
                         </div>
                         <div class="lb-user-info">
-                            <div class="lb-name">{{ user.display_name }}</div>
+                            <div class="lb-name">
+                                {{ user.display_name }}
+                                <span *ngIf="isCurrentUser(user)" class="you-badge">YOU</span>
+                            </div>
                             <div class="lb-sub">&#64;{{ user.username }}</div>
                         </div>
                     </td>

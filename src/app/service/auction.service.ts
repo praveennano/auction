@@ -783,7 +783,7 @@ export class AuctionService {
       {
         id: 2,
         name: 'Pool A',
-        playerIds: [2, 3, 4, 5.6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 33, 34, 35], // Pool 2: 10 players
+        playerIds: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 33, 34, 35], // Pool 2: remaining players
         isActive: false,
         isCompleted: false
       }
@@ -863,6 +863,10 @@ export class AuctionService {
   private pools = new BehaviorSubject<PlayerPool[]>(this.createManualPools());
   private currentPool = new BehaviorSubject<PlayerPool | null>(null);
 
+  // DB-derived pool config (set by loadFromSupabase, reused on reset)
+  private dbDerivedPools: PlayerPool[] | null = null;
+  private dbAllPlayers: Player[] = [];
+
   // Observable streams
   availablePlayers$ = this.availablePlayers.asObservable();
   unsoldPlayers$ = this.unsoldPlayers.asObservable();
@@ -873,6 +877,9 @@ export class AuctionService {
   auctionInProgress$ = this.auctionInProgress.asObservable();
   pools$ = this.pools.asObservable();
   currentPool$ = this.currentPool.asObservable();
+
+  // Promise that resolves when Supabase data is loaded (or load fails)
+  supabaseReady: Promise<void>;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -886,7 +893,9 @@ export class AuctionService {
     this.currentPool.next(initialPools[0]);
 
     // Load teams & players from Supabase (async, won't block UI)
-    this.loadFromSupabase();
+    // Store the promise so callers can await DB readiness
+    // Only load in browser — on server (SSR), SupabaseService.client is undefined
+    this.supabaseReady = this.isBrowser ? this.loadFromSupabase() : Promise.resolve();
 
     console.log('🎯 Service initialized — loading data from Supabase');
   }
@@ -915,14 +924,21 @@ export class AuctionService {
           return t;
         });
         this.teams.next(updatedTeams);
-        console.log('✅ Teams synced with Supabase colors + IDs');
+        console.log('✅ Teams synced:', updatedTeams.map(t => `${t.name} → ${t.color} [${t.supabaseId ? 'ID OK' : '⚠️ NO ID'}]`));
+      } else {
+        console.warn('⚠️ No teams from Supabase!');
       }
 
       // 2. Load players (order by auction_order)
-      const { data: dbPlayers } = await this.supabaseService.client
+      const { data: dbPlayers, error: playersError } = await this.supabaseService.client
         .from('auction_players')
         .select('id,player_name,player_role,base_price,auction_order,auction_status,final_team_id')
         .order('auction_order');
+
+      console.log('🔍 [DB] Raw players response:',
+        dbPlayers?.map((p: any) => `${p.player_name} | order=${p.auction_order} | status=${p.auction_status}`)
+      );
+      if (playersError) console.error('❌ Players fetch error:', playersError);
 
       if (dbPlayers && dbPlayers.length > 0) {
         // Build stats lookup from hardcoded list
@@ -935,6 +951,8 @@ export class AuctionService {
         const remapped: Player[] = [];
         const pool1Ids: number[] = [];
         const pool2Ids: number[] = [];
+        const pool1Names: string[] = [];
+        const pool2Names: string[] = [];
 
         dbPlayers.forEach((dbP: any, idx: number) => {
           const localId = idx + 1;
@@ -960,27 +978,130 @@ export class AuctionService {
           // Pool 1 = auction_order 1-5, Pool 2 = rest
           if (dbP.auction_order >= 1 && dbP.auction_order <= 5) {
             pool1Ids.push(localId);
+            pool1Names.push(`${dbP.player_name} (order=${dbP.auction_order})`);
           } else {
             pool2Ids.push(localId);
+            pool2Names.push(`${dbP.player_name} (order=${dbP.auction_order ?? 'NULL'})`);
           }
 
           if (dbP.auction_status === 'upcoming') {
             remapped.push(player);
+          } else {
+            console.log(`⏭️ Skipped "${dbP.player_name}" — status: ${dbP.auction_status}`);
           }
         });
 
-        // Update players and pools
-        this.initialPlayers = remapped.map(p => ({ ...p })) as Player[];
-        this.availablePlayers.next(remapped);
+        console.log('🏅 POOL A (Preferred 5):', pool1Names);
+        console.log('🎱 POOL B (Rest):', pool2Names);
+        console.log('✅ Available for auction:', remapped.map(p => p.name));
 
         // Rebuild pools with DB-derived IDs
-        const newPools = [
+        const newPools: PlayerPool[] = [
           { id: 1, name: 'Premium Pool', playerIds: pool1Ids, isActive: true, isCompleted: false },
           { id: 2, name: 'Pool A', playerIds: pool2Ids, isActive: false, isCompleted: false }
         ];
-        this.pools.next(newPools);
-        this.currentPool.next(newPools[0]);
-        console.log('✅ Players loaded from Supabase:', remapped.length, 'upcoming');
+
+        // ── Merge saved auction progress (sold/unsold) with DB-derived pools ──
+        let mergedAvailable = remapped;
+        let mergedPools = newPools;
+        let mergedCurrentPool: PlayerPool | null = newPools[0];
+
+        if (this.isBrowser && typeof localStorage !== 'undefined') {
+          try {
+            const raw = localStorage.getItem(this.STORAGE_KEY);
+            if (raw) {
+              const saved = JSON.parse(raw);
+              console.log('📂 Merging saved auction progress with DB pools...');
+
+              // Build a name→localId map from the DB remap
+              const nameToLocalId = new Map<string, number>();
+              remapped.forEach(p => nameToLocalId.set(p.name.toLowerCase().trim(), p.id));
+
+              // Determine which players are already sold/unsold from saved state
+              const soldNames = new Set<string>();
+              if (saved.teams) {
+                for (const team of saved.teams) {
+                  if (team.players) {
+                    for (const p of team.players) {
+                      soldNames.add(p.name.toLowerCase().trim());
+                    }
+                  }
+                }
+              }
+              const unsoldNames = new Set<string>();
+              if (saved.unsoldPlayers) {
+                for (const p of saved.unsoldPlayers) {
+                  unsoldNames.add(p.name.toLowerCase().trim());
+                }
+              }
+
+              // Filter out sold players from available list
+              mergedAvailable = remapped.filter(p => !soldNames.has(p.name.toLowerCase().trim()));
+
+              // Mark unsold status
+              mergedAvailable = mergedAvailable.map(p => ({
+                ...p,
+                isUnsold: unsoldNames.has(p.name.toLowerCase().trim())
+              }));
+
+              // Restore team rosters & budgets from saved state if present
+              if (saved.teams && saved.teams.length > 0) {
+                // Re-map saved team players with DB-derived supabaseIds
+                const updatedTeams = this.teams.value.map((currentTeam: Team) => {
+                  const savedTeam = saved.teams.find((st: any) => st.id === currentTeam.id);
+                  if (savedTeam) {
+                    return { ...currentTeam, players: savedTeam.players || [], budget: savedTeam.budget };
+                  }
+                  return currentTeam;
+                });
+                this.teams.next(updatedTeams);
+              }
+
+              // Restore unsold players
+              if (saved.unsoldPlayers && saved.unsoldPlayers.length > 0) {
+                this.unsoldPlayers.next(saved.unsoldPlayers);
+              }
+
+              // Restore current auction state
+              if (saved.auctionInProgress) {
+                this.currentPlayer.next(saved.currentPlayer);
+                this.currentBid.next(saved.currentBid);
+                this.currentTeam.next(saved.currentTeam);
+                this.auctionInProgress.next(saved.auctionInProgress);
+              }
+
+              // Update pool completion status based on remaining available players
+              const availableIds = new Set(mergedAvailable.map(p => p.id));
+              mergedPools = newPools.map(pool => {
+                const hasAvailable = pool.playerIds.some(id => availableIds.has(id));
+                return { ...pool, isCompleted: !hasAvailable };
+              });
+
+              // Find the first non-completed pool to set as active
+              const activePool = mergedPools.find(p => !p.isCompleted) || null;
+              mergedPools = mergedPools.map(p => ({ ...p, isActive: activePool ? p.id === activePool.id : false }));
+              mergedCurrentPool = activePool;
+
+              console.log('✅ Merged saved progress — sold:', soldNames.size, 'unsold:', unsoldNames.size, 'available:', mergedAvailable.length);
+            }
+          } catch (e) {
+            console.warn('⚠️ Failed to merge saved state, using fresh DB data:', e);
+          }
+        }
+
+        // Store DB-derived pool config for reuse on reset
+        this.dbDerivedPools = newPools.map(p => ({ ...p }));
+        this.dbAllPlayers = remapped.map(p => ({ ...p })) as Player[];
+
+        // Update players and pools
+        this.initialPlayers = mergedAvailable.map(p => ({ ...p })) as Player[];
+        this.availablePlayers.next(mergedAvailable);
+        this.pools.next(mergedPools);
+        this.currentPool.next(mergedCurrentPool);
+
+        console.log(`✅ Loaded: ${mergedAvailable.length} players | Pool 1: ${pool1Ids.length} | Pool 2: ${pool2Ids.length}`);
+      } else {
+        console.warn('⚠️ No players from Supabase — using hardcoded data');
       }
     } catch (err) {
       console.warn('⚠️ Supabase load failed, using hardcoded data:', err);
@@ -1232,19 +1353,34 @@ export class AuctionService {
     // Reset all teams with captains
     const resetTeams = this.createInitialTeams();
 
-    // Reset pools
-    const resetPools = this.createManualPools();
+    // Use DB-derived pools if available, otherwise fall back to hardcoded
+    const resetPools = this.dbDerivedPools
+      ? this.dbDerivedPools.map(p => ({ ...p, isActive: false, isCompleted: false }))
+      : this.createManualPools();
+    // Activate the first pool
+    if (resetPools.length > 0) resetPools[0].isActive = true;
+
+    // Use DB-derived player list if available
+    const resetPlayers = this.dbAllPlayers.length > 0
+      ? this.dbAllPlayers.map(p => ({ ...p, isSold: false, isUnsold: false }))
+      : [...this.initialPlayers];
 
     // Reset all state
-    this.availablePlayers.next([...this.initialPlayers]);
+    this.initialPlayers = resetPlayers.map(p => ({ ...p })) as Player[];
+    this.availablePlayers.next(resetPlayers);
     this.unsoldPlayers.next([]);
     this.teams.next(resetTeams);
     this.pools.next(resetPools);
-    this.currentPool.next(resetPools[0]);
+    this.currentPool.next(resetPools[0] || null);
     this.currentPlayer.next(null);
     this.currentBid.next(0);
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
+
+    // Re-sync teams with Supabase IDs
+    if (this.isBrowser) {
+      this.loadFromSupabase();
+    }
 
     console.log('✅ Auction reset completed with team captains and manual pool system');
     console.log('👑 All team captains assigned to their respective teams');
@@ -1285,7 +1421,10 @@ export class AuctionService {
   }
 
   private reconstructPoolsFromState(availablePlayers: Player[]): void {
-    const freshPools = this.createManualPools();
+    // Use DB-derived pools if available, otherwise fall back to hardcoded
+    const freshPools = this.dbDerivedPools
+      ? this.dbDerivedPools.map(p => ({ ...p, isActive: false, isCompleted: false }))
+      : this.createManualPools();
 
     // Find which pool should be active based on remaining players
     let activePool = freshPools[0];

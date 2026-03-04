@@ -14,6 +14,8 @@ export interface PgUserProfile {
     total_predictions: number;
     correct_predictions: number;
     accuracy_percentage: number;
+    role?: string;
+    needs_token_setup?: boolean;
     created_at?: string;
 }
 
@@ -112,7 +114,7 @@ export class PredictionGameService {
     async getProfileByUsername(username: string): Promise<PgUserProfile | null> {
         const { data } = await this.supabaseService.client
             .from('users')
-            .select('id,username,display_name,phone_number,initial_tokens,token_balance,tokens_spent,tokens_won,total_predictions,correct_predictions,accuracy_percentage,created_at')
+            .select('id,username,display_name,phone_number,initial_tokens,token_balance,tokens_spent,tokens_won,total_predictions,correct_predictions,accuracy_percentage,role,needs_token_setup,created_at')
             .eq('username', username.trim().toLowerCase())
             .maybeSingle();
         return data as PgUserProfile | null;
@@ -129,9 +131,33 @@ export class PredictionGameService {
 
     clearSession(): void {
         this.userProfileSubject.next(null);
+        this.teamsSubject.next([]);
+        this.playersSubject.next([]);
         this.predictionsSubject.next([]);
         this.poolInfoSubject.next([]);
         this.unsubscribeRealtime();
+    }
+
+    get isAdmin(): boolean {
+        return this.userProfileSubject.value?.role === 'admin';
+    }
+
+    async resetAllPredictions(userId: string): Promise<{ predictions_deleted: number; message: string }> {
+        const { data, error } = await this.supabaseService.client
+            .rpc('reset_all_predictions', { p_user_id: userId });
+
+        if (error) throw new Error(error.message);
+        return data;
+    }
+
+    async setUserTokens(userId: string, tokens: number): Promise<void> {
+        const { error } = await this.supabaseService.client
+            .rpc('set_user_tokens', { p_user_id: userId, p_tokens: tokens });
+
+        if (error) throw new Error(error.message);
+
+        // Refresh profile to get updated balance
+        await this.refreshProfile(userId);
     }
 
     // â”€â”€â”€ DATA LOADING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
