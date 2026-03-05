@@ -1,5 +1,6 @@
 <!-- App Tab Switcher -->
-<div class="app-tab-bar">
+<div class="app-tab-bar" [class.theme-dark]="activeAppTab === 'prediction'"
+  [class.theme-light]="activeAppTab === 'auction'">
   <button class="app-tab-btn" [class.active]="activeAppTab === 'prediction'" (click)="activeAppTab = 'prediction'">
     <span>🎯 Prediction Game</span>
   </button>
@@ -435,6 +436,29 @@
 
         <div class="celebration-price">
           <span class="amount">{{celebrationData.soldPrice | number}}</span>
+        </div>
+
+        <!-- Prediction Stats -->
+        <div class="celebration-prediction-stats" *ngIf="celebrationData.totalPredictors">
+          <div class="prediction-stats-title">🎯 Prediction Results</div>
+          <div class="prediction-stats-grid">
+            <div class="pred-stat">
+              <span class="pred-stat-value">{{celebrationData.totalPredictors}}</span>
+              <span class="pred-stat-label">Predicted</span>
+            </div>
+            <div class="pred-stat correct">
+              <span class="pred-stat-value">{{celebrationData.winners}}</span>
+              <span class="pred-stat-label">Correct ✅</span>
+            </div>
+            <div class="pred-stat">
+              <span class="pred-stat-value">🪙 {{celebrationData.totalTokensBet}}</span>
+              <span class="pred-stat-label">Tokens Bet</span>
+            </div>
+            <div class="pred-stat won">
+              <span class="pred-stat-value">🪙 {{celebrationData.tokensWon}}</span>
+              <span class="pred-stat-label">Tokens Won</span>
+            </div>
+          </div>
         </div>
       </div>
 

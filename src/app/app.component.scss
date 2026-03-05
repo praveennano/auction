@@ -961,6 +961,70 @@
   }
 }
 
+/* CELEBRATION PREDICTION STATS */
+.celebration-prediction-stats {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.prediction-stats-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.03em;
+}
+
+.prediction-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.pred-stat {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  padding: 0.5rem 0.3rem;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.pred-stat.correct {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+}
+
+.pred-stat.won {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+}
+
+.pred-stat-value {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.pred-stat-label {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 480px) {
+  .prediction-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .teams-section {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
   border-radius: 24px;
@@ -1002,12 +1066,24 @@
 /* ===================== APP TAB BAR ===================== */
 .app-tab-bar {
   display: flex;
-  background: linear-gradient(135deg, #0a0e1a 0%, #0f1420 100%);
-  border-bottom: 2px solid rgba(99, 102, 241, 0.3);
   padding: 0 1rem;
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: all 0.3s ease;
+
+  // Dark theme (Prediction tab active)
+  &.theme-dark {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f1420 100%);
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+  }
+
+  // Light theme (Auction tab active)
+  &.theme-light {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-bottom: 2px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
 }
 
 .app-tab-btn {
@@ -1017,7 +1093,6 @@
   padding: 0.75rem 1.5rem;
   border: none;
   background: transparent;
-  color: #64748b;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -1025,15 +1100,36 @@
   margin-bottom: -2px;
   transition: all 0.2s;
 
-  &:hover {
-    color: #94a3b8;
-    background: rgba(255, 255, 255, 0.03);
+  // Dark theme colors
+  .theme-dark & {
+    color: #64748b;
+
+    &:hover {
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    &.active {
+      color: #a78bfa;
+      border-bottom-color: #6366f1;
+      background: rgba(99, 102, 241, 0.08);
+    }
   }
 
-  &.active {
-    color: #a78bfa;
-    border-bottom-color: #6366f1;
-    background: rgba(99, 102, 241, 0.08);
+  // Light theme colors
+  .theme-light & {
+    color: #94a3b8;
+
+    &:hover {
+      color: #475569;
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    &.active {
+      color: #1e293b;
+      border-bottom-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.06);
+    }
   }
 
   i {

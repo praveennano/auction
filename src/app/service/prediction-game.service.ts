@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SupabaseService } from './supabase.service';
 
@@ -72,7 +72,7 @@ export class PredictionGameService {
 
     constructor(private supabaseService: SupabaseService) { }
 
-    // â”€â”€â”€ AUTH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── AUTH ──────────────────────────────────────────────────────────────
 
     async signUp(
         username: string,
@@ -160,7 +160,7 @@ export class PredictionGameService {
         await this.refreshProfile(userId);
     }
 
-    // â”€â”€â”€ DATA LOADING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── DATA LOADING ──────────────────────────────────────────────────────
 
     async loadTeams(): Promise<void> {
         const { data } = await this.supabaseService.client
@@ -207,7 +207,7 @@ export class PredictionGameService {
         this.poolInfoSubject.next(pool);
     }
 
-    // â”€â”€â”€ TOKEN ALLOCATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── TOKEN ALLOCATION ──────────────────────────────────────────────────
 
     async updateTokenAllocation(
         userId: string, playerId: string, teamId: string, tokenAmount: number
@@ -227,7 +227,7 @@ export class PredictionGameService {
         ]);
     }
 
-    // â”€â”€â”€ REALTIME â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── REALTIME ──────────────────────────────────────────────────────────
 
     subscribeToRealtime(userId: string, onUpdate: () => void): void {
         this.unsubscribeRealtime();
@@ -245,7 +245,7 @@ export class PredictionGameService {
         }
     }
 
-    // â”€â”€â”€ LEADERBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── LEADERBOARD ───────────────────────────────────────────────────────
 
     async loadLeaderboard(): Promise<PgUserProfile[]> {
         const { data } = await this.supabaseService.client
@@ -281,18 +281,38 @@ export class PredictionGameService {
         playerSupabaseId: string,
         teamSupabaseId: string,
         finalPrice: number
-    ): Promise<void> {
-        const { data, error } = await this.supabaseService.client.rpc('process_player_auction', {
+    ): Promise<{ totalPredictors: number; winners: number; totalTokensBet: number; tokensWon: number }> {
+        const result = { totalPredictors: 0, winners: 0, totalTokensBet: 0, tokensWon: 0 };
+
+        const { error } = await this.supabaseService.client.rpc('process_player_auction', {
             p_player_id: playerSupabaseId,
             p_winning_team_id: teamSupabaseId,
             p_final_price: finalPrice
         });
+
         if (error) {
-            console.error('âŒ process_player_auction failed:', error.message);
-        } else {
-            console.log('âœ… Auction result processed:', data);
-            // Leaderboard auto-updates via Supabase Realtime (users table changes push to prediction component)
+            console.error('process_player_auction failed:', error.message);
+            return result;
         }
+
+        // Query prediction stats for this player after processing
+        try {
+            const { data: preds } = await this.supabaseService.client
+                .from('predictions')
+                .select('status, tokens_bet, tokens_won')
+                .eq('player_id', playerSupabaseId);
+
+            if (preds && preds.length > 0) {
+                result.totalPredictors = preds.length;
+                result.winners = preds.filter((p: any) => p.status === 'won').length;
+                result.totalTokensBet = preds.reduce((sum: number, p: any) => sum + (p.tokens_bet || 0), 0);
+                result.tokensWon = preds.filter((p: any) => p.status === 'won')
+                    .reduce((sum: number, p: any) => sum + (p.tokens_won || 0), 0);
+            }
+        } catch (e) {
+            console.warn('Could not load prediction stats:', e);
+        }
+
+        return result;
     }
 }
-
