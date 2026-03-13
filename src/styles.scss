@@ -11,20 +11,20 @@
   --color-success: #10b981;
   --color-danger: #ef4444;
   --color-info: #06b6d4;
-  
+
   --color-background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ff 50%, #f3f4f6 100%);
   --color-surface: #ffffff;
   --color-text: #1e293b;
   --color-text-secondary: #64748b;
-  
+
   --color-sold: #10b981;
   --color-unsold: #ef4444;
   --color-pending: #4f46e5;
-  
+
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  
+
   --radius-sm: 0.25rem;
   --radius: 0.5rem;
   --transition: all 0.2s ease;
@@ -37,7 +37,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
   line-height: 1.5;
@@ -75,7 +76,7 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
@@ -87,6 +88,7 @@ html, body {
   0% {
     transform: translateX(-10px) translateY(-5px) scale(1);
   }
+
   100% {
     transform: translateX(10px) translateY(5px) scale(1.05);
   }
@@ -94,15 +96,17 @@ html, body {
 
 .header-content {
   display: grid;
-  grid-template-columns: auto 1fr auto; /* Logo | Title | Actions */
+  grid-template-columns: auto 1fr auto;
+  /* Logo | Title | Actions */
   align-items: center;
- // max-width: 1400px;
+  // max-width: 1400px;
   margin: 0 auto;
   width: 100%;
   position: relative;
   z-index: 1;
- // padding: 1rem;
-  gap: 2rem; /* Add gap between sections */
+  // padding: 1rem;
+  gap: 2rem;
+  /* Add gap between sections */
 }
 
 .app-logo-left {
@@ -131,6 +135,7 @@ html, body {
   0% {
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
   }
+
   100% {
     filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
   }
@@ -158,9 +163,12 @@ html, body {
 }
 
 @keyframes bounceRotate {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(-50%) rotate(0deg) scale(1);
   }
+
   50% {
     transform: translateY(-60%) rotate(10deg) scale(1.1);
   }
@@ -210,7 +218,7 @@ html, body {
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   text-transform: uppercase;
@@ -238,7 +246,7 @@ html, body {
   background: rgba(255, 255, 255, 0.25);
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
@@ -290,13 +298,25 @@ html, body {
 }
 
 @keyframes liveBlink {
-  0% { opacity: 1; }
-  100% { opacity: 0.3; }
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.3;
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 /* Responsive Design */
@@ -304,16 +324,16 @@ html, body {
   .app-title {
     font-size: 2.2rem;
   }
-  
+
   .app-title::before,
   .app-title::after {
     font-size: 1.5rem;
   }
-  
+
   .app-title::before {
     left: -2.5rem;
   }
-  
+
   .app-title::after {
     right: -2.5rem;
   }
@@ -341,10 +361,11 @@ html, body {
   .app-title {
     font-size: 1.8rem;
   }
-  
+
   .app-title::before,
   .app-title::after {
-    display: none; /* Hide decorative elements on mobile */
+    display: none;
+    /* Hide decorative elements on mobile */
   }
 
   .btn-header-action {
@@ -532,6 +553,7 @@ html, body {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -559,17 +581,18 @@ html, body {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+
   .max-bid-hint,
   .team-full-hint {
     font-size: 0.7rem;
     padding: 0.3rem 0.5rem;
   }
-  
+
   .max-bid-text {
     font-size: 0.8rem;
   }
 }
- 
+
 .players-list::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 3px;
@@ -742,21 +765,29 @@ html, body {
 
 /* Spotlight Stats - Reduced size */
 .spotlight-stats {
-  margin: 0.75rem auto; /* Added auto for horizontal centering */
+  margin: 0.75rem auto;
+  /* Added auto for horizontal centering */
   width: 100%;
-  max-width: 420px; /* Increased width */
+  max-width: 420px;
+  /* Increased width */
   display: flex;
-  justify-content: center; /* Center the grid container */
+  justify-content: center;
+  /* Center the grid container */
 }
 
 .stats-grid-enhanced {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Keep 2 columns but allow more space */
-  gap: 0.8rem; /* Increased gap for better spacing */
-  justify-content: center; /* Center grid items */
-  align-items: start; /* Align items to start */
+  grid-template-columns: 1fr 1fr;
+  /* Keep 2 columns but allow more space */
+  gap: 0.8rem;
+  /* Increased gap for better spacing */
+  justify-content: center;
+  /* Center grid items */
+  align-items: start;
+  /* Align items to start */
   width: 100%;
-  max-width: 400px; /* Constrain grid width */
+  max-width: 400px;
+  /* Constrain grid width */
 }
 
 .stats-grid {
@@ -768,15 +799,19 @@ html, body {
 .spotlight-stat {
   background: var(--color-surface);
   border-radius: var(--radius);
-  padding: 0.8rem 1.1rem; /* Increased padding for wider boxes */
+  padding: 0.8rem 1.1rem;
+  /* Increased padding for wider boxes */
   display: flex;
   align-items: center;
-  gap: 0.7rem; /* Increased gap between icon and text */
+  gap: 0.7rem;
+  /* Increased gap between icon and text */
   box-shadow: var(--shadow-sm);
   border: 1px solid #e2e8f0;
   transition: var(--transition);
-  min-width: 160px; /* Increased minimum width */
-  justify-self: center; /* Center each stat box in its grid cell */
+  min-width: 160px;
+  /* Increased minimum width */
+  justify-self: center;
+  /* Center each stat box in its grid cell */
 }
 
 .spotlight-stat:hover {
@@ -786,7 +821,8 @@ html, body {
 }
 
 .spotlight-stat.batting {
-  border-left: 3px solid var(--color-info); /* Slightly thicker border */
+  border-left: 3px solid var(--color-info);
+  /* Slightly thicker border */
 }
 
 .spotlight-stat.bowling {
@@ -794,16 +830,20 @@ html, body {
 }
 
 .spotlight-stat.fielding {
-  border-left: 3px solid #f59e0b; /* Golden color for fielding */
+  border-left: 3px solid #f59e0b;
+  /* Golden color for fielding */
 }
 
 .spotlight-stat.special {
-  border-left: 3px solid #8b5cf6; /* Purple for special achievements */
+  border-left: 3px solid #8b5cf6;
+  /* Purple for special achievements */
 }
 
 .stat-icon {
-  font-size: 1.1rem; /* Slightly larger icon */
-  width: 1.8rem; /* Increased icon container size */
+  font-size: 1.1rem;
+  /* Slightly larger icon */
+  width: 1.8rem;
+  /* Increased icon container size */
   height: 1.8rem;
   display: flex;
   align-items: center;
@@ -812,17 +852,20 @@ html, body {
   border-radius: 50%;
   color: white;
   box-shadow: var(--shadow-sm);
-  flex-shrink: 0; /* Prevent icon from shrinking */
+  flex-shrink: 0;
+  /* Prevent icon from shrinking */
 }
 
 .stat-info {
   flex: 1;
-  min-width: 0; /* Allow text to wrap if needed */
+  min-width: 0;
+  /* Allow text to wrap if needed */
 }
 
 
 .stat-number {
-  font-size: 1rem; /* Slightly larger number */
+  font-size: 1rem;
+  /* Slightly larger number */
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.1;
@@ -842,7 +885,7 @@ html, body {
   // padding: 1.5rem;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 12px;
-  width:220px;
+  width: 220px;
   border: 2px solid #dee2e6;
 }
 
@@ -854,6 +897,7 @@ html, body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .bid-amount-section {
   display: flex;
   align-items: center;
@@ -866,7 +910,7 @@ html, body {
   font-size: 2.5rem;
   font-weight: 700;
   color: #2c5aa0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-edit-bid {
@@ -883,6 +927,7 @@ html, body {
   transition: all 0.3s ease;
   font-size: 0.85rem;
 }
+
 .btn-edit-bid:hover {
   background: #5a6268;
   transform: scale(1.05);
@@ -923,6 +968,7 @@ html, body {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -934,15 +980,15 @@ html, body {
   .bid-amount {
     font-size: 2rem;
   }
-  
+
   .bid-input {
     font-size: 1.5rem;
   }
-  
+
   .bid-input-container {
     min-width: 180px;
   }
-  
+
   .btn-edit-bid,
   .btn-bid-confirm,
   .btn-bid-cancel {
@@ -954,7 +1000,7 @@ html, body {
 
 /* Focus styles for accessibility */
 .bid-input:focus {
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
 .btn-edit-bid:focus,
@@ -979,9 +1025,10 @@ html, body {
   border: 2px solid #007bff;
   border-radius: 8px;
   padding: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
   min-width: 200px;
 }
+
 .bid-input {
   border: none;
   outline: none;
@@ -1365,12 +1412,48 @@ html, body {
   grid-template-columns: 1fr auto auto auto;
   gap: 1rem;
   align-items: center;
- // background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(10px);
- // border-bottom: 2px solid rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.team-header-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1;
+  /* keep above pseudo elements */
+}
+
+.team-flag-img {
+  width: 32px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.team-names-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.team-short-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+}
+
+.team-full-name {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Replace the existing team-header::before and ::after with these */
@@ -1382,11 +1465,11 @@ html, body {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    var(--team-color) 20%, 
-    var(--team-color) 80%, 
-    transparent 100%);
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--team-color) 20%,
+      var(--team-color) 80%,
+      transparent 100%);
   opacity: 0.8;
   transition: all 0.3s ease;
 }
@@ -1399,7 +1482,7 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 50%, var(--team-color-light, rgba(255, 255, 255, 0.1)) 0%, transparent 20%),
     radial-gradient(circle at 80% 50%, var(--team-color-light, rgba(255, 255, 255, 0.1)) 0%, transparent 20%);
   pointer-events: none;
@@ -1409,31 +1492,36 @@ html, body {
 
 /* Team-specific color classes */
 .team-card[data-team-id="1"] {
-  --team-color: #E74C3C; /* Vishnu - Red */
+  --team-color: #E74C3C;
+  /* Vishnu - Red */
   --team-color-light: rgba(231, 76, 60, 0.1);
   border-left-color: #E74C3C;
 }
 
 .team-card[data-team-id="2"] {
-  --team-color: #3498DB; /* Karthikeyan - Blue */
+  --team-color: #3498DB;
+  /* Karthikeyan - Blue */
   --team-color-light: rgba(52, 152, 219, 0.1);
   border-left-color: #3498DB;
 }
 
 .team-card[data-team-id="3"] {
-  --team-color: #F39C12; /* Akshay - Orange */
+  --team-color: #F39C12;
+  /* Akshay - Orange */
   --team-color-light: rgba(243, 156, 18, 0.1);
   border-left-color: #F39C12;
 }
 
 .team-card[data-team-id="4"] {
-  --team-color: #27AE60; /* Aru - Green */
+  --team-color: #27AE60;
+  /* Aru - Green */
   --team-color-light: rgba(39, 174, 96, 0.1);
   border-left-color: #27AE60;
 }
 
 .team-card[data-team-id="5"] {
-  --team-color: #8E44AD; /* Guna - Purple */
+  --team-color: #8E44AD;
+  /* Guna - Purple */
   --team-color-light: rgba(142, 68, 173, 0.1);
   border-left-color: #8E44AD;
 }
@@ -1527,7 +1615,7 @@ html, body {
     grid-template-columns: 1fr auto auto auto;
     gap: 0.5rem;
   }
-  
+
   .team-max-bid {
     font-size: 0.7rem;
     min-width: 65px;
@@ -1541,14 +1629,14 @@ html, body {
     gap: 0.5rem;
     text-align: center;
   }
-  
+
   .team-name,
   .team-budget,
   .team-capacity,
   .team-max-bid {
     justify-self: center;
   }
-  
+
   .team-max-bid {
     margin-top: 0.25rem;
   }
@@ -1764,18 +1852,19 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+
 .available-players-panel {
   .panel-header {
     flex-shrink: 0; // Ensure header doesn't shrink
   }
-  
- app-player-wordcloud {
+
+  app-player-wordcloud {
     flex: 1;
     display: block;
     height: 100%; // Available players can use full height
     min-height: 200px;
   }
-  
+
   .empty-state {
     position: absolute;
     top: 50%;
@@ -1789,11 +1878,11 @@ html, body {
 .unsold-players-panel {
   display: flex;
   flex-direction: column;
-  
+
   .panel-header {
     flex-shrink: 0; // Header stays fixed
   }
-  
+
   .unsold-wordcloud-section {
     flex: 1; // Take remaining space but not more
     display: flex;
@@ -1802,12 +1891,12 @@ html, body {
     max-height: 60%; // IMPORTANT: Don't take more than 60% of panel height
     position: relative;
     overflow: hidden; // Prevent overflow
-    
+
     app-player-wordcloud {
       flex: 1;
       height: 100%; // Use full available space in this section
     }
-    
+
     .empty-state {
       position: absolute;
       top: 50%;
@@ -1817,11 +1906,11 @@ html, body {
       z-index: 10;
     }
   }
-  
+
   .auction-stats {
     flex-shrink: 0; // Stats section stays fixed
     height: auto; // Let it size naturally
-  //  min-height: 200px; // Ensure stats have enough space
+    //  min-height: 200px; // Ensure stats have enough space
     margin-top: 0.5rem;
     border-top: 1px solid #e2e8f0; // Visual separator
   }
@@ -1843,7 +1932,7 @@ html, body {
       max-height: 50%; // Less space on smaller screens
       min-height: 120px;
     }
-    
+
     .auction-stats {
       min-height: 180px;
     }
@@ -1856,13 +1945,13 @@ html, body {
       min-height: 150px;
     }
   }
-  
+
   .unsold-players-panel {
     .unsold-wordcloud-section {
       max-height: 45%; // Even less space on mobile
       min-height: 100px;
     }
-    
+
     .auction-stats {
       min-height: 160px;
     }
@@ -1992,6 +2081,7 @@ html, body {
     opacity: 0;
     transform: translateX(-30px) scale(0.8);
   }
+
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
@@ -2003,12 +2093,12 @@ html, body {
   .header-content {
     gap: 1.5rem;
   }
-  
+
   .app-logo {
     height: 50px;
     max-width: 50px;
   }
-  
+
   .app-title {
     font-size: 1.8rem;
     letter-spacing: 1.5px;
@@ -2094,7 +2184,7 @@ html, body {
   width: auto;
   max-width: 55px;
   border-radius: 12px;
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(255, 255, 255, 0.2),
     0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
@@ -2165,6 +2255,7 @@ html, body {
     opacity: 0;
     transform: translate3d(0, -100%, 0);
   }
+
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -2177,12 +2268,12 @@ html, body {
     max-width: 95vw !important;
     margin: 1rem !important;
   }
-  
+
   .rebid-action-info {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .rebid-icon {
     align-self: center;
   }
@@ -2193,93 +2284,100 @@ html, body {
 
 /* Conservative Large Display Adjustments */
 @media (min-width: 2560px) and (min-height: 1440px) {
+
   /* Only increase base font slightly */
-  html, body {
-    font-size: 18px; /* Subtle increase from 16px */
+  html,
+  body {
+    font-size: 18px;
+    /* Subtle increase from 16px */
   }
-  
+
   /* Slightly larger team grid spacing */
   .teams-grid {
     gap: 2rem;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   }
-  
+
   /* Modest content grid height increase */
   .content-grid {
-    height: 450px; /* Up from 400px */
+    height: 450px;
+    /* Up from 400px */
     gap: 1.5rem;
   }
 }
 
 /* True TV Displays Only (4K+ resolution) */
 @media (min-width: 3840px) and (min-height: 2160px) {
+
   /* NOW we can be more aggressive since this is clearly a TV */
-  html, body {
-    font-size: 22px; /* Larger base font for 4K TV */
+  html,
+  body {
+    font-size: 22px;
+    /* Larger base font for 4K TV */
   }
-  
+
   /* Header scaling for TV */
   .app-title {
     font-size: 3rem;
   }
-  
+
   .btn-header-action {
     padding: 1rem 1.8rem;
     font-size: 1.1rem;
   }
-  
+
   /* Content panels for TV viewing */
   .content-grid {
     height: 600px;
     gap: 2rem;
   }
-  
+
   /* Player spotlight for TV */
   .spotlight-player-name {
     font-size: 2rem !important;
     font-weight: 700 !important;
   }
-  
+
   /* Bid display for TV */
   .bid-display {
     width: 300px;
   }
-  
+
   .bid-amount {
     font-size: 3.5rem;
   }
-  
+
   /* Team components for TV */
   .team-name {
     font-size: 1.4rem;
   }
-  
+
   .team-budget {
     font-size: 1rem;
     padding: 0.5rem 0.8rem;
   }
-  
+
   .teams-grid {
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     gap: 2.5rem;
   }
-  
+
   /* Stats for TV viewing */
   .spotlight-stat {
     padding: 1.2rem 1.5rem;
     min-width: 200px;
   }
-  
+
   .stat-number {
     font-size: 1.4rem;
   }
-  
+
   /* Buttons for TV */
   .btn-auction-action {
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
   }
-  
+
   .btn-bid {
     padding: 0.8rem;
     font-size: 1rem;
@@ -2299,19 +2397,20 @@ html, body {
 
 /* High DPI Display Detection (for actual TVs vs monitors) */
 @media (min-width: 1920px) and (min-resolution: 1.5dppx) {
+
   /* This targets high DPI large displays (likely TVs) */
   .team-header {
     padding: 1.2rem 1.5rem;
   }
-  
+
   .team-name {
     font-size: 1.3rem;
   }
-  
+
   .bid-amount {
     font-size: 3rem;
   }
-  
+
   .spotlight-player-name {
     font-size: 1.8rem !important;
     font-weight: 700 !important;

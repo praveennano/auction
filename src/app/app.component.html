@@ -350,7 +350,13 @@
           <div *ngFor="let team of teams" class="team-card" [style.border-color]="team.color">
             <!-- ENHANCED: Team header with capacity indicator -->
             <div class="team-header" [style.background-color]="team.color + '15'">
-              <div class="team-name">{{team.shortName}}</div>
+              <div class="team-header-info">
+                <img [src]="getTeamFlag(team.shortName)" [alt]="team.shortName + ' Flag'" class="team-flag-img"
+                  [title]="team.shortName">
+                <div class="team-names-wrap">
+                  <div class="team-short-name">{{team.shortName}}</div>
+                </div>
+              </div>
               <div class="team-budget">{{team.budget}}</div>
               <div class="team-capacity" [class.full]="getTeamCapacityInfo(team).full">
                 {{getTeamCapacityInfo(team).current}}/{{getTeamCapacityInfo(team).max}}

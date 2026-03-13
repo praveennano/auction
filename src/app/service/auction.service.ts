@@ -35,11 +35,10 @@ export class AuctionService {
   private readonly STORAGE_KEY = 'cwf_auction_data';
   private isBrowser: boolean;
 
-  // Team captains as initial players (these will be automatically assigned to teams)
   private teamCaptains: Player[] = [
     {
       id: 101, // Using higher IDs to avoid conflicts
-      name: 'Keshav',
+      name: 'Sharan M',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 150, // Captain gets higher base price
       mvpRanking: 1,
@@ -51,7 +50,7 @@ export class AuctionService {
     },
     {
       id: 102,
-      name: 'Loki',
+      name: 'Nageshwaran',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 350,
       mvpRanking: 2,
@@ -63,7 +62,7 @@ export class AuctionService {
     },
     {
       id: 103,
-      name: 'Praveen',
+      name: 'Sriram',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 320,
       mvpRanking: 3,
@@ -75,7 +74,7 @@ export class AuctionService {
     },
     {
       id: 104,
-      name: 'Kabeer',
+      name: 'S N K',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 180,
       mvpRanking: 4,
@@ -87,7 +86,7 @@ export class AuctionService {
     },
     {
       id: 105,
-      name: 'Sowrish',
+      name: 'Aravind Ganesh A R',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 400,
       mvpRanking: 5,
@@ -103,41 +102,21 @@ export class AuctionService {
   private initialPlayers: Player[] = [
     {
       id: 1,
-      name: 'Sharan M',
+      name: 'Keshav',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 1,
-      battingStats: {
-        Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 4, // ✅ Keeping original
-        runs: 495, // ✅ Updated from Excel (was 360)
-        battingAvg: 30.94, // ✅ Updated from Excel (was 30.97)
-        strikeRate: 167.2 // ✅ Updated from Excel (was 154.23)
-      },
-      bowlingStats: {
-        wickets: 11, // ✅ Updated from Excel (was 10)
-        economy: 7.91, // ✅ Updated from Excel (was 7.5)
-        catches: 13 // ✅ Updated from Excel (was 9)
-      },
+      battingStats: { Cup: 2, pomAwards: 4, runs: 495, battingAvg: 30.94, strikeRate: 167.2 },
+      bowlingStats: { wickets: 11, economy: 7.91, catches: 13 },
     },
     {
       id: 2,
-      name: 'Sriram MP',
+      name: 'Loki',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: {
-        Cup: 0, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ Keeping original
-        runs: 918, // ✅ Updated from Excel (was 56) - MAJOR INCREASE
-        battingAvg: 21.86, // ✅ Updated from Excel (was 18.7)
-        strikeRate: 159.4 // ✅ Updated from Excel (was 121.7)
-      },
-      bowlingStats: {
-        wickets: 31, // ✅ Updated from Excel (was 2) - MAJOR INCREASE
-        economy: 9.63, // ✅ Updated from Excel (was 8.5)
-        catches: 31 // ✅ Updated from Excel (was 3) - MAJOR INCREASE
-      }
+      battingStats: { Cup: 0, pomAwards: 1, runs: 918, battingAvg: 21.86, strikeRate: 159.4 },
+      bowlingStats: { wickets: 31, economy: 9.63, catches: 31 }
     },
     {
       id: 3,
@@ -200,41 +179,21 @@ export class AuctionService {
     },
     {
       id: 6,
-      name: 'S N K',
+      name: 'Praveen',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: {
-        Cup: 4, // ✅ Keeping your existing cup count
-        pomAwards: 2, // ✅ Keeping original
-        runs: 330, // ✅ Updated from Excel (was 302)
-        battingAvg: 12.5, // ✅ Updated from Excel (was 14.26)
-        strikeRate: 130.2 // ✅ Updated from Excel (was 130.27)
-      },
-      bowlingStats: {
-        wickets: 43, // ✅ Updated from Excel (was 40)
-        economy: 7.4, // ✅ Updated from Excel (was 7.42)
-        catches: 20 // ✅ Updated from Excel (was 18)
-      }
+      battingStats: { Cup: 4, pomAwards: 2, runs: 330, battingAvg: 12.5, strikeRate: 130.2 },
+      bowlingStats: { wickets: 43, economy: 7.4, catches: 20 }
     },
     {
       id: 7,
-      name: 'Nageshwaran',
+      name: 'Kabeer',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: {
-        Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ Keeping original
-        runs: 201, // ✅ Updated from Excel estimate (was 199)
-        battingAvg: 10.1, // ✅ Updated from Excel estimate (was 13.32)
-        strikeRate: 125.8 // ✅ Updated from Excel estimate (was 127.79)
-      },
-      bowlingStats: {
-        wickets: 13, // ✅ Updated from Excel estimate (was 12)
-        economy: 13.5, // ✅ Updated from Excel estimate (was 11.43)
-        catches: 12 // ✅ Updated from Excel estimate (was 8)
-      }
+      battingStats: { Cup: 1, pomAwards: 1, runs: 201, battingAvg: 10.1, strikeRate: 125.8 },
+      bowlingStats: { wickets: 13, economy: 13.5, catches: 12 }
     },
     {
       id: 8,
@@ -523,22 +482,12 @@ export class AuctionService {
     },
     {
       id: 23,
-      name: 'Aravind Ganesh A R',
+      name: 'Sowrish',
       role: PlayerRole.ALL_ROUNDER,
       basePrice: 100,
       mvpRanking: 0,
-      battingStats: {
-        Cup: 4, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ Keeping original
-        runs: 230, // ✅ Keeping original (no Excel match)
-        battingAvg: 11.27, // ✅ Keeping original
-        strikeRate: 141.33 // ✅ Keeping original
-      },
-      bowlingStats: {
-        wickets: 9, // ✅ Keeping original
-        economy: 11.48, // ✅ Keeping original
-        catches: 11 // ✅ Keeping original
-      }
+      battingStats: { Cup: 4, pomAwards: 1, runs: 230, battingAvg: 11.27, strikeRate: 141.33 },
+      bowlingStats: { wickets: 9, economy: 11.48, catches: 11 }
     },
     {
       id: 24,
@@ -809,43 +758,43 @@ export class AuctionService {
     return [
       {
         id: 1,
-        name: 'Keshav',
-        shortName: 'Keshav',
-        color: '#F39C12', // Vibrant Red - Bold & Powerful
+        name: 'Team Sharan M',
+        shortName: 'WI',
+        color: '#7B0041', // Maroon (West Indies)
         budget: 2350,
-        players: [this.teamCaptains[0]] // Vishnu as captain
+        players: [this.teamCaptains[0]]
       },
       {
         id: 2,
-        name: 'Loki',
-        shortName: 'Loki',
-        color: '#3498DB', // Royal Blue - Classic & Professional
+        name: 'Team Nageshwaran',
+        shortName: 'ENG',
+        color: '#00247D', // Blue (England)
         budget: 2150,
-        players: [this.teamCaptains[1]] // Karthikeyan as captain
+        players: [this.teamCaptains[1]]
       },
       {
         id: 3,
-        name: 'Praveen',
-        shortName: 'Praveen',
-        color: '#E74C3C', // Golden Orange - Energetic & Dynamic
+        name: 'Team Sriram',
+        shortName: 'SA',
+        color: '#007A4D', // Green (South Africa)
         budget: 2180,
-        players: [this.teamCaptains[2]] // Akshay as captain
+        players: [this.teamCaptains[2]]
       },
       {
         id: 4,
-        name: 'Kabeer',
-        shortName: 'Kabeer',
-        color: '#27AE60', // Forest Green - Fresh & Strong
+        name: 'Team S N K',
+        shortName: 'AUS',
+        color: '#FFCD00', // Yellow (Australia)
         budget: 2320,
-        players: [this.teamCaptains[3]] // Arumugam as captain
+        players: [this.teamCaptains[3]]
       },
       {
         id: 5,
-        name: 'Sowrish',
-        shortName: 'Sowrish',
-        color: '#8E44AD', // Purple - Regal & Distinctive
+        name: 'Team Aravind Ganesh',
+        shortName: 'NZ',
+        color: '#000000', // Black (New Zealand)
         budget: 2100,
-        players: [this.teamCaptains[4]] // Guna as captain
+        players: [this.teamCaptains[4]]
       },
     ];
   }

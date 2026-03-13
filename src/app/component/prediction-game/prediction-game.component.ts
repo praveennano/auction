@@ -415,6 +415,17 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
         return best;
     }
 
+    getTeamFlag(shortName: string): string {
+        const flags: { [key: string]: string } = {
+            'WI': 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2230%22%20viewBox%3D%220%200%2040%2030%22%3E%3Crect%20width%3D%2240%22%20height%3D%2230%22%20fill%3D%22%237b0041%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2220%22%20font-family%3D%22Arial%22%20font-size%3D%2214%22%20fill%3D%22%23facc15%22%20font-weight%3D%22bold%22%20text-anchor%3D%22middle%22%3EWI%3C%2Ftext%3E%3C%2Fsvg%3E',
+            'ENG': 'https://flagcdn.com/w40/gb-eng.png',
+            'SA': 'https://flagcdn.com/w40/za.png',
+            'AUS': 'https://flagcdn.com/w40/au.png',
+            'NZ': 'https://flagcdn.com/w40/nz.png',
+        };
+        return flags[shortName] || 'https://flagcdn.com/w40/un.png';
+    }
+
     getStatusBadge(player: PgPlayer): string {
         if (player.auction_status === 'sold') return '✓ SOLD';
         if (player.auction_status === 'unsold') return '✗ UNSOLD';
