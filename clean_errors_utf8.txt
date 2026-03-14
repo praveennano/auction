@@ -1,0 +1,124 @@
+﻿
+> auction@0.0.0 build
+> ng build
+
+npm : - Building...
+At line:1 char:1
++ npm run build > build_errors.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (- Building...:String)  
+   [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+Application bundle generation failed. [7.849 seconds]
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain 
+operation does not include 'null' or 'undefined' in its type, 
+therefore the '?.' operator can be replaced with the '.' operator. 
+[plugin angular-compiler]
+
+    src/app/app.component.html:212:42:
+      212 Γöé ...     [min]="currentPlayer?.basePrice || 100" 
+[max]="getMaxPoss...
+          Γò╡                               ~~~~~~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:62:15:
+      62 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain 
+operation does not include 'null' or 'undefined' in its type, 
+therefore the '?.' operator can be replaced with the '.' operator. 
+[plugin angular-compiler]
+
+    src/app/app.component.html:230:48:
+      230 Γöé                   Minimum bid: 
+{{currentPlayer?.basePrice || 100}}
+          Γò╡                                                 
+~~~~~~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:62:15:
+      62 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain 
+operation does not include 'null' or 'undefined' in its type, 
+therefore the '?.' operator can be replaced with the '.' operator. 
+[plugin angular-compiler]
+
+    src/app/app.component.html:253:81:
+      253 Γöé ...entTeam !== null && currentBid > 
+(currentPlayer?.basePrice || 0)"
+          Γò╡                                                     
+~~~~~~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:62:15:
+      62 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain 
+operation does not include 'null' or 'undefined' in its type, 
+therefore the '?.' operator can be replaced with the '.' operator. 
+[plugin angular-compiler]
+
+    src/app/app.component.html:259:60:
+      259 Γöé ...auction for {{currentPlayer?.name}}" 
+(click)="rebidCurrentPlay...
+          Γò╡                                 ~~~~
+
+  Error occurs in the template of component AppComponent.
+
+    src/app/app.component.ts:62:15:
+      62 Γöé   templateUrl: './app.component.html',
+         Γò╡                ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Γû▓ [WARNING] NG8107: The left side of this optional chain 
+operation does not include 'null' or 'undefined' in its type, 
+therefore the '?.' operator can be replaced with the '.' operator. 
+[plugin angular-compiler]
+
+    src/app/component/prediction-leaderboard/prediction-leaderboard.
+component.html:52:50:
+      52 Γöé ...                 {{ 
+user.display_name?.charAt(0)?.toUpperCase() }}
+         Γò╡                                           ~~~~~~
+
+  Error occurs in the template of component 
+PredictionLeaderboardComponent.
+
+    src/app/component/prediction-leaderboard/prediction-leaderboard.
+component.ts:9:17:
+      9 Γöé     templateUrl: 
+'./prediction-leaderboard.component.html',
+        Γò╡                  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'showTokenSetup' does not exist on type 
+'PredictionGameComponent'. [plugin angular-compiler]
+
+    src/app/component/prediction-game/prediction-game.component.html
+:138:31:
+      138 Γöé     <div *ngIf="isLoggedIn && !showTokenSetup" 
+class="game-screen">
+          Γò╡                                ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PredictionGameComponent.
+
+    src/app/component/prediction-game/prediction-game.component.ts:2
+7:17:
+      27 Γöé     templateUrl: './prediction-game.component.html',
+         Γò╡                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

@@ -588,6 +588,7 @@
     min-height: 0; // critical — allows scrolling inside a flex child
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 2rem;
 }
 
 .prediction-table {
@@ -848,7 +849,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.4rem 0.75rem;
+    padding: 0.5rem 0.75rem 1.5rem;
     background: rgba(255, 255, 255, 0.02);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     flex-wrap: wrap;

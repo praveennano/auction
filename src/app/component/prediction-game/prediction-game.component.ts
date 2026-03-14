@@ -37,18 +37,6 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
     authLoading = false;
     showSignInPassword = false;
     showSignUpPassword = false;
-    tokenSliderValue = 5;
-
-    // ── Top-up state ─────────────────────────────────────────────────────
-    showTopUp = false;
-    topUpAmount = 50;
-    topUpStep: 'pick' | 'confirm' = 'pick';
-    topUpLoading = false;
-
-    // ── Token setup (after reset) ─────────────────────────────────────
-    showTokenSetup = false;
-    selectedTokenAmount = 5;
-    tokenSetupLoading = false;
 
     isLoggedIn = false;
     userProfile: PgUserProfile | null = null;
@@ -56,6 +44,7 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
     players: PgPlayer[] = [];
     loading = false;
     activeSubTab: 'predictions' | 'leaderboard' = 'predictions';
+    hideCompletedPlayers = true;
 
     // ── Local state ─────────────────────────────────────────────────────
     private localTokens = new Map<string, number>(); // 'playerId_teamId' → tokens
@@ -123,8 +112,12 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
                         this.isLoggedIn = true;
                         this.userProfile = profile;
                         this.adminStatusChange.emit(profile.role === 'admin');
+
+                        // Automatically give user 50 tokens if they need setup
                         if (profile.needs_token_setup) {
-                            this.showTokenSetup = true;
+                            this.pgService.setUserTokens(profile.id, 50).then(() => {
+                                this.loadGameData(profile.id);
+                            });
                         } else {
                             this.loadGameData(profile.id);
                         }
@@ -149,20 +142,19 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
             const { username, password } = this.signInForm.value;
             const profile = await this.pgService.signIn(username, password);
             this.persistSession(profile.username);
-            this.isLoggedIn = true;
+            // Automatically initialize their tokens to 50 under the hood
+            await this.pgService.setUserTokens(profile.id, 50);
+
             this.userProfile = profile;
+            this.isLoggedIn = true;
             this.adminStatusChange.emit(profile.role === 'admin');
 
-            if (profile.needs_token_setup) {
-                this.showTokenSetup = true;
-            } else {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: `Welcome back, ${profile.display_name}! 🎉`,
-                    detail: `You have ${profile.token_balance} tokens.`
-                });
-                await this.loadGameData(profile.id);
-            }
+            this.messageService.add({
+                severity: 'success',
+                summary: `Welcome back, ${profile.display_name}! 🎉`,
+                detail: `You have ${profile.token_balance} tokens.`
+            });
+            await this.loadGameData(profile.id);
         } catch (err: any) {
             this.messageService.add({ severity: 'error', summary: 'Sign In Failed', detail: err.message });
         } finally {
@@ -177,7 +169,7 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
         try {
             const { username, password, display_name, phone_number } = this.signUpForm.value;
             const profile = await this.pgService.signUp(
-                username, password, phone_number, display_name, this.tokenSliderValue
+                username, password, phone_number, display_name, 50
             );
             this.persistSession(profile.username);
             this.isLoggedIn = true;
@@ -201,7 +193,6 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
         }
         this.pgService.clearSession();
         this.isLoggedIn = false;
-        this.showTopUp = false;
         this.localTokens.clear();
         this.signInForm.reset();
         this.signUpForm.reset();
@@ -228,64 +219,15 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
         } finally {
             this.resetLoading = false;
             this.showResetConfirm = false;
-            // Admin also needs to re-pick tokens
-            this.showTokenSetup = true;
-            this.cdr.markForCheck();
-        }
-    }
 
-    // ── Token Setup (after reset) ────────────────────────────────────
-    async confirmTokenSetup(): Promise<void> {
-        if (!this.userProfile) return;
-        this.tokenSetupLoading = true;
-        this.cdr.markForCheck();
-        try {
-            await this.pgService.setUserTokens(this.userProfile.id, this.selectedTokenAmount);
-            this.showTokenSetup = false;
-            this.messageService.add({
-                severity: 'success',
-                summary: '🪙 Tokens Set!',
-                detail: `You have ${this.selectedTokenAmount} tokens. Good luck!`
-            });
+            // Admin auto-gets 50 tokens on reset
+            await this.pgService.setUserTokens(this.userProfile.id, 50);
             await this.loadGameData(this.userProfile.id);
-        } catch (err: any) {
-            this.messageService.add({ severity: 'error', summary: 'Failed', detail: err.message });
-        } finally {
-            this.tokenSetupLoading = false;
             this.cdr.markForCheck();
         }
     }
 
-    // ── Top-Up ─────────────────────────────────────────────────────────
-    openTopUp(): void {
-        this.showTopUp = true;
-        this.topUpStep = 'pick';
-        this.topUpAmount = 50;
-    }
 
-    cancelTopUp(): void {
-        this.showTopUp = false;
-        this.topUpStep = 'pick';
-    }
-
-    async confirmTopUp(): Promise<void> {
-        if (!this.userProfile) return;
-        this.topUpLoading = true;
-        try {
-            await this.pgService.addTokens(this.userProfile.id, this.topUpAmount);
-            this.messageService.add({
-                severity: 'success',
-                summary: '🪙 Tokens Added!',
-                detail: `${this.topUpAmount} tokens added to your balance.`
-            });
-            this.showTopUp = false;
-        } catch (err: any) {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.message });
-        } finally {
-            this.topUpLoading = false;
-            this.cdr.markForCheck();
-        }
-    }
 
     private persistSession(username: string): void {
         if (isPlatformBrowser(this.platformId)) {

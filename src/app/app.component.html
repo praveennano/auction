@@ -209,7 +209,7 @@
               <div *ngIf="isEditingBid" class="bid-edit-section">
                 <div class="bid-input-container">
                   <input type="number" class="bid-input" [(ngModel)]="editBidAmount"
-                    [min]="currentPlayer?.basePrice || 100" [max]="getMaxPossibleBid()" (keyup.enter)="confirmBidEdit()"
+                    [min]="currentPlayer.basePrice || 100" [max]="getMaxPossibleBid()" (keyup.enter)="confirmBidEdit()"
                     (keyup.escape)="cancelBidEdit()" #bidInput>
                 </div>
 
@@ -226,8 +226,8 @@
 
               <!-- Validation message -->
               <div *ngIf="isEditingBid && !isValidBidAmount(editBidAmount)" class="bid-validation-error">
-                <span *ngIf="editBidAmount < (currentPlayer?.basePrice || 100)">
-                  Minimum bid: {{currentPlayer?.basePrice || 100}}
+                <span *ngIf="editBidAmount < (currentPlayer.basePrice || 100)">
+                  Minimum bid: {{currentPlayer.basePrice || 100}}
                 </span>
                 <span *ngIf="editBidAmount > getMaxPossibleBid()">
                   Maximum possible bid: {{getMaxPossibleBid()}}
@@ -250,13 +250,12 @@
                 SOLD!
               </button>
               <button class="btn-auction-action unsold"
-                [disabled]="currentTeam !== null && currentBid > (currentPlayer?.basePrice || 0)"
-                (click)="markUnsold()">
+                [disabled]="currentTeam !== null && currentBid > (currentPlayer.basePrice || 0)" (click)="markUnsold()">
                 UNSOLD
               </button>
 
               <button class="btn-auction-action rebid" [disabled]="isEditingBid"
-                title="Restart auction for {{currentPlayer?.name}}" (click)="rebidCurrentPlayer()">
+                title="Restart auction for {{currentPlayer.name}}" (click)="rebidCurrentPlayer()">
                 <i class="pi pi-refresh"></i>
                 REBID
               </button>

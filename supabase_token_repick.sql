@@ -24,14 +24,14 @@ BEGIN
     GET DIAGNOSTICS v_deleted_count = ROW_COUNT;
 
     UPDATE users SET
-        token_balance = 0,
-        initial_tokens = 0,
+        token_balance = 50,
+        initial_tokens = 50,
         tokens_spent = 0,
         tokens_won = 0,
         total_predictions = 0,
         correct_predictions = 0,
         accuracy_percentage = 0,
-        needs_token_setup = true
+        needs_token_setup = false
     WHERE true;
 
     UPDATE auction_players SET
@@ -43,7 +43,7 @@ BEGIN
     RETURN json_build_object(
         'success', true,
         'predictions_deleted', v_deleted_count,
-        'message', 'All predictions reset. Users must re-pick tokens.'
+        'message', 'All predictions reset. User balances restored to 50 tokens.'
     );
 END;
 $$;

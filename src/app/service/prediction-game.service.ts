@@ -170,7 +170,7 @@ export class PredictionGameService {
 
     async loadPlayers(): Promise<void> {
         const { data } = await this.supabaseService.client
-            .from('auction_players').select('*').order('auction_order');
+            .from('auction_players').select('*').order('player_name', { ascending: true });
         if (data) this.playersSubject.next(data as PgPlayer[]);
     }
 
@@ -181,15 +181,14 @@ export class PredictionGameService {
     async loadUserPredictions(userId: string): Promise<void> {
         const { data } = await this.supabaseService.client
             .from('predictions').select('*')
-            .eq('user_id', userId).eq('status', 'active');
+            .eq('user_id', userId);
         if (data) this.predictionsSubject.next(data as PgPrediction[]);
     }
 
     async loadAllPoolInfo(): Promise<void> {
         const { data } = await this.supabaseService.client
             .from('predictions')
-            .select('player_id, predicted_team_id, tokens_bet')
-            .eq('status', 'active');
+            .select('player_id, predicted_team_id, tokens_bet, status');
 
         if (!data) return;
 

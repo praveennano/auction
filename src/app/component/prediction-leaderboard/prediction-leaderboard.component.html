@@ -49,7 +49,7 @@
                     <td class="user-cell">
                         <div class="lb-avatar" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2"
                             [class.me]="isCurrentUser(user)">
-                            {{ user.display_name?.charAt(0)?.toUpperCase() }}
+                            {{ user.display_name.charAt(0).toUpperCase() }}
                         </div>
                         <div class="lb-user-info">
                             <div class="lb-name">

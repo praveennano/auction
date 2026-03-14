@@ -271,25 +271,7 @@ export class AuctionService {
         catches: 39 // ✅ Updated from Excel (was 30) - TOP CATCHER!
       }
     },
-    {
-      id: 12,
-      name: 'Mahesh',
-      role: PlayerRole.BOWLER,
-      basePrice: 100,
-      mvpRanking: 0,
-      battingStats: {
-        Cup: 2, // ✅ Keeping your existing cup count
-        pomAwards: 1, // ✅ Keeping original
-        runs: 198, // ✅ Updated from Excel estimate (was 193)
-        battingAvg: 8.9, // ✅ Updated from Excel estimate (was 10.67)
-        strikeRate: 93.2 // ✅ Updated from Excel estimate (was 87.32)
-      },
-      bowlingStats: {
-        wickets: 24, // ✅ Updated from Excel estimate (was 21)
-        economy: 10.2, // ✅ Updated from Excel estimate (was 10.58)
-        catches: 8 // ✅ Updated from Excel estimate (was 7)
-      }
-    },
+
     {
       id: 13,
       name: 'S S Deepak',
@@ -309,25 +291,7 @@ export class AuctionService {
         catches: 22 // ✅ Updated from Excel estimate (was 20)
       }
     },
-    {
-      id: 14,
-      name: 'Naveen',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 0,
-      battingStats: {
-        Cup: 1, // ✅ Keeping your existing cup count
-        pomAwards: 3, // ✅ Keeping original
-        runs: 146, // ✅ Updated from Excel estimate (was 134)
-        battingAvg: 7.8, // ✅ Updated from Excel estimate (was 9.19)
-        strikeRate: 118.5 // ✅ Updated from Excel estimate (was 83.95)
-      },
-      bowlingStats: {
-        wickets: 26, // ✅ Updated from Excel estimate (was 23)
-        economy: 8.9, // ✅ Updated from Excel estimate (was 8.55)
-        catches: 15 // ✅ Updated from Excel estimate (was 13)
-      }
-    },
+
     {
       id: 15,
       name: 'Dg',
@@ -660,44 +624,7 @@ export class AuctionService {
         catches: 35 // ✅ From Excel - EXCELLENT fielder! (2nd highest)
       }
     },
-    {
-      id: 33,
-      name: 'Gopi',
-      role: PlayerRole.BOWLER,
-      basePrice: 100,
-      mvpRanking: 0, // Lower ranking - developing player
-      battingStats: {
-        Cup: 0, // New/limited experience
-        pomAwards: 0, // No major awards yet
-        runs: 35, // ✅ Estimated - limited batting
-        battingAvg: 3.8, // ✅ Estimated - lower-order batsman
-        strikeRate: 65.4 // ✅ Estimated - cautious batting
-      },
-      bowlingStats: {
-        wickets: 3, // ✅ Estimated - developing bowler
-        economy: 19.8, // ✅ Estimated - needs work on economy
-        catches: 3 // ✅ Estimated - few catches
-      }
-    },
-    {
-      id: 34,
-      name: 'Venkat',
-      role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
-      mvpRanking: 0, // No ranking yet - new player
-      battingStats: {
-        Cup: 0, // New player - no cups
-        pomAwards: 0, // No awards yet
-        runs: 0, // ✅ Empty - no matches played yet
-        battingAvg: 0, // ✅ Empty - no batting average
-        strikeRate: 0 // ✅ Empty - no strike rate
-      },
-      bowlingStats: {
-        wickets: 0, // ✅ Empty - no wickets yet
-        economy: 0, // ✅ Empty - no bowling economy
-        catches: 0 // ✅ Empty - no catches yet
-      }
-    },
+
     {
       id: 35,
       name: 'Sharan(Sarath) ',
@@ -716,6 +643,42 @@ export class AuctionService {
         economy: 0, // ✅ Empty - no bowling economy
         catches: 0 // ✅ Empty - no catches yet
       }
+    },
+    {
+      id: 36,
+      name: 'Ashwin',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0,
+      battingStats: { Cup: 0, pomAwards: 0, runs: 0, battingAvg: 0, strikeRate: 0 },
+      bowlingStats: { wickets: 0, economy: 0, catches: 0 }
+    },
+    {
+      id: 37,
+      name: 'Musab',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0,
+      battingStats: { Cup: 0, pomAwards: 0, runs: 0, battingAvg: 0, strikeRate: 0 },
+      bowlingStats: { wickets: 0, economy: 0, catches: 0 }
+    },
+    {
+      id: 38,
+      name: 'Shivam',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0,
+      battingStats: { Cup: 0, pomAwards: 0, runs: 0, battingAvg: 0, strikeRate: 0 },
+      bowlingStats: { wickets: 0, economy: 0, catches: 0 }
+    },
+    {
+      id: 39,
+      name: 'Sriram MP',
+      role: PlayerRole.ALL_ROUNDER,
+      basePrice: 100,
+      mvpRanking: 0,
+      battingStats: { Cup: 0, pomAwards: 0, runs: 0, battingAvg: 0, strikeRate: 0 },
+      bowlingStats: { wickets: 0, economy: 0, catches: 0 }
     }
   ];
 
@@ -732,7 +695,7 @@ export class AuctionService {
       {
         id: 2,
         name: 'Pool A',
-        playerIds: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 33, 34, 35], // Pool 2: remaining players
+        playerIds: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 35, 36, 37, 38, 39], // Pool 2: remaining players
         isActive: false,
         isCompleted: false
       }

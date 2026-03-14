@@ -114,16 +114,7 @@
                     </span>
                 </div>
 
-                <div class="form-field token-slider-field">
-                    <label>Starting Tokens <span class="token-value">{{ tokenSliderValue }}</span></label>
-                    <div class="slider-wrapper">
-                        <span class="slider-label">20</span>
-                        <input type="range" class="token-slider" [(ngModel)]="tokenSliderValue"
-                            [ngModelOptions]="{standalone: true}" min="20" max="200" step="5">
-                        <span class="slider-label">200</span>
-                    </div>
-                    <span class="field-hint">New account only. Returning users keep their balance.</span>
-                </div>
+
 
                 <button type="submit" class="btn-auth" [disabled]="signUpForm.invalid || authLoading">
                     <span *ngIf="!authLoading">✨ Create Account</span>
@@ -141,37 +132,10 @@
         </div>
     </div>
 
-    <!-- ======================== TOKEN SETUP (after reset) ======================== -->
-    <div *ngIf="isLoggedIn && showTokenSetup" class="token-setup-screen">
-        <div class="token-setup-card">
-            <div class="token-setup-icon">🪙</div>
-            <h2 class="token-setup-title">Pick Your Tokens</h2>
-            <p class="token-setup-desc">New quarter! Choose your starting tokens for this auction round.</p>
 
-            <div class="token-slider-field">
-                <label>Your Tokens: <span class="token-value">🪙 {{ selectedTokenAmount }}</span></label>
-                <div class="slider-wrapper">
-                    <span class="slider-label">5</span>
-                    <input type="range" class="token-slider" [(ngModel)]="selectedTokenAmount" min="5" max="200"
-                        step="5">
-                    <span class="slider-label">200</span>
-                </div>
-                <div class="token-preview">
-                    <span class="token-chip">{{ selectedTokenAmount }} tokens</span>
-                </div>
-            </div>
-
-            <button class="btn-auth" (click)="confirmTokenSetup()" [disabled]="tokenSetupLoading">
-                <span *ngIf="!tokenSetupLoading">Start with {{ selectedTokenAmount }} Tokens 🚀</span>
-                <span *ngIf="tokenSetupLoading" class="btn-loading">
-                    <span class="spinner-sm"></span> Setting up...
-                </span>
-            </button>
-        </div>
-    </div>
 
     <!-- ======================== GAME SCREEN ======================== -->
-    <div *ngIf="isLoggedIn && !showTokenSetup" class="game-screen">
+    <div *ngIf="isLoggedIn" class="game-screen">
 
         <!-- Top Bar -->
         <div class="pg-topbar">
@@ -212,9 +176,7 @@
                         🏆 Board
                     </button>
                 </div>
-                <button class="btn-topup-trigger" (click)="openTopUp()" title="Add tokens">
-                    🪙 Top Up
-                </button>
+
                 <button class="btn-logout" (click)="onLogout()" title="Sign out">
                     <i class="pi pi-sign-out"></i>
                 </button>
@@ -247,55 +209,7 @@
             </div>
         </div>
 
-        <!-- TOP-UP PANEL -->
-        <div class="topup-panel" *ngIf="showTopUp">
 
-            <!-- Step 1: Pick amount -->
-            <div *ngIf="topUpStep === 'pick'" class="topup-step">
-                <div class="topup-title">🪙 Add Tokens to Your Balance</div>
-                <div class="topup-current">Current balance: <strong>{{ userProfile?.token_balance }}</strong> tokens
-                </div>
-                <div class="topup-slider-row">
-                    <span class="slider-label">10</span>
-                    <input type="range" class="token-slider" [(ngModel)]="topUpAmount" min="10" max="200" step="10">
-                    <span class="slider-label">200</span>
-                </div>
-                <div class="topup-preview">
-                    Adding <span class="topup-amount">+{{ topUpAmount }}</span> tokens →
-                    New balance: <span class="topup-new-balance">{{ (userProfile?.token_balance || 0) + topUpAmount
-                        }}</span>
-                </div>
-                <div class="topup-actions">
-                    <button class="btn-topup-cancel" (click)="cancelTopUp()">Cancel</button>
-                    <button class="btn-topup-next" (click)="topUpStep = 'confirm'">
-                        Continue →
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: Confirm -->
-            <div *ngIf="topUpStep === 'confirm'" class="topup-step topup-confirm">
-                <div class="topup-confirm-icon">🤔</div>
-                <div class="topup-confirm-title">Are you sure?</div>
-                <div class="topup-confirm-msg">
-                    You are about to add <strong>{{ topUpAmount }} tokens</strong> to your balance.<br>
-                    Your balance will become <strong>{{ (userProfile?.token_balance || 0) + topUpAmount }}
-                        tokens</strong>.
-                </div>
-                <div class="topup-actions">
-                    <button class="btn-topup-cancel" (click)="topUpStep = 'pick'" [disabled]="topUpLoading">
-                        ← Go Back
-                    </button>
-                    <button class="btn-topup-confirm" (click)="confirmTopUp()" [disabled]="topUpLoading">
-                        <span *ngIf="!topUpLoading">✅ Yes, Add Tokens!</span>
-                        <span *ngIf="topUpLoading" class="btn-loading">
-                            <span class="spinner-sm"></span> Adding...
-                        </span>
-                    </button>
-                </div>
-            </div>
-
-        </div>
 
         <!-- PREDICTIONS TABLE -->
         <div *ngIf="activeSubTab === 'predictions'" class="predictions-view">
