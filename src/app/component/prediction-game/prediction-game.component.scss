@@ -626,6 +626,35 @@
         text-align: center;
         vertical-align: middle;
     }
+
+    // Sticky configurations
+    th.col-num,
+    td.col-num {
+        position: sticky;
+        left: 0;
+        width: 30px;
+        min-width: 30px;
+        max-width: 30px;
+        padding-left: 0;
+        padding-right: 0;
+        background: #0a0e1a;
+        z-index: 5;
+    }
+
+    th.col-player,
+    td.col-player {
+        position: sticky;
+        left: 30px;
+        background: #0a0e1a;
+        z-index: 5;
+        border-right: 2px solid rgba(255, 255, 255, 0.05);
+    }
+
+    th.col-num,
+    th.col-player {
+        z-index: 20;
+        background: #0f1420; // Distinct header background
+    }
 }
 
 .team-short {
@@ -638,11 +667,26 @@
 
     &:hover {
         background: rgba(255, 255, 255, 0.03);
+
+        td.col-num,
+        td.col-player {
+            background: #111827; // Highlight sticky cols on hover
+        }
     }
 
     &.has-bet {
         background: rgba(34, 197, 94, 0.05);
         border-left: 3px solid rgba(34, 197, 94, 0.4);
+
+        td.col-num,
+        td.col-player {
+            background: #0c1a12; // Solid version of green tint
+        }
+
+        &:hover td.col-num,
+        &:hover td.col-player {
+            background: #0f2418; // Slightly lighter
+        }
     }
 
     &.sold {
@@ -657,8 +701,6 @@
 .col-num {
     color: #475569;
     font-size: 0.7rem;
-    width: 28px;
-    min-width: 28px;
 }
 
 .player-cell {
