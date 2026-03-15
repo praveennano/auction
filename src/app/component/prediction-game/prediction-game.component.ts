@@ -64,6 +64,14 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
         @Inject(PLATFORM_ID) private platformId: object
     ) { }
 
+    teamCaptains: { [key: string]: string } = {
+        'WI': 'Sharan',
+        'ENG': 'Nage',
+        'SA': 'Sriram',
+        'AUS': 'S N K',
+        'NZ': 'A G'
+    };
+
     ngOnInit(): void {
         this.signInForm = this.fb.group({
             username: ['', [Validators.required, Validators.minLength(3)]],

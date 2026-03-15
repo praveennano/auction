@@ -613,6 +613,26 @@
         letter-spacing: 0.04em;
         border-bottom: 2px solid rgba(255, 255, 255, 0.05);
         white-space: nowrap;
+
+        .team-header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.15rem;
+
+            .team-short {
+                line-height: 1;
+            }
+
+            .team-captain {
+                font-size: 0.55rem;
+                color: rgba(148, 163, 184, 0.8);
+                text-transform: none;
+                font-weight: 400;
+                line-height: 1;
+                letter-spacing: 0;
+            }
+        }
     }
 
     th.col-player {

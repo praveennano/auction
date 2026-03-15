@@ -232,8 +232,12 @@
                                 <th class="col-player">Player</th>
                                 <th *ngFor="let team of teams; trackBy: trackByTeamId" class="col-team"
                                     [style.border-bottom-color]="team.team_color">
-                                    <span class="team-short">{{ team.team_short_name
-                                        }}</span>
+                                    <div class="team-header-content">
+                                        <span class="team-short">{{ team.team_short_name }}</span>
+                                        <span class="team-captain" *ngIf="teamCaptains[team.team_short_name]">
+                                            ({{ teamCaptains[team.team_short_name] }})
+                                        </span>
+                                    </div>
                                 </th>
                                 <th class="col-total">Used</th>
                                 <th class="col-pool">Pool</th>
