@@ -7,7 +7,7 @@ export enum PlayerRole {
 
 export interface Player {
   id: number;
-  supabaseId?: string;   // Supabase UUID from auction_players table
+  supabaseId?: string;
   name: string;
   role: PlayerRole;
   basePrice: number;
@@ -16,23 +16,20 @@ export interface Player {
   isSold?: boolean;
   isUnsold?: boolean;
 
-  // MVP ranking - required field
   mvpRanking: number;
+  cups: number;             // ← moved here, top-level, required
 
-  // Enhanced batting stats with new fields
   battingStats: {
-    Cup?: number;           // Cups/Tournaments won
-    pomAwards?: number;     // Player of Match awards
-    runs: number;           // Total runs scored
-    battingAvg?: number;    // Batting average
-    strikeRate: number;     // Strike rate
+    pomAwards?: number;     // Cup removed from here
+    runs: number;
+    battingAvg?: number;
+    strikeRate: number;
   };
 
-  // Enhanced bowling stats with new fields
   bowlingStats?: {
-    wickets: number;        // Total wickets taken
-    economy: number;        // Economy rate
-    catches?: number;       // Catches taken (fielding)
+    wickets: number;
+    economy: number;
+    catches?: number;
   };
 }
 

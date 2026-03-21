@@ -181,11 +181,10 @@
     </div> -->
 
                 <!-- Only show cups if exists and > 0 -->
-                <div class="spotlight-stat special"
-                  *ngIf="currentPlayer.battingStats.Cup && currentPlayer.battingStats.Cup > 0">
+                <div class="spotlight-stat special" *ngIf="currentPlayer.cups && currentPlayer.cups > 0">
                   <div class="stat-icon">🏆</div>
                   <div class="stat-info">
-                    <div class="stat-number">{{currentPlayer.battingStats.Cup}}</div>
+                    <div class="stat-number">{{currentPlayer.cups}}</div>
                     <div class="stat-text">Cups Won</div>
                   </div>
                 </div>
