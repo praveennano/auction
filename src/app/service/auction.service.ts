@@ -106,7 +106,7 @@ export class AuctionService {
   // Regular players for auction (original player list)
   private initialPlayers: Player[] = [
     {
-      id: 1, name: 'Keshav', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 1, cups: 0,
+      id: 1, name: 'Keshav', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 1, cups: 3,
       battingStats: { runs: 32, battingAvg: 8.0, strikeRate: 46.3 },
       bowlingStats: { wickets: 2, economy: 13.34, catches: 8 }
     },
@@ -116,17 +116,17 @@ export class AuctionService {
       bowlingStats: { wickets: 10, economy: 9.79, catches: 13 }
     },
     {
-      id: 3, name: 'Gopal', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 3, name: 'Gopal', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 3,
       battingStats: { runs: 862, battingAvg: 26.12, strikeRate: 139.5 },
       bowlingStats: { wickets: 38, economy: 8.5, catches: 8 }
     },
     {
-      id: 4, name: 'Siddhartha', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 4, name: 'Siddhartha', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 3,
       battingStats: { runs: 284, battingAvg: 9.44, strikeRate: 122.9 },
       bowlingStats: { wickets: 26, economy: 9.97, catches: 22 }
     },
     {
-      id: 5, name: 'Vetri', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 9, cups: 0,
+      id: 5, name: 'Vetri', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 9, cups: 3,
       battingStats: { runs: 919, battingAvg: 22.98, strikeRate: 155.2 },
       bowlingStats: { wickets: 27, economy: 11.09, catches: 26 }
     },
@@ -136,52 +136,52 @@ export class AuctionService {
       bowlingStats: { wickets: 11, economy: 12.88, catches: 7 }
     },
     {
-      id: 7, name: 'Kabeer', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 7, name: 'Kabeer', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
       battingStats: { runs: 293, battingAvg: 16.28, strikeRate: 135.7 },
       bowlingStats: { wickets: 1, economy: 11.5, catches: 1 }
     },
     {
-      id: 8, name: 'Pradeep', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 3, cups: 0,
+      id: 8, name: 'Pradeep', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 3, cups: 3,
       battingStats: { runs: 537, battingAvg: 12.79, strikeRate: 137.4 },
       bowlingStats: { wickets: 29, economy: 11.08, catches: 34 }
     },
     {
-      id: 9, name: 'Saravanan', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 9, name: 'Saravanan', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 5,
       battingStats: { runs: 646, battingAvg: 20.19, strikeRate: 171.4 },
       bowlingStats: { wickets: 35, economy: 8.06, catches: 41 }
     },
     {
-      id: 10, name: 'Aravind DG', role: PlayerRole.BOWLER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 10, name: 'Aravind DG', role: PlayerRole.BOWLER, basePrice: 100, mvpRanking: 0, cups: 3,
       battingStats: { runs: 91, battingAvg: 11.38, strikeRate: 82.7 },
       bowlingStats: { wickets: 15, economy: 12.35, catches: 4 }
     },
     {
-      id: 11, name: 'Sarath Kumar', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 11, name: 'Sarath Kumar', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 6,
       battingStats: { runs: 1326, battingAvg: 27.62, strikeRate: 173.1 },
       bowlingStats: { wickets: 39, economy: 8.65, catches: 51 }
     },
     {
-      id: 13, name: 'S S Deepak', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 13, name: 'S S Deepak', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
       battingStats: { runs: 276, battingAvg: 10.22, strikeRate: 123.8 },
       bowlingStats: { wickets: 28, economy: 8.74, catches: 25 }
     },
     {
-      id: 15, name: 'Dg', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 15, name: 'Dg', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
       battingStats: { runs: 245, battingAvg: 8.75, strikeRate: 119.5 },
       bowlingStats: { wickets: 16, economy: 11.4, catches: 9 }
     },
     {
-      id: 16, name: 'Arun S', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 16, name: 'Arun S', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 5,
       battingStats: { runs: 265, battingAvg: 9.81, strikeRate: 118.9 },
       bowlingStats: { wickets: 33, economy: 9.41, catches: 7 }
     },
     {
-      id: 17, name: 'Ravi', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 17, name: 'Ravi', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 4,
       battingStats: { runs: 259, battingAvg: 11.77, strikeRate: 117.7 },
       bowlingStats: { wickets: 5, economy: 15.51, catches: 40 }
     },
     {
-      id: 18, name: 'Ashok', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 18, name: 'Ashok', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 4,
       battingStats: { runs: 825, battingAvg: 25.01, strikeRate: 150.8 },
       bowlingStats: { wickets: 38, economy: 7.42, catches: 15 }
     },
@@ -191,27 +191,27 @@ export class AuctionService {
       bowlingStats: { wickets: 19, economy: 8.94, catches: 12 }
     },
     {
-      id: 20, name: 'Shiva', role: PlayerRole.BOWLER, basePrice: 100, mvpRanking: 10, cups: 0,
+      id: 20, name: 'Shiva', role: PlayerRole.BOWLER, basePrice: 100, mvpRanking: 10, cups: 4,
       battingStats: { runs: 265, battingAvg: 9.47, strikeRate: 152.3 },
       bowlingStats: { wickets: 30, economy: 10.06, catches: 10 }
     },
     {
-      id: 21, name: 'Ajay', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 21, name: 'Ajay', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
       battingStats: { runs: 794, battingAvg: 20.89, strikeRate: 161.1 },
       bowlingStats: { wickets: 11, economy: 12.09, catches: 31 }
     },
     {
-      id: 22, name: 'Logesh', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 22, name: 'Logesh', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
       battingStats: { runs: 153, battingAvg: 10.2, strikeRate: 100.0 },
       bowlingStats: { wickets: 19, economy: 8.65, catches: 4 }
     },
     {
-      id: 23, name: 'Sowrish', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 23, name: 'Sowrish', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
       battingStats: { runs: 671, battingAvg: 19.74, strikeRate: 156.4 },
       bowlingStats: { wickets: 19, economy: 10.83, catches: 10 }
     },
     {
-      id: 24, name: 'Umesh', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 24, name: 'Umesh', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
       battingStats: { runs: 1038, battingAvg: 23.06, strikeRate: 144.8 },
       bowlingStats: { wickets: 37, economy: 8.69, catches: 15 }
     },
@@ -221,12 +221,12 @@ export class AuctionService {
       bowlingStats: { wickets: 8, economy: 8.9, catches: 10 }
     },
     {
-      id: 26, name: 'Muthu', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 26, name: 'Muthu', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
       battingStats: { runs: 67, battingAvg: 7.44, strikeRate: 84.8 },
       bowlingStats: { wickets: 1, economy: 8.0, catches: 2 }
     },
     {
-      id: 27, name: 'Vishnu', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 27, name: 'Vishnu', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 4,
       battingStats: { runs: 169, battingAvg: 6.77, strikeRate: 100.0 },
       bowlingStats: { wickets: 4, economy: 16.15, catches: 3 }
     },
@@ -236,22 +236,22 @@ export class AuctionService {
       bowlingStats: { wickets: 26, economy: 9.52, catches: 10 }
     },
     {
-      id: 29, name: 'Akshay', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 29, name: 'Akshay', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
       battingStats: { runs: 303, battingAvg: 10.1, strikeRate: 113.1 },
       bowlingStats: { wickets: 24, economy: 8.98, catches: 10 }
     },
     {
-      id: 30, name: 'Arumugam', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 7, cups: 0,
+      id: 30, name: 'Arumugam', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 7, cups: 2,
       battingStats: { runs: 288, battingAvg: 8.73, strikeRate: 123.6 },
       bowlingStats: { wickets: 30, economy: 11.21, catches: 23 }
     },
     {
-      id: 31, name: 'Guna', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 5, cups: 0,
+      id: 31, name: 'Guna', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 5, cups: 2,
       battingStats: { runs: 532, battingAvg: 11.57, strikeRate: 149.8 },
       bowlingStats: { wickets: 13, economy: 14.29, catches: 30 }
     },
     {
-      id: 32, name: 'Satz', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 32, name: 'Satz', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
       battingStats: { runs: 843, battingAvg: 23.42, strikeRate: 155.3 },
       bowlingStats: { wickets: 14, economy: 11.23, catches: 39 }
     },
@@ -276,7 +276,7 @@ export class AuctionService {
       bowlingStats: { wickets: 0, economy: 0, catches: 0 }
     },
     {
-      id: 39, name: 'Sriram MP', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 39, name: 'Sriram MP', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
       battingStats: { runs: 1123, battingAvg: 21.19, strikeRate: 158.8 },
       bowlingStats: { wickets: 41, economy: 9.47, catches: 37 }
     },
@@ -295,14 +295,13 @@ export class AuctionService {
         id: 2,
         name: 'Pool A',
         // 21 players → Positions 6–26 (random within pool)
-        playerIds: [1, 4, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27],
+        playerIds: [1, 4, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 21, 37, 23, 24, 39, 27],
         isActive: false,
         isCompleted: false
       },
       {
         id: 3,
         name: 'Karthikeyan Slot',
-        // Karthikeyan (id: 28) → Always Position 27
         playerIds: [28],
         isActive: false,
         isCompleted: false
@@ -310,8 +309,7 @@ export class AuctionService {
       {
         id: 4,
         name: 'Pool B',
-        // 8 players → Positions 28–35 (random within pool)
-        playerIds: [29, 32, 31, 35, 36, 37, 38, 39],
+        playerIds: [29, 32, 31, 35, 36, 22, 38, 26],
         isActive: false,
         isCompleted: false
       }
@@ -482,7 +480,7 @@ export class AuctionService {
               battingStats: { runs: 0, strikeRate: 0 },
               bowlingStats: { wickets: 0, economy: 0 }
             }),
-            id: localId,
+            id: stats?.id ?? localId,  // ← preserve original initialPlayers ID so pool membership works
             supabaseId: dbP.id,
             name: dbP.player_name,
             basePrice: dbP.base_price ?? stats?.basePrice ?? 100,
@@ -510,11 +508,11 @@ export class AuctionService {
         console.log('🎱 POOL B (Rest):', pool2Names);
         console.log('✅ Available for auction:', remapped.map(p => p.name));
 
-        // Rebuild pools with DB-derived IDs
-        const newPools: PlayerPool[] = [
-          { id: 1, name: 'Premium Pool', playerIds: pool1Ids, isActive: true, isCompleted: false },
-          { id: 2, name: 'Pool A', playerIds: pool2Ids, isActive: false, isCompleted: false }
-        ];
+        // Since players now keep their original initialPlayers IDs (stats?.id),
+        // createManualPools() playerIds match directly — no remapping needed!
+        const newPools: PlayerPool[] = this.createManualPools().map(p => ({ ...p }));
+        console.log('🏊 Pools built:', newPools.map(p => `${p.name}(${p.playerIds.length})`).join(', '));
+
 
         // ── Merge saved auction progress (sold/unsold) with DB-derived pools ──
         let mergedAvailable = remapped;
