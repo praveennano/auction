@@ -1,8 +1,11 @@
 <!-- App Tab Switcher -->
-<div class="app-tab-bar" [class.theme-dark]="activeAppTab === 'prediction'"
+<div class="app-tab-bar" [class.theme-dark]="activeAppTab === 'prediction' || activeAppTab === 'dream8'"
   [class.theme-light]="activeAppTab === 'auction'">
   <button class="app-tab-btn" [class.active]="activeAppTab === 'prediction'" (click)="activeAppTab = 'prediction'">
     <span>🎯 Prediction Game</span>
+  </button>
+  <button class="app-tab-btn" [class.active]="activeAppTab === 'dream8'" (click)="activeAppTab = 'dream8'">
+    <span>🏆 Dream 8</span>
   </button>
   <button *ngIf="isAdmin" class="app-tab-btn" [class.active]="activeAppTab === 'auction'"
     (click)="activeAppTab = 'auction'">
@@ -15,6 +18,10 @@
   <app-prediction-game (adminStatusChange)="onAdminStatusChange($event)"></app-prediction-game>
 </div>
 
+<!-- Tab 2: Dream 8 -->
+<div *ngIf="activeAppTab === 'dream8'">
+  <app-dream8></app-dream8>
+</div>
 <!-- Tab 2: Auction (existing content below) -->
 <div *ngIf="activeAppTab === 'auction'">
 

@@ -22,6 +22,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { PlayerWordcloudComponent } from './player-wordcloud/player-wordcloud.component';
 import { FormsModule } from '@angular/forms';
 import { PredictionGameComponent } from './component/prediction-game/prediction-game.component';
+import { Dream8Component } from './component/dream8/dream8.component';
 import { PredictionGameService } from './service/prediction-game.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -56,7 +57,8 @@ interface CelebrationData {
     TagModule,
     ConfirmDialogModule,
     ToastModule,
-    PredictionGameComponent
+    PredictionGameComponent,
+    Dream8Component
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './app.component.html',
@@ -91,7 +93,7 @@ interface CelebrationData {
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Cricket Player Auction';
-  activeAppTab: 'auction' | 'prediction' = 'prediction';
+  activeAppTab: 'auction' | 'prediction' | 'dream8' = 'prediction';
   isAdmin = false;
 
   onAdminStatusChange(isAdmin: boolean): void {

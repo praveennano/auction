@@ -1,0 +1,194 @@
+<!-- Dream 8 - Fantasy Team Builder -->
+<div class="dream8-container" *ngIf="isLoggedIn; else loginPrompt">
+
+  <!-- Header -->
+  <div class="dream8-header">
+    <div class="header-title">
+      <span class="header-icon">🏆</span>
+      <h1>Dream 8</h1>
+      <span class="header-subtitle">Build your fantasy team</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-preview" [class.active]="showPreview" (click)="togglePreview()"
+        [disabled]="selectedPlayerIds.size === 0">
+        <span>{{ showPreview ? '📋 Player List' : '👁️ Preview Team' }}</span>
+        <span class="selected-count" *ngIf="selectedPlayerIds.size > 0">
+          {{ selectedPlayerIds.size }}/{{ TEAM_SIZE }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Budget Bar -->
+  <div class="budget-section">
+    <div class="budget-bar-container">
+      <div class="budget-labels">
+        <span class="budget-spent">
+          <span class="budget-value">₹{{ totalCost }}</span> spent
+        </span>
+        <span class="budget-remaining" [class.over-budget]="totalCost > BUDGET">
+          <span class="budget-value">₹{{ remainingBudget }}</span> remaining
+        </span>
+        <span class="budget-total">/ ₹{{ BUDGET }}</span>
+      </div>
+      <div class="budget-bar">
+        <div class="budget-bar-fill"
+          [style.width.%]="budgetPercentage > 100 ? 100 : budgetPercentage"
+          [class.warning]="budgetPercentage > 75 && budgetPercentage <= 90"
+          [class.danger]="budgetPercentage > 90">
+        </div>
+      </div>
+      <div class="budget-slots">
+        <div class="slot" *ngFor="let i of [1,2,3,4,5,6,7,8]"
+          [class.filled]="i <= selectedPlayerIds.size"
+          [class.active]="i === selectedPlayerIds.size + 1">
+          {{ i }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading players...</p>
+  </div>
+
+  <!-- Main Content: Player List -->
+  <div class="dream8-content" *ngIf="!isLoading && !showPreview">
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Search players by name or role..."
+          [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()">
+        <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()">✕</button>
+      </div>
+      <span class="player-count">{{ filteredPlayers.length }} players</span>
+    </div>
+
+    <!-- Player Cards Grid -->
+    <div class="player-grid">
+      <div class="player-card"
+        *ngFor="let player of filteredPlayers"
+        [class.selected]="isSelected(player)"
+        [class.disabled]="!canAfford(player) && !isSelected(player)"
+        [class.team-full]="selectedPlayerIds.size >= TEAM_SIZE && !isSelected(player)"
+        (click)="togglePlayer(player)">
+        <div class="card-select-indicator">
+          <span *ngIf="isSelected(player)" class="check-mark">✓</span>
+          <span *ngIf="!isSelected(player)" class="add-mark">+</span>
+        </div>
+        <div class="card-body">
+          <div class="player-role-badge" [ngClass]="getRoleClass(player.role)">
+            {{ getRoleIcon(player.role) }}
+          </div>
+          <div class="player-name">{{ player.name }}</div>
+          <div class="player-role-text">{{ player.role }}</div>
+          <div class="player-team-label" *ngIf="player.teamName">
+            <span class="team-dot" [style.backgroundColor]="player.teamColor"></span>
+            {{ player.teamName }}
+          </div>
+        </div>
+        <div class="card-price" [class.affordable]="canAfford(player)" [class.too-expensive]="!canAfford(player) && !isSelected(player)">
+          ₹{{ player.soldPrice }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredPlayers.length === 0 && !isLoading">
+      <span class="empty-icon">🏏</span>
+      <p *ngIf="searchQuery">No players match "{{ searchQuery }}"</p>
+      <p *ngIf="!searchQuery">No players available yet. Auction data will appear once the auction starts.</p>
+    </div>
+  </div>
+
+  <!-- Team Preview -->
+  <div class="dream8-preview" *ngIf="!isLoading && showPreview">
+
+    <div class="preview-empty" *ngIf="selectedPlayers.length === 0">
+      <span class="empty-icon">👥</span>
+      <h3>No Players Selected</h3>
+      <p>Go back and pick your Dream 8 squad!</p>
+    </div>
+
+    <div class="preview-team" *ngIf="selectedPlayers.length > 0">
+      <!-- Cricket field background -->
+      <div class="field-container">
+        <div class="field-pitch"></div>
+        <div class="preview-grid">
+          <div class="preview-card" *ngFor="let player of selectedPlayers; let i = index">
+            <button class="remove-btn" (click)="removePlayer(player.supabaseId); $event.stopPropagation()" title="Remove">✕</button>
+            <div class="preview-role" [ngClass]="getRoleClass(player.role)">
+              {{ getRoleIcon(player.role) }}
+            </div>
+            <div class="preview-name">{{ player.name }}</div>
+            <div class="preview-price">₹{{ player.soldPrice }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Summary -->
+      <div class="preview-summary">
+        <div class="summary-stats">
+          <div class="summary-stat">
+            <span class="stat-label">Players</span>
+            <span class="stat-value">{{ selectedPlayerIds.size }}/{{ TEAM_SIZE }}</span>
+          </div>
+          <div class="summary-stat">
+            <span class="stat-label">Total Cost</span>
+            <span class="stat-value">₹{{ totalCost }}</span>
+          </div>
+          <div class="summary-stat">
+            <span class="stat-label">Remaining</span>
+            <span class="stat-value" [class.danger-text]="remainingBudget < 0">₹{{ remainingBudget }}</span>
+          </div>
+        </div>
+
+        <div class="preview-actions">
+          <button class="btn-clear" (click)="clearTeam()" [disabled]="isSaving">
+            🗑️ Clear All
+          </button>
+          <button class="btn-save" [disabled]="!canSave || isSaving || !hasChanges" (click)="saveTeam()">
+            <span *ngIf="!isSaving">💾 {{ savedTeam ? 'Update Team' : 'Save Team' }}</span>
+            <span *ngIf="isSaving">⏳ Saving...</span>
+          </button>
+        </div>
+
+        <div class="save-hint" *ngIf="!isTeamComplete">
+          Select {{ TEAM_SIZE - selectedPlayerIds.size }} more player{{ TEAM_SIZE - selectedPlayerIds.size > 1 ? 's' : '' }} to save
+        </div>
+        <div class="save-hint saved" *ngIf="savedTeam && !hasChanges">
+          ✅ Team saved
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Save Bar -->
+  <div class="floating-bar" *ngIf="selectedPlayerIds.size > 0 && !showPreview">
+    <div class="float-info">
+      <span class="float-count">{{ selectedPlayerIds.size }}/{{ TEAM_SIZE }} selected</span>
+      <span class="float-cost">₹{{ totalCost }}/{{ BUDGET }}</span>
+    </div>
+    <div class="float-actions">
+      <button class="btn-float-preview" (click)="togglePreview()">Preview →</button>
+      <button class="btn-float-save" [disabled]="!canSave || isSaving" (click)="saveTeam()">
+        {{ savedTeam ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Login Prompt -->
+<ng-template #loginPrompt>
+  <div class="login-prompt">
+    <span class="prompt-icon">🔐</span>
+    <h2>Login Required</h2>
+    <p>Please log in to create your Dream 8 team</p>
+  </div>
+</ng-template>
+
+<p-toast></p-toast>
