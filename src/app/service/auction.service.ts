@@ -281,35 +281,21 @@ export class AuctionService {
       bowlingStats: { wickets: 41, economy: 9.47, catches: 37 }
     },
   ];
-  // MANUAL POOL CONFIGURATION - Updated to exclude captain IDs
+  // MANUAL POOL CONFIGURATION - 2 pools: Premium (top 5) + General (remaining 30)
   private createManualPools(): PlayerPool[] {
     return [
       {
         id: 1,
         name: 'Premium Pool',
-        playerIds: [25, 5, 30, 2, 3],   // Positions 1–5 (random within pool)
+        playerIds: [25, 5, 30, 2, 3],   // Top 5 preferred players
         isActive: true,
         isCompleted: false
       },
       {
         id: 2,
-        name: 'Pool A',
-        // 21 players → Positions 6–26 (random within pool)
-        playerIds: [1, 4, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 21, 37, 23, 24, 39, 27],
-        isActive: false,
-        isCompleted: false
-      },
-      {
-        id: 3,
-        name: 'Karthikeyan Slot',
-        playerIds: [28],
-        isActive: false,
-        isCompleted: false
-      },
-      {
-        id: 4,
-        name: 'Pool B',
-        playerIds: [29, 32, 31, 35, 36, 22, 38, 26],
+        name: 'General Pool',
+        // Remaining 30 players (merged from old Pool A + Karthikeyan Slot + Pool B)
+        playerIds: [1, 4, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 21, 37, 23, 24, 39, 27, 28, 29, 32, 31, 35, 36, 22, 38, 26],
         isActive: false,
         isCompleted: false
       }
@@ -487,13 +473,14 @@ export class AuctionService {
             isSold: dbP.auction_status === 'sold',
             isUnsold: dbP.auction_status === 'unsold'
           };
+          const playerId = stats?.id ?? localId;
 
-          // Pool 1 = auction_order 1-5, Pool 2 = rest
+          // Pool 1 = auction_order 1-5 (Premium), Pool 2 = rest (General)
           if (dbP.auction_order >= 1 && dbP.auction_order <= 5) {
-            pool1Ids.push(localId);
+            pool1Ids.push(playerId);
             pool1Names.push(`${dbP.player_name} (order=${dbP.auction_order})`);
           } else {
-            pool2Ids.push(localId);
+            pool2Ids.push(playerId);
             pool2Names.push(`${dbP.player_name} (order=${dbP.auction_order ?? 'NULL'})`);
           }
 
@@ -504,13 +491,15 @@ export class AuctionService {
           }
         });
 
-        console.log('🏅 POOL A (Preferred 5):', pool1Names);
-        console.log('🎱 POOL B (Rest):', pool2Names);
+        console.log('🏅 Premium Pool (Top 5):', pool1Names);
+        console.log('🎱 General Pool (Rest):', pool2Names);
         console.log('✅ Available for auction:', remapped.map(p => p.name));
 
-        // Since players now keep their original initialPlayers IDs (stats?.id),
-        // createManualPools() playerIds match directly — no remapping needed!
-        const newPools: PlayerPool[] = this.createManualPools().map(p => ({ ...p }));
+        // Build pools dynamically from auction_order (not hardcoded)
+        const newPools: PlayerPool[] = [
+          { id: 1, name: 'Premium Pool', playerIds: pool1Ids, isActive: true, isCompleted: false },
+          { id: 2, name: 'General Pool', playerIds: pool2Ids, isActive: false, isCompleted: false }
+        ];
         console.log('🏊 Pools built:', newPools.map(p => `${p.name}(${p.playerIds.length})`).join(', '));
 
 
