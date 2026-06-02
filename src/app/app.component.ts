@@ -259,10 +259,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.auctionService.rtmStatusChanged$.subscribe(event => {
         if (event.status === 'closed' && event.winner) {
+          const teamName = event.winnerName || `Team ${event.winner}`;
           this.messageService.add({
             severity: 'success',
             summary: 'RTM Completed',
-            detail: `Team ${event.winner} won Player ${event.playerId} via RTM`
+            detail: `${teamName} won Player ${event.playerId} via RTM`
           });
         }
       })

@@ -16,6 +16,7 @@ export interface Player {
   ownerId?: number; // Team who currently owns the player (after sale)
   isSold?: boolean;
   isUnsold?: boolean;
+  unsoldAtSoldCount?: number; // soldCount at the moment this player was marked unsold (for RTM batch grouping)
 
   mvpRanking: number;
   cups: number;             // ← moved here, top-level, required

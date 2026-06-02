@@ -18,17 +18,17 @@
             
             <div class="player-header">
               <h4>{{ player.name }}</h4>
-              <span class="player-role">{{ player.role }}</span>
+              <span *ngIf="isUnsoldPlayer(player)" class="badge badge-unsold">UNSOLD</span>
             </div>
 
             <div class="player-details">
               <div class="stat">
-                <label>Base Price (110%):</label>
+                <label>{{ isUnsoldPlayer(player) ? 'Min Bid:' : 'RTM Price (110%):' }}</label>
                 <span class="rtm-price">${{ getRtmBasePrice(player.id) }}</span>
               </div>
               <div class="stat">
-                <label>Original Owner:</label>
-                <span>{{ getTeamName(player.ownerId || 0) }}</span>
+                <label>{{ isUnsoldPlayer(player) ? 'Status:' : 'Original Owner:' }}</label>
+                <span>{{ isUnsoldPlayer(player) ? 'Available (Unsold)' : getTeamName(player.ownerId || 0) }}</span>
               </div>
             </div>
 
@@ -45,6 +45,21 @@
             <div class="no-bids" *ngIf="getBidsForPlayer(player.id).length === 0">
               <small>No bids yet</small>
             </div>
+
+            <!-- Per-player RTM actions -->
+            <div class="player-rtm-actions">
+              <button
+                class="btn btn-sm btn-success"
+                *ngIf="getBidsForPlayer(player.id).length > 0"
+                (click)="closeRtmForPlayer(player.id); $event.stopPropagation()">
+                ✅ Finalise RTM
+              </button>
+              <button
+                class="btn btn-sm btn-outline-secondary"
+                (click)="skipRtmForPlayer(player.id); $event.stopPropagation()">
+                Skip
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -54,28 +69,29 @@
         <h3>Place Your RTM Bid</h3>
         
         <div class="selected-player-info">
-          <p>Selected Player: <strong>{{ eligiblePlayers.find(p => p.id === selectedPlayerId)?.name }}</strong></p>
+          <p>Selected Player: <strong>{{ getSelectedPlayerName() }}</strong></p>
         </div>
 
         <!-- Team Selection -->
         <div class="team-selection">
           <h4>Select Your Team</h4>
           <div class="teams-list">
-            <div 
+            <div
               *ngFor="let team of teams"
               class="team-option"
               [class.selected]="selectedTeam?.id === team.id"
-              [class.disabled]="!canTeamBidRtm(team.id)"
-              (click)="canTeamBidRtm(team.id) && selectTeam(team)">
-              
+              [class.disabled]="!canTeamBidRtm(team.id) || isOriginalOwner(team.id)"
+              (click)="(canTeamBidRtm(team.id) && !isOriginalOwner(team.id)) && selectTeam(team)">
+
               <div class="team-info">
                 <strong>{{ team.name }}</strong>
                 <small>Budget: ${{ team.budget }}</small>
               </div>
-              
+
               <div class="team-status">
-                <span *ngIf="team.rtmAvailable" class="badge rtm-available">RTM Available</span>
-                <span *ngIf="!team.rtmAvailable" class="badge rtm-used">RTM Used</span>
+                <span *ngIf="isOriginalOwner(team.id)" class="badge rtm-owner">Owns Player</span>
+                <span *ngIf="!isOriginalOwner(team.id) && team.rtmAvailable" class="badge rtm-available">RTM Available</span>
+                <span *ngIf="!isOriginalOwner(team.id) && !team.rtmAvailable" class="badge rtm-used">RTM Used</span>
               </div>
             </div>
           </div>

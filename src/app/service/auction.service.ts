@@ -1,7 +1,7 @@
 // Enhanced auction.service.ts with Team Captains as Initial Players
 
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { Player, PlayerRole } from '../models/player.model';
 import { Team } from '../models/team.model';
@@ -312,7 +312,8 @@ export class AuctionService {
         shortName: 'WI',
         color: '#7B0041', // Maroon (West Indies)
         budget: 1880,
-        players: [this.teamCaptains[0]]
+        players: [this.teamCaptains[0]],
+        rtmAvailable: true
       },
       {
         id: 2,
@@ -320,7 +321,8 @@ export class AuctionService {
         shortName: 'ENG',
         color: '#00247D', // Blue (England)
         budget: 2350,
-        players: [this.teamCaptains[1]]
+        players: [this.teamCaptains[1]],
+        rtmAvailable: true
       },
       {
         id: 3,
@@ -328,7 +330,8 @@ export class AuctionService {
         shortName: 'SA',
         color: '#007A4D', // Green (South Africa)
         budget: 2400,
-        players: [this.teamCaptains[2]]
+        players: [this.teamCaptains[2]],
+        rtmAvailable: true
       },
       {
         id: 4,
@@ -336,7 +339,8 @@ export class AuctionService {
         shortName: 'AUS',
         color: '#FFCD00', // Yellow (Australia)
         budget: 2090,
-        players: [this.teamCaptains[3]]
+        players: [this.teamCaptains[3]],
+        rtmAvailable: true
       },
       {
         id: 5,
@@ -344,7 +348,8 @@ export class AuctionService {
         shortName: 'NZ',
         color: '#000000', // Black (New Zealand)
         budget: 2350,
-        players: [this.teamCaptains[4]]
+        players: [this.teamCaptains[4]],
+        rtmAvailable: true
       },
     ];
   }
@@ -369,7 +374,14 @@ export class AuctionService {
   private rtmWindow = new BehaviorSubject<RtmWindow | null>(null);
   private rtmOffers = new BehaviorSubject<Map<number, RtmOffer[]>>(new Map());
   private soldCount = new BehaviorSubject<number>(0);
-  rtmStatusChanged$ = new Subject<{ playerId: number; status: 'open' | 'closed'; winner?: number }>();
+  // totalAuctioned counts every player through auction (sold + unsold) — drives RTM milestones
+  private totalAuctioned = new BehaviorSubject<number>(0);
+  // Players in the current 5-player batch; reset after each RTM window opens
+  private currentBatchPlayers: Player[] = [];
+  rtmStatusChanged$ = new Subject<{ playerId: number; status: 'open' | 'closed'; winner?: number; winnerName?: string }>();
+
+  // Supabase RTM window UUID — set when openRtmWindow persists to DB
+  private rtmWindowSupabaseId: string | null = null;
 
   // Observable streams
   availablePlayers$ = this.availablePlayers.asObservable();
@@ -386,6 +398,7 @@ export class AuctionService {
   rtmWindow$ = this.rtmWindow.asObservable();
   rtmOffers$ = this.rtmOffers.asObservable();
   soldCount$ = this.soldCount.asObservable();
+  totalAuctioned$ = this.totalAuctioned.asObservable();
 
   // Promise that resolves when Supabase data is loaded (or load fails)
   supabaseReady: Promise<void>;
@@ -415,25 +428,36 @@ export class AuctionService {
       // 1. Load teams
       const { data: dbTeams } = await this.supabaseService.client
         .from('teams')
-        .select('id,team_name,team_short_name,team_color')
+        .select('id,team_name,team_short_name,team_color,rtm_available,rtm_used_at,rtm_used_for_player_id')
         .order('team_name');
 
       if (dbTeams && dbTeams.length > 0) {
-        // Build lookup: DB team_name -> supabaseId + color
-        const dbTeamMap = new Map<string, { supabaseId: string; color: string }>(
-          dbTeams.map((t: any) => [t.team_name.toLowerCase(), { supabaseId: t.id, color: t.team_color }])
+        // Build lookup: DB team_name -> supabaseId + color + RTM state
+        const dbTeamMap = new Map<string, { supabaseId: string; color: string; rtmAvailable: boolean; rtmUsedAt?: string }>(
+          dbTeams.map((t: any) => [t.team_name.toLowerCase(), {
+            supabaseId: t.id,
+            color: t.team_color,
+            rtmAvailable: t.rtm_available !== false, // default true if column doesn't exist yet
+            rtmUsedAt: t.rtm_used_at || undefined
+          }])
         );
 
-        // Update supabaseId & color on the existing in-memory teams
+        // Update supabaseId, color, and RTM state on the existing in-memory teams
         const updatedTeams = this.teams.value.map(t => {
           const dbEntry = dbTeamMap.get(t.name.toLowerCase());
           if (dbEntry) {
-            return { ...t, supabaseId: dbEntry.supabaseId, color: dbEntry.color };
+            return {
+              ...t,
+              supabaseId: dbEntry.supabaseId,
+              color: dbEntry.color,
+              rtmAvailable: dbEntry.rtmAvailable,
+              rtmUsedAt: dbEntry.rtmUsedAt
+            };
           }
           return t;
         });
         this.teams.next(updatedTeams);
-        console.log('✅ Teams synced:', updatedTeams.map(t => `${t.name} → ${t.color} [${t.supabaseId ? 'ID OK' : '⚠️ NO ID'}]`));
+        console.log('✅ Teams synced:', updatedTeams.map(t => `${t.name} → ${t.color} [${t.supabaseId ? 'ID OK' : '⚠️ NO ID'}] RTM:${t.rtmAvailable ? '✅' : '❌'}`));
       } else {
         console.warn('⚠️ No teams from Supabase!');
       }
@@ -739,6 +763,11 @@ export class AuctionService {
     const newSoldCount = this.soldCount.value + 1;
     this.soldCount.next(newSoldCount);
 
+    // Increment total auctioned (sold + unsold) and add to current batch
+    const newTotalAuctioned = this.totalAuctioned.value + 1;
+    this.totalAuctioned.next(newTotalAuctioned);
+    this.currentBatchPlayers.push(soldPlayer);
+
     // Update states
     this.teams.next(updatedTeams);
     this.availablePlayers.next(updatedAvailablePlayers);
@@ -750,10 +779,10 @@ export class AuctionService {
       finalBid: currentBidValue
     });
 
-    // Check if RTM should be activated
-    if (this.shouldActivateRtm(newSoldCount)) {
-      console.log(`🎯 RTM Milestone reached: ${newSoldCount} players sold`);
-      this.openRtmWindow(newSoldCount);
+    // RTM triggers every 5 players AUCTIONED (sold + unsold), not just sold
+    if (newTotalAuctioned % 5 === 0) {
+      console.log(`🎯 RTM Milestone reached: ${newTotalAuctioned} players auctioned (${newSoldCount} sold)`);
+      this.openRtmWindow(newTotalAuctioned);
     }
 
     this.currentPlayer.next(null);
@@ -769,11 +798,11 @@ export class AuctionService {
       return;
     }
 
-    // Update player as unsold
     const unsoldPlayer: Player = {
       ...currentPlayerValue,
       isUnsold: true,
-      isSold: false
+      isSold: false,
+      unsoldAtSoldCount: this.soldCount.value
     };
 
     // Update unsold players list
@@ -784,13 +813,23 @@ export class AuctionService {
       player => player.id !== currentPlayerValue.id
     );
 
-    // Reset current auction
+    // Increment total auctioned and add to current batch
+    const newTotalAuctioned = this.totalAuctioned.value + 1;
+    this.totalAuctioned.next(newTotalAuctioned);
+    this.currentBatchPlayers.push(unsoldPlayer);
+
     this.unsoldPlayers.next(updatedUnsoldPlayers);
     this.availablePlayers.next(updatedAvailablePlayers);
     this.currentPlayer.next(null);
     this.currentBid.next(0);
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
+
+    // RTM triggers every 5 players AUCTIONED (sold + unsold)
+    if (newTotalAuctioned % 5 === 0) {
+      console.log(`🎯 RTM Milestone reached: ${newTotalAuctioned} players auctioned (${this.soldCount.value} sold)`);
+      this.openRtmWindow(newTotalAuctioned);
+    }
 
     console.log(`❌ Player ${currentPlayerValue.name} marked as unsold`);
   }
@@ -873,7 +912,7 @@ export class AuctionService {
   resetAuction(): void {
     console.log('🔄 Resetting auction with team captains and manual pool system...');
 
-    // Reset all teams with captains
+    // Reset all teams with captains (rtmAvailable: true is set in createInitialTeams)
     const resetTeams = this.createInitialTeams();
 
     // Use DB-derived pools if available, otherwise fall back to hardcoded
@@ -899,6 +938,14 @@ export class AuctionService {
     this.currentBid.next(0);
     this.currentTeam.next(null);
     this.auctionInProgress.next(false);
+
+    // Reset RTM state
+    this.rtmWindow.next(null);
+    this.rtmOffers.next(new Map());
+    this.soldCount.next(0);
+    this.totalAuctioned.next(0);
+    this.currentBatchPlayers = [];
+    this.rtmWindowSupabaseId = null;
 
     // Re-sync teams with Supabase IDs
     if (this.isBrowser) {
@@ -1214,39 +1261,25 @@ export class AuctionService {
   // RTM (Right To Match) METHODS
   // ────────────────────────────────────────────────────────────────────────
 
-  shouldActivateRtm(soldCount: number): boolean {
-    if (soldCount < 5) return false;
-    return [10, 15, 20, 25, 30].includes(soldCount);
+  shouldActivateRtm(totalAuctioned: number): boolean {
+    return totalAuctioned > 0 && totalAuctioned % 5 === 0;
   }
 
-  openRtmWindow(soldCount: number): RtmWindow | null {
-    if (!this.shouldActivateRtm(soldCount)) return null;
+  openRtmWindow(totalAuctioned: number): RtmWindow | null {
+    // Eligible players = exactly the 5 players that went through auction in this batch
+    const batchPlayers = [...this.currentBatchPlayers];
+    this.currentBatchPlayers = []; // reset for next batch
 
-    const allTeams = this.teams.value;
-    const soldPlayers: Player[] = [];
-    allTeams.forEach(team => {
-      soldPlayers.push(...team.players);
-    });
+    if (batchPlayers.length === 0) return null;
 
-    const rangeSize = 5;
-    const startIndex = Math.max(0, soldPlayers.length - rangeSize);
-    const rtmEligiblePlayers = soldPlayers.slice(startIndex);
-
-    const unsoldInRange = this.unsoldPlayers.value.filter(p =>
-      rtmEligiblePlayers.some(rp => rp.id === p.id) ||
-      this.availablePlayers.value.some(ap => ap.id === p.id)
-    );
-
-    const eligiblePlayerIds = [
-      ...rtmEligiblePlayers.map(p => p.id),
-      ...unsoldInRange.map(p => p.id)
-    ];
+    const eligiblePlayerIds = batchPlayers.map(p => p.id);
+    const batchStart = totalAuctioned - batchPlayers.length + 1;
 
     const rtmWindow: RtmWindow = {
       id: `rtm_${Date.now()}`,
       playerIds: eligiblePlayerIds,
-      startSoldCount: soldCount - 4,
-      endSoldCount: soldCount,
+      startSoldCount: batchStart,
+      endSoldCount: totalAuctioned,
       active: true,
       createdAt: Date.now(),
       offers: new Map()
@@ -1256,8 +1289,48 @@ export class AuctionService {
     this.rtmOffers.next(new Map());
     this.rtmStatusChanged$.next({ status: 'open', playerId: 0 });
 
-    console.log('📋 RTM Window Opened:', rtmWindow);
+    // Persist to Supabase — all eligible players (sold + unsold)
+    this.persistRtmWindowToSupabase(rtmWindow, batchPlayers);
+
+    console.log(`📋 RTM Window Opened — batch: ${batchPlayers.map(p => p.name).join(', ')}`);
     return rtmWindow;
+  }
+
+  /**
+   * Persist RTM window to Supabase via open_rtm_window RPC
+   */
+  private async persistRtmWindowToSupabase(rtmWindow: RtmWindow, eligiblePlayers: Player[]): Promise<void> {
+    try {
+      // Collect supabaseIds of eligible players
+      const eligibleSupabaseIds = eligiblePlayers
+        .map(p => p.supabaseId)
+        .filter((id): id is string => !!id);
+
+      if (eligibleSupabaseIds.length === 0) {
+        console.warn('⚠️ No supabaseIds for RTM eligible players — skipping DB persist');
+        return;
+      }
+
+      const { data, error } = await this.supabaseService.client.rpc('open_rtm_window', {
+        p_start_sold_count: rtmWindow.startSoldCount,
+        p_end_sold_count: rtmWindow.endSoldCount,
+        p_eligible_player_ids: eligibleSupabaseIds
+      });
+
+      if (error) {
+        console.error('❌ Supabase open_rtm_window error:', error);
+        return;
+      }
+
+      if (data?.success && data?.window_id) {
+        this.rtmWindowSupabaseId = data.window_id;
+        console.log('✅ RTM window persisted to Supabase:', data.window_id);
+      } else {
+        console.warn('⚠️ open_rtm_window returned:', data);
+      }
+    } catch (err) {
+      console.error('❌ Failed to persist RTM window:', err);
+    }
   }
 
   validateRtmBid(playerId: number, teamId: number, bidAmount: number): RtmValidation {
@@ -1289,10 +1362,14 @@ export class AuctionService {
       return { valid: false, message: 'Cannot use RTM on your own player' };
     }
 
-    const basePrice = Math.ceil((player.soldPrice || player.basePrice) * 1.10);
+    const basePrice = this.getRtmBasePrice(playerId);
 
     if (bidAmount < basePrice) {
-      return { valid: false, message: `RTM bid must be at least ${basePrice} (110% of ${player.soldPrice})`, basePrice };
+      const isUnsold = !player.soldPrice;
+      const msg = isUnsold
+        ? `Bid must be at least ${basePrice} (base price)`
+        : `RTM bid must be at least ${basePrice} (110% of ${player.soldPrice}, rounded to nearest 10)`;
+      return { valid: false, message: msg, basePrice };
     }
 
     if (team.budget < bidAmount) {
@@ -1333,8 +1410,48 @@ export class AuctionService {
     currentOffers.set(playerId, playerOffers);
     this.rtmOffers.next(currentOffers);
 
+    // Persist to Supabase
+    this.persistRtmBidToSupabase(playerId, teamId, bidAmount);
+
     console.log(`💰 RTM Bid placed: Team ${teamId} bidding ${bidAmount} for Player ${playerId}`);
     return { success: true, message: 'RTM bid placed successfully' };
+  }
+
+  /**
+   * Persist RTM bid to Supabase via place_rtm_bid RPC
+   */
+  private async persistRtmBidToSupabase(playerId: number, teamId: number, bidAmount: number): Promise<void> {
+    try {
+      if (!this.rtmWindowSupabaseId) {
+        console.warn('⚠️ No Supabase window ID — skipping bid persist');
+        return;
+      }
+
+      // Find the player's supabaseId and team's supabaseId
+      const player = this.findPlayerById(playerId);
+      const team = this.teams.value.find(t => t.id === teamId);
+
+      if (!player?.supabaseId || !team?.supabaseId) {
+        console.warn('⚠️ Missing supabaseId for player or team — skipping bid persist');
+        return;
+      }
+
+      const { data, error } = await this.supabaseService.client.rpc('place_rtm_bid', {
+        p_window_id: this.rtmWindowSupabaseId,
+        p_player_id: player.supabaseId,
+        p_team_id: team.supabaseId,
+        p_bid_amount: bidAmount
+      });
+
+      if (error) {
+        console.error('❌ Supabase place_rtm_bid error:', error);
+        return;
+      }
+
+      console.log('✅ RTM bid persisted to Supabase:', data);
+    } catch (err) {
+      console.error('❌ Failed to persist RTM bid:', err);
+    }
   }
 
   getHighestRtmBid(playerId: number): RtmOffer | null {
@@ -1359,28 +1476,30 @@ export class AuctionService {
     const highestBid = this.getHighestRtmBid(playerId);
 
     if (!highestBid) {
-      console.log(`⏹️ RTM closed with no bids for Player ${playerId}`);
+      console.log(`⏹️ RTM skipped for Player ${playerId} — no bids`);
+      this.removePlayerFromRtmWindow(playerId);
       return null;
     }
 
     const player = this.findPlayerById(playerId);
-    const originalOwnerId = player?.ownerId;
-    const winnerTeamId = highestBid.teamId;
-
-    if (!player || !originalOwnerId) {
+    if (!player) {
       return { playerId, winnerId: 0, finalAmount: 0, originalOwnerId: 0, success: false, message: 'Player not found' };
     }
+
+    const originalOwnerId = player.ownerId;         // undefined for unsold players
+    const isUnsoldPlayer = !originalOwnerId;
+    const winnerTeamId = highestBid.teamId;
 
     const winnerTeam = this.teams.value.find(t => t.id === winnerTeamId);
     const originalOwnerTeam = this.teams.value.find(t => t.id === originalOwnerId);
 
-    if (!winnerTeam || !originalOwnerTeam) {
-      return { playerId, winnerId: winnerTeamId, finalAmount: highestBid.amount, originalOwnerId, success: false, message: 'Team not found' };
+    if (!winnerTeam || (!isUnsoldPlayer && !originalOwnerTeam)) {
+      return { playerId, winnerId: winnerTeamId, finalAmount: highestBid.amount, originalOwnerId: originalOwnerId ?? 0, success: false, message: 'Team not found' };
     }
 
     if (winnerTeam.budget < highestBid.amount) {
       console.log(`⛔ RTM winner ${winnerTeamId} insufficient budget at close`);
-      return { playerId, winnerId: 0, finalAmount: 0, originalOwnerId, success: false, message: 'Winner budget insufficient' };
+      return { playerId, winnerId: 0, finalAmount: 0, originalOwnerId: originalOwnerId ?? 0, success: false, message: 'Winner budget insufficient' };
     }
 
     try {
@@ -1394,10 +1513,11 @@ export class AuctionService {
             rtmUsedForPlayerId: playerId,
             players: [
               ...team.players.filter(p => p.id !== playerId),
-              { ...player, ownerId: winnerTeamId, soldPrice: highestBid.amount }
+              { ...player, ownerId: winnerTeamId, soldPrice: highestBid.amount, isUnsold: false, isSold: true }
             ]
           };
-        } else if (team.id === originalOwnerId) {
+        } else if (!isUnsoldPlayer && team.id === originalOwnerId) {
+          // Credit the original owner — only for sold players
           return {
             ...team,
             budget: team.budget + highestBid.amount,
@@ -1409,31 +1529,139 @@ export class AuctionService {
 
       this.teams.next(updatedTeams);
 
-      this.rtmWindow.next(null);
-      this.rtmOffers.next(new Map());
+      // Remove from unsold list if this was an unsold player
+      if (isUnsoldPlayer) {
+        this.unsoldPlayers.next(this.unsoldPlayers.value.filter(p => p.id !== playerId));
+      }
 
-      this.rtmStatusChanged$.next({ status: 'closed', playerId, winner: winnerTeamId });
+      this.removePlayerFromRtmWindow(playerId);
 
-      console.log(`✅ RTM completed: Player ${playerId} won by Team ${winnerTeamId} for ${highestBid.amount}. Original owner credited.`);
+      this.rtmStatusChanged$.next({
+        status: 'closed',
+        playerId,
+        winner: winnerTeamId,
+        winnerName: winnerTeam.name
+      });
+
+      // Persist to Supabase (originalOwnerTeam is null for unsold players)
+      this.persistRtmCloseToSupabase(player, winnerTeam, originalOwnerTeam ?? null, highestBid.amount);
+
+      console.log(`✅ RTM completed: Player ${playerId} won by ${winnerTeam.name} for ${highestBid.amount}.`);
 
       return {
         playerId,
         winnerId: winnerTeamId,
         finalAmount: highestBid.amount,
-        originalOwnerId,
+        originalOwnerId: originalOwnerId ?? 0,
         success: true,
-        message: `RTM won by Team ${winnerTeamId}`
+        message: `RTM won by ${winnerTeam.name}`
       };
     } catch (error) {
       console.error('❌ RTM close error:', error);
-      return { playerId, winnerId: winnerTeamId, finalAmount: highestBid.amount, originalOwnerId, success: false, message: String(error) };
+      return { playerId, winnerId: winnerTeamId, finalAmount: highestBid.amount, originalOwnerId: originalOwnerId ?? 0, success: false, message: String(error) };
+    }
+  }
+
+  skipRtmForPlayer(playerId: number): void {
+    console.log(`⏭️ RTM skipped for Player ${playerId}`);
+    this.removePlayerFromRtmWindow(playerId);
+  }
+
+  private removePlayerFromRtmWindow(playerId: number): void {
+    const current = this.rtmWindow.value;
+    if (!current) return;
+
+    const updatedOffers = new Map(this.rtmOffers.value);
+    updatedOffers.delete(playerId);
+    this.rtmOffers.next(updatedOffers);
+
+    const remaining = current.playerIds.filter(id => id !== playerId);
+    if (remaining.length === 0) {
+      this.rtmWindow.next(null);
+      this.closeRtmWindowInSupabase();
+    } else {
+      this.rtmWindow.next({ ...current, playerIds: remaining });
+    }
+  }
+
+  private async closeRtmWindowInSupabase(): Promise<void> {
+    if (!this.rtmWindowSupabaseId) return;
+    try {
+      await this.supabaseService.client
+        .from('rtm_windows')
+        .update({ is_active: false, closed_at: new Date().toISOString() })
+        .eq('id', this.rtmWindowSupabaseId);
+      this.rtmWindowSupabaseId = null;
+      console.log('✅ RTM window closed in Supabase');
+    } catch (err) {
+      console.error('❌ Failed to close RTM window in Supabase:', err);
+    }
+  }
+
+  /**
+   * Persist RTM close/transaction to Supabase via process_rtm_transaction RPC
+   */
+  private async persistRtmCloseToSupabase(
+    player: Player,
+    winnerTeam: Team,
+    originalOwnerTeam: Team | null,
+    rtmAmount: number
+  ): Promise<void> {
+    try {
+      if (!player.supabaseId || !winnerTeam.supabaseId) {
+        console.warn('⚠️ Missing supabaseId(s) — skipping RTM close persist');
+        return;
+      }
+
+      // Unsold player pick-up: no original owner, just update the player record directly
+      if (!originalOwnerTeam) {
+        await this.supabaseService.client
+          .from('auction_players')
+          .update({ final_team_id: winnerTeam.supabaseId, final_price: rtmAmount, auction_status: 'sold' })
+          .eq('id', player.supabaseId);
+        console.log('✅ Unsold player RTM pick-up persisted to Supabase');
+        return;
+      }
+
+      if (!this.rtmWindowSupabaseId) {
+        console.warn('⚠️ No Supabase window ID — skipping RTM close persist');
+        return;
+      }
+      if (!originalOwnerTeam.supabaseId) {
+        console.warn('⚠️ Missing original owner supabaseId — skipping RTM close persist');
+        return;
+      }
+
+      const { data, error } = await this.supabaseService.client.rpc('process_rtm_transaction', {
+        p_window_id: this.rtmWindowSupabaseId,
+        p_player_id: player.supabaseId,
+        p_winner_team_id: winnerTeam.supabaseId,
+        p_original_owner_id: originalOwnerTeam.supabaseId,
+        p_rtm_amount: rtmAmount,
+        p_original_sold_price: player.soldPrice || player.basePrice
+      });
+
+      if (error) {
+        console.error('❌ Supabase process_rtm_transaction error:', error);
+        return;
+      }
+
+      console.log('✅ RTM transaction persisted to Supabase:', data);
+
+      // Clear the window ID after successful close
+      this.rtmWindowSupabaseId = null;
+    } catch (err) {
+      console.error('❌ Failed to persist RTM close:', err);
     }
   }
 
   getRtmBasePrice(playerId: number): number {
     const player = this.findPlayerById(playerId);
     if (!player) return 0;
-    return Math.ceil((player.soldPrice || player.basePrice) * 1.10);
+    // Unsold players: base price, no premium
+    if (!player.soldPrice) return player.basePrice;
+    // Sold players: 110% rounded UP to the nearest 10
+    return Math.ceil((player.soldPrice * 1.10) / 10) * 10;
   }
 
   private findPlayerById(playerId: number): Player | undefined {

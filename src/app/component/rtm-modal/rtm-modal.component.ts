@@ -20,12 +20,13 @@ export class RtmModalComponent implements OnInit, OnDestroy {
   rtmOffers: Map<number, RtmOffer[]> = new Map();
   eligiblePlayers: Player[] = [];
   teams: Team[] = [];
+  unsoldPlayers: Player[] = [];
   selectedTeam: Team | null = null;
   selectedPlayerId: number | null = null;
   rtmForm: FormGroup;
 
   private destroy$ = new Subject<void>();
-  private selectedPlayerBidForm: FormGroup;
+  selectedPlayerBidForm: FormGroup;
 
   constructor(
     public auctionService: AuctionService,
@@ -62,6 +63,14 @@ export class RtmModalComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(teams => {
         this.teams = teams;
+        if (this.rtmWindow) this.loadEligiblePlayers();
+      });
+
+    this.auctionService.unsoldPlayers$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(unsoldPlayers => {
+        this.unsoldPlayers = unsoldPlayers;
+        if (this.rtmWindow) this.loadEligiblePlayers();
       });
   }
 
@@ -73,22 +82,34 @@ export class RtmModalComponent implements OnInit, OnDestroy {
   private loadEligiblePlayers(): void {
     if (!this.rtmWindow) return;
 
-    const allTeams = this.teams;
-    const allPlayers: Player[] = [];
+    // Collect all sold players (from team rosters) + unsold players
+    const soldPlayers: Player[] = [];
+    this.teams.forEach(team => soldPlayers.push(...team.players));
 
-    allTeams.forEach(team => {
-      allPlayers.push(...team.players);
-    });
+    const allCandidates = [...soldPlayers, ...this.unsoldPlayers];
 
-    this.eligiblePlayers = allPlayers.filter(p => this.rtmWindow?.playerIds.includes(p.id));
+    this.eligiblePlayers = allCandidates.filter(p => this.rtmWindow?.playerIds.includes(p.id));
+  }
+
+  isUnsoldPlayer(player: Player): boolean {
+    return !player.ownerId && !!player.isUnsold;
   }
 
   selectPlayer(playerId: number): void {
     this.selectedPlayerId = playerId;
     const basePrice = this.auctionService.getRtmBasePrice(playerId);
-    this.selectedPlayerBidForm.patchValue({
-      bidAmount: basePrice
-    });
+    this.selectedPlayerBidForm.patchValue({ bidAmount: basePrice });
+
+    // Auto-deselect team if they own this player
+    if (this.selectedTeam && this.isOriginalOwner(this.selectedTeam.id)) {
+      this.selectedTeam = null;
+    }
+  }
+
+  isOriginalOwner(teamId: number): boolean {
+    if (!this.selectedPlayerId) return false;
+    const player = this.eligiblePlayers.find(p => p.id === this.selectedPlayerId);
+    return !!player?.ownerId && player.ownerId === teamId;
   }
 
   placeBid(): void {
@@ -145,8 +166,28 @@ export class RtmModalComponent implements OnInit, OnDestroy {
   async closeRtmForPlayer(playerId: number): Promise<void> {
     const result = await this.auctionService.closeRtmForPlayer(playerId);
     if (result?.success) {
-      alert(`✅ RTM completed! Team ${result.winnerId} won Player ${playerId} for $${result.finalAmount}`);
+      alert(`✅ ${result.message} for $${result.finalAmount}`);
     }
+    if (this.selectedPlayerId === playerId) {
+      this.selectedPlayerId = null;
+      this.selectedTeam = null;
+      this.selectedPlayerBidForm.reset();
+    }
+  }
+
+  skipRtmForPlayer(playerId: number): void {
+    this.auctionService.skipRtmForPlayer(playerId);
+    if (this.selectedPlayerId === playerId) {
+      this.selectedPlayerId = null;
+      this.selectedTeam = null;
+      this.selectedPlayerBidForm.reset();
+    }
+  }
+
+  getSelectedPlayerName(): string {
+    if (!this.selectedPlayerId) return '';
+    const player = this.eligiblePlayers.find(p => p.id === this.selectedPlayerId);
+    return player?.name || '';
   }
 
   isRtmWindowActive(): boolean {
