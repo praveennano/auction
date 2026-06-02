@@ -26,6 +26,8 @@ import { Dream8Component } from './component/dream8/dream8.component';
 import { PredictionGameService } from './service/prediction-game.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RtmModalComponent } from './component/rtm-modal/rtm-modal.component';
+import { RtmBadgeComponent } from './component/rtm-badge/rtm-badge.component';
 
 interface CelebrationData {
   playerName: string;
@@ -58,7 +60,9 @@ interface CelebrationData {
     ConfirmDialogModule,
     ToastModule,
     PredictionGameComponent,
-    Dream8Component
+    Dream8Component,
+    RtmModalComponent,
+    RtmBadgeComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './app.component.html',
@@ -99,7 +103,6 @@ export class AppComponent implements OnInit, OnDestroy {
   onAdminStatusChange(isAdmin: boolean): void {
     this.isAdmin = isAdmin;
   }
-
   // Basic auction properties (visible to UI)
   teams: Team[] = [];
   availablePlayers: Player[] = [];
@@ -111,6 +114,10 @@ export class AppComponent implements OnInit, OnDestroy {
   auctionInProgress: boolean = false;
   currentBid: number = 0;
   currentTeam: Team | null = null;
+
+  // RTM-related properties
+  rtmWindowActive = false;
+  soldCount = 0;
 
   showCelebration = false;
   celebrationData: CelebrationData = {
@@ -190,10 +197,11 @@ export class AppComponent implements OnInit, OnDestroy {
       });
     } else {
       this.hasLoadedFromStorage = true;
-    }
-
-    // PRIVATE: Subscribe to pool updates (for internal logic only)
+    }    // PRIVATE: Subscribe to pool updates (for internal logic only)
     this.subscribeToPoolUpdatesInternal();
+
+    // RTM subscriptions
+    this.subscribeToRtmUpdates();
   }
 
   ngOnDestroy(): void {
@@ -205,7 +213,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.saveCurrentState();
     }
   }
-
   // ================================
   // PRIVATE POOL METHODS (HIDDEN FROM UI)
   // ================================
@@ -221,6 +228,43 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.auctionService.currentPool$.subscribe(currentPool => {
         this.currentPool = currentPool;
+      })
+    );
+  }
+
+  // ================================
+  // RTM SUBSCRIPTION METHODS
+  // ================================
+
+  private subscribeToRtmUpdates(): void {
+    // Subscribe to RTM window state
+    this.subscriptions.add(
+      this.auctionService.rtmWindow$.subscribe(window => {
+        this.rtmWindowActive = window !== null && window.active;
+        if (window?.active) {
+          console.log('🎯 RTM window activated for players:', window.playerIds);
+        }
+      })
+    );
+
+    // Subscribe to sold count for RTM milestone tracking
+    this.subscriptions.add(
+      this.auctionService.soldCount$.subscribe(count => {
+        this.soldCount = count;
+        console.log(`📊 Players sold: ${count}`);
+      })
+    );
+
+    // Subscribe to RTM status changes
+    this.subscriptions.add(
+      this.auctionService.rtmStatusChanged$.subscribe(event => {
+        if (event.status === 'closed' && event.winner) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'RTM Completed',
+            detail: `Team ${event.winner} won Player ${event.playerId} via RTM`
+          });
+        }
       })
     );
   }

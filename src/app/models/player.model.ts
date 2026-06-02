@@ -13,6 +13,7 @@ export interface Player {
   basePrice: number;
   soldPrice?: number;
   teamId?: number;
+  ownerId?: number; // Team who currently owns the player (after sale)
   isSold?: boolean;
   isUnsold?: boolean;
 

@@ -8,6 +8,11 @@
         <h3 class="team-name">{{team.shortName}}</h3>
         <div class="budget-badge">{{team.budget}}</div>
       </div>
+
+      <!-- RTM Badge -->
+      <div class="rtm-badge-container">
+        <app-rtm-badge [team]="team"></app-rtm-badge>
+      </div>
       
       <!-- Player count indicator -->
       <div class="player-count">

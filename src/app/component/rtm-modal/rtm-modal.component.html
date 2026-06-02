@@ -1,0 +1,130 @@
+<div class="rtm-modal-overlay" *ngIf="isRtmWindowActive()">
+  <div class="rtm-modal-container">
+    <div class="rtm-modal-header">
+      <h2>🎯 Right To Match (RTM)</h2>
+      <p class="subtitle">RTM Window Active - Last 5 Players Sold</p>
+    </div>
+
+    <div class="rtm-modal-body">
+      <!-- Players Grid -->
+      <div class="players-section">
+        <h3>Eligible Players</h3>
+        <div class="players-grid">
+          <div 
+            *ngFor="let player of eligiblePlayers" 
+            class="player-card"
+            [class.selected]="selectedPlayerId === player.id"
+            (click)="selectPlayer(player.id)">
+            
+            <div class="player-header">
+              <h4>{{ player.name }}</h4>
+              <span class="player-role">{{ player.role }}</span>
+            </div>
+
+            <div class="player-details">
+              <div class="stat">
+                <label>Base Price (110%):</label>
+                <span class="rtm-price">${{ getRtmBasePrice(player.id) }}</span>
+              </div>
+              <div class="stat">
+                <label>Original Owner:</label>
+                <span>{{ getTeamName(player.ownerId || 0) }}</span>
+              </div>
+            </div>
+
+            <!-- Bids Display -->
+            <div class="bids-info" *ngIf="getBidsForPlayer(player.id).length > 0">
+              <div class="highest-bid" *ngIf="getHighestBidForPlayer(player.id) as highestBid">
+                <label>Highest Bid:</label>
+                <span>${{ highestBid.amount }} by {{ getTeamName(highestBid.teamId) }}</span>
+              </div>
+              <div class="all-bids">
+                <small>{{ getBidsForPlayer(player.id).length }} bid(s)</small>
+              </div>
+            </div>
+            <div class="no-bids" *ngIf="getBidsForPlayer(player.id).length === 0">
+              <small>No bids yet</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bidding Section -->
+      <div class="bidding-section" *ngIf="selectedPlayerId">
+        <h3>Place Your RTM Bid</h3>
+        
+        <div class="selected-player-info">
+          <p>Selected Player: <strong>{{ eligiblePlayers.find(p => p.id === selectedPlayerId)?.name }}</strong></p>
+        </div>
+
+        <!-- Team Selection -->
+        <div class="team-selection">
+          <h4>Select Your Team</h4>
+          <div class="teams-list">
+            <div 
+              *ngFor="let team of teams"
+              class="team-option"
+              [class.selected]="selectedTeam?.id === team.id"
+              [class.disabled]="!canTeamBidRtm(team.id)"
+              (click)="canTeamBidRtm(team.id) && selectTeam(team)">
+              
+              <div class="team-info">
+                <strong>{{ team.name }}</strong>
+                <small>Budget: ${{ team.budget }}</small>
+              </div>
+              
+              <div class="team-status">
+                <span *ngIf="team.rtmAvailable" class="badge rtm-available">RTM Available</span>
+                <span *ngIf="!team.rtmAvailable" class="badge rtm-used">RTM Used</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bid Amount Input -->
+        <form [formGroup]="selectedPlayerBidForm" class="bid-form">
+          <div class="form-group">
+            <label for="bidAmount">Bid Amount</label>
+            <div class="bid-input-group">
+              <span class="currency">$</span>
+              <input 
+                type="number" 
+                id="bidAmount"
+                formControlName="bidAmount"
+                class="bid-input"
+                min="{{ getRtmBasePrice(selectedPlayerId) }}"
+                step="1">
+            </div>
+            <small class="rtm-price-note">
+              Minimum: ${{ getRtmBasePrice(selectedPlayerId) }} (110% of original bid)
+            </small>
+          </div>
+        </form>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button 
+            class="btn btn-primary"
+            [disabled]="!selectedTeam || !selectedPlayerBidForm.valid"
+            (click)="placeBid()">
+            Place RTM Bid
+          </button>
+          <button 
+            class="btn btn-secondary"
+            (click)="selectedPlayerId = null; selectedTeam = null; selectedPlayerBidForm.reset()">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- RTM Status -->
+      <div class="rtm-status">
+        <h3>RTM Milestone Status</h3>
+        <div class="milestone-info">
+          <p>Players Sold: <strong>{{ rtmWindow?.endSoldCount }}</strong></p>
+          <p>RTM Window: Players {{ rtmWindow?.startSoldCount }} - {{ rtmWindow?.endSoldCount }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

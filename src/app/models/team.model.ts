@@ -8,4 +8,8 @@ export interface Team {
   color: string;
   budget: number;
   players: Player[];
+  // RTM fields
+  rtmAvailable: boolean;
+  rtmUsedAt?: string;
+  rtmUsedForPlayerId?: number;
 }

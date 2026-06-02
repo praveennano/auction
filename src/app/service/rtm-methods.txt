@@ -1,0 +1,275 @@
+// ────────────────────────────────────────────────────────────────────────
+// RTM (Right To Match) METHODS - Add these before the closing brace of AuctionService
+// ────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Check if RTM should be activated after a player sale
+   * RTM unlocks after first 5 players, then at milestones (10, 15, 20, 25, 30)
+   */
+  shouldActivateRtm(soldCount: number): boolean {
+    if (soldCount < 5) return false;
+    return [10, 15, 20, 25, 30].includes(soldCount);
+  }
+
+  /**
+   * Open RTM window for the last 5 players sold
+   */
+  openRtmWindow(soldCount: number): RtmWindow | null {
+    if (!this.shouldActivateRtm(soldCount)) {
+      return null;
+    }
+
+    // Get all sold players from all teams
+    const allTeams = this.teams.value;
+    const soldPlayers: Player[] = [];
+    allTeams.forEach(team => {
+      soldPlayers.push(...team.players);
+    });
+
+    // Get the last 5 sold players IDs
+    const rangeSize = 5;
+    const startIndex = Math.max(0, soldPlayers.length - rangeSize);
+    const rtmEligiblePlayers = soldPlayers.slice(startIndex);
+
+    // Include unsold players that might be in this range
+    const unsoldInRange = this.unsoldPlayers.value.filter(p =>
+      rtmEligiblePlayers.some(rp => rp.id === p.id) ||
+      this.availablePlayers.value.some(ap => ap.id === p.id)
+    );
+
+    const eligiblePlayerIds = [
+      ...rtmEligiblePlayers.map(p => p.id),
+      ...unsoldInRange.map(p => p.id)
+    ];
+
+    const rtmWindow: RtmWindow = {
+      id: `rtm_${Date.now()}`,
+      playerIds: eligiblePlayerIds,
+      startSoldCount: soldCount - 4,
+      endSoldCount: soldCount,
+      active: true,
+      createdAt: Date.now(),
+      offers: new Map()
+    };
+
+    this.rtmWindow.next(rtmWindow);
+    this.rtmOffers.next(new Map());
+    this.rtmStatusChanged$.next({ status: 'open', playerId: 0 });
+
+    console.log('📋 RTM Window Opened:', rtmWindow);
+    return rtmWindow;
+  }
+
+  /**
+   * Validate if a team can place an RTM bid
+   */
+  validateRtmBid(playerId: number, teamId: number, bidAmount: number): RtmValidation {
+    const currentWindow = this.rtmWindow.value;
+    if (!currentWindow || !currentWindow.active) {
+      return { valid: false, message: 'No active RTM window' };
+    }
+
+    if (!currentWindow.playerIds.includes(playerId)) {
+      return { valid: false, message: 'Player not eligible for RTM in current window' };
+    }
+
+    const team = this.teams.value.find(t => t.id === teamId);
+    if (!team) {
+      return { valid: false, message: 'Team not found' };
+    }
+
+    if (!team.rtmAvailable) {
+      return { valid: false, message: 'Team has already used their RTM allowance' };
+    }
+
+    const player = this.findPlayerById(playerId);
+    if (!player) {
+      return { valid: false, message: 'Player not found' };
+    }
+
+    const originalOwnerId = player.ownerId;
+    if (originalOwnerId === teamId) {
+      return { valid: false, message: 'Cannot use RTM on your own player' };
+    }
+
+    const basePrice = Math.ceil((player.soldPrice || player.basePrice) * 1.10);
+
+    if (bidAmount < basePrice) {
+      return { valid: false, message: `RTM bid must be at least ${basePrice} (110% of ${player.soldPrice})`, basePrice };
+    }
+
+    if (team.budget < bidAmount) {
+      return { valid: false, message: `Insufficient budget. Required: ${bidAmount}, Available: ${team.budget}` };
+    }
+
+    return { valid: true, message: 'RTM bid valid', basePrice };
+  }
+
+  /**
+   * Place an RTM bid for a player
+   */
+  placeRtmBid(playerId: number, teamId: number, bidAmount: number): { success: boolean; message: string } {
+    const validation = this.validateRtmBid(playerId, teamId, bidAmount);
+    if (!validation.valid) {
+      return { success: false, message: validation.message };
+    }
+
+    const currentOffers = this.rtmOffers.value;
+    if (!currentOffers.has(playerId)) {
+      currentOffers.set(playerId, []);
+    }
+
+    const playerOffers = currentOffers.get(playerId) || [];
+    const existingBidIndex = playerOffers.findIndex(o => o.teamId === teamId);
+
+    const newOffer: RtmOffer = {
+      id: `offer_${Date.now()}_${teamId}`,
+      playerId,
+      teamId,
+      amount: bidAmount,
+      createdAt: Date.now()
+    };
+
+    if (existingBidIndex >= 0) {
+      playerOffers[existingBidIndex] = newOffer;
+    } else {
+      playerOffers.push(newOffer);
+    }
+
+    currentOffers.set(playerId, playerOffers);
+    this.rtmOffers.next(currentOffers);
+
+    console.log(`💰 RTM Bid placed: Team ${teamId} bidding ${bidAmount} for Player ${playerId}`);
+    return { success: true, message: 'RTM bid placed successfully' };
+  }
+
+  /**
+   * Get current highest RTM bid for a player
+   */
+  getHighestRtmBid(playerId: number): RtmOffer | null {
+    const offers = this.rtmOffers.value.get(playerId) || [];
+    if (offers.length === 0) return null;
+
+    return offers.sort((a, b) => {
+      if (b.amount !== a.amount) {
+        return b.amount - a.amount;
+      }
+      return a.createdAt - b.createdAt;
+    })[0];
+  }
+
+  /**
+   * Get all RTM bids for a player sorted by amount
+   */
+  getRtmBidsForPlayer(playerId: number): RtmOffer[] {
+    const offers = this.rtmOffers.value.get(playerId) || [];
+    return offers.sort((a, b) => {
+      if (b.amount !== a.amount) {
+        return b.amount - a.amount;
+      }
+      return a.createdAt - b.createdAt;
+    });
+  }
+
+  /**
+   * Close RTM for a specific player and process the result
+   */
+  async closeRtmForPlayer(playerId: number): Promise<RtmResult | null> {
+    const highestBid = this.getHighestRtmBid(playerId);
+
+    if (!highestBid) {
+      console.log(`⏹️ RTM closed with no bids for Player ${playerId}`);
+      return null;
+    }
+
+    const player = this.findPlayerById(playerId);
+    const originalOwnerId = player?.ownerId;
+    const winnerTeamId = highestBid.teamId;
+
+    if (!player || !originalOwnerId) {
+      return { playerId, winnerId: 0, finalAmount: 0, originalOwnerId: 0, success: false, message: 'Player not found' };
+    }
+
+    const winnerTeam = this.teams.value.find(t => t.id === winnerTeamId);
+    const originalOwnerTeam = this.teams.value.find(t => t.id === originalOwnerId);
+
+    if (!winnerTeam || !originalOwnerTeam) {
+      return { playerId, winnerId: winnerTeamId, finalAmount: highestBid.amount, originalOwnerId, success: false, message: 'Team not found' };
+    }
+
+    if (winnerTeam.budget < highestBid.amount) {
+      console.log(`⛔ RTM winner ${winnerTeamId} insufficient budget at close`);
+      return { playerId, winnerId: 0, finalAmount: 0, originalOwnerId, success: false, message: 'Winner budget insufficient' };
+    }
+
+    try {
+      const updatedTeams = this.teams.value.map(team => {
+        if (team.id === winnerTeamId) {
+          return {
+            ...team,
+            budget: team.budget - highestBid.amount,
+            rtmAvailable: false,
+            rtmUsedAt: new Date().toISOString(),
+            rtmUsedForPlayerId: playerId,
+            players: [
+              ...team.players.filter(p => p.id !== playerId),
+              { ...player, ownerId: winnerTeamId, soldPrice: highestBid.amount }
+            ]
+          };
+        } else if (team.id === originalOwnerId) {
+          return {
+            ...team,
+            budget: team.budget + highestBid.amount,
+            players: team.players.filter(p => p.id !== playerId)
+          };
+        }
+        return team;
+      });
+
+      this.teams.next(updatedTeams);
+
+      this.rtmWindow.next(null);
+      this.rtmOffers.next(new Map());
+
+      this.rtmStatusChanged$.next({ status: 'closed', playerId, winner: winnerTeamId });
+
+      console.log(`✅ RTM completed: Player ${playerId} won by Team ${winnerTeamId} for ${highestBid.amount}. Original owner credited.`);
+
+      return {
+        playerId,
+        winnerId: winnerTeamId,
+        finalAmount: highestBid.amount,
+        originalOwnerId,
+        success: true,
+        message: `RTM won by Team ${winnerTeamId}`
+      };
+    } catch (error) {
+      console.error('❌ RTM close error:', error);
+      return { playerId, winnerId: winnerTeamId, finalAmount: highestBid.amount, originalOwnerId, success: false, message: String(error) };
+    }
+  }
+
+  /**
+   * Get RTM base price for a player (110% of sold price)
+   */
+  getRtmBasePrice(playerId: number): number {
+    const player = this.findPlayerById(playerId);
+    if (!player) return 0;
+    return Math.ceil((player.soldPrice || player.basePrice) * 1.10);
+  }
+
+  /**
+   * Helper to find player by ID across all sources
+   */
+  private findPlayerById(playerId: number): Player | undefined {
+    const allTeams = this.teams.value;
+    for (const team of allTeams) {
+      const found = team.players.find(p => p.id === playerId);
+      if (found) return found;
+    }
+    const inAvailable = this.availablePlayers.value.find(p => p.id === playerId);
+    if (inAvailable) return inAvailable;
+    const inUnsold = this.unsoldPlayers.value.find(p => p.id === playerId);
+    if (inUnsold) return inUnsold;
+    return undefined;
+  }

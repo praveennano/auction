@@ -8,11 +8,12 @@ import { AuctionService } from '../../service/auction.service';
 import { Team } from '../../models/team.model';
 import { Player, PlayerRole } from '../../models/player.model';
 import { Observable } from 'rxjs';
+import { RtmBadgeComponent } from '../rtm-badge/rtm-badge.component';
 
 @Component({
   selector: 'app-team-list',
   standalone: true,
-  imports: [CommonModule, CardModule, ButtonModule, BadgeModule, TagModule],
+  imports: [CommonModule, CardModule, ButtonModule, BadgeModule, TagModule, RtmBadgeComponent],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.scss'
 })
