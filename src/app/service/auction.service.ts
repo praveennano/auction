@@ -202,7 +202,7 @@ export class AuctionService {
       bowlingStats: { wickets: 13, economy: 15.05, catches: 39 }
     },
     {
-      id: 20, name: 'Logesh', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
+      id: 20, name: 'Mahesh', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
       battingStats: { runs: 155, battingAvg: 9.69, strikeRate: 98.7 },
       bowlingStats: { wickets: 26, economy: 9.53, catches: 25 }
     },

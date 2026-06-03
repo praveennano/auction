@@ -104,10 +104,11 @@
   transform: translate(-50%, -50%);
   text-align: center;
   background: linear-gradient(145deg,
-      rgba(255, 255, 255, 0.98) 0%,
-      rgba(248, 250, 252, 0.99) 30%,
-      rgba(240, 245, 251, 0.98) 70%,
-      rgba(255, 255, 255, 0.98) 100%);
+      rgba(255,255,255,0.98) 0%,
+      rgba(253,250,244,0.99) 50%,
+      rgba(255,255,255,0.98) 100%);
+  border: 1px solid rgba(201,168,76,0.3);
+  box-shadow: 0 0 40px rgba(201,168,76,0.12), 0 20px 60px rgba(0,0,0,0.2);
   backdrop-filter: blur(25px);
   border-radius: 28px;
   padding: 7.5rem 3rem 3.5rem;
@@ -181,18 +182,18 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  background: linear-gradient(135deg, #10b981 0%, #059669 40%, #047857 100%);
-  color: white;
+  background: linear-gradient(135deg, #9B7D2A 0%, #C9A84C 40%, #E8C96A 60%, #C9A84C 100%);
+  color: #0A0600;
   padding: 1.5rem 3rem;
   border-radius: 70px;
   font-size: 2.4rem;
   font-weight: 900;
   margin-bottom: 2.5rem;
   box-shadow:
-    0 20px 45px rgba(16, 185, 129, 0.5),
-    0 10px 25px rgba(16, 185, 129, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    0 20px 45px rgba(201,168,76,0.4),
+    0 10px 25px rgba(201,168,76,0.2),
+    inset 0 2px 0 rgba(255,255,255,0.25),
+    inset 0 -2px 0 rgba(0,0,0,0.2);
   animation: badge-celebration-enhanced 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
   letter-spacing: 0.1em;
@@ -338,9 +339,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    color: #10b981;
+    color: #C9A84C;
     filter: blur(10px);
-    opacity: 0.7;
+    opacity: 0.5;
     animation: glow-pulse 2s ease-in-out infinite;
   }
 }
@@ -470,7 +471,7 @@
   .amount {
     font-size: 4rem;
     font-weight: 900;
-    background: linear-gradient(45deg, #047857, #10b981, #34d399, #10b981);
+    background: linear-gradient(45deg, #9B7D2A, #C9A84C, #E8C96A, #C9A84C);
     background-size: 300% 300%;
     -webkit-background-clip: text;
     background-clip: text;
