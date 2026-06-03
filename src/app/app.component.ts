@@ -266,6 +266,8 @@ export class AppComponent implements OnInit, OnDestroy {
             detail: `${teamName} won Player ${event.playerId} via RTM`
           });
         }
+        // Save state after every RTM action (player move + budget changes)
+        this.saveCurrentState();
       })
     );
   }
@@ -852,6 +854,17 @@ export class AppComponent implements OnInit, OnDestroy {
       'NZ': 'https://flagcdn.com/w40/nz.png',
     };
     return flags[shortName] || 'https://flagcdn.com/w40/un.png';
+  }
+
+  getCaptainImage(teamId: number): string {
+    const images: { [key: number]: string } = {
+      1: 'assets/captains/captain-1.jpg',
+      2: 'assets/captains/captain-2.jpg',
+      3: 'assets/captains/captain-3.jpg',
+      4: 'assets/captains/captain-4.jpg',
+      5: 'assets/captains/captain-5.jpg',
+    };
+    return images[teamId] ?? 'assets/captains/placeholder.webp';
   }
 
   getPositionText(role: string | PlayerRole): string {

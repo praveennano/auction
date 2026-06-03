@@ -1,8 +1,13 @@
 <div class="rtm-modal-overlay" *ngIf="isRtmWindowActive()">
-  <div class="rtm-modal-container">
+  <div class="rtm-modal-container" [class.modal-blurred]="showCloseConfirm">
     <div class="rtm-modal-header">
-      <h2>🎯 Right To Match (RTM)</h2>
-      <p class="subtitle">RTM Window Active - Last 5 Players Sold</p>
+      <div class="header-row">
+        <div>
+          <h2>🎯 Right To Match (RTM)</h2>
+          <p class="subtitle">RTM Window Active - Last 5 Players Sold</p>
+        </div>
+        <button class="btn-close-rtm" (click)="closeEntireRtmWindow()">✕ Close RTM</button>
+      </div>
     </div>
 
     <div class="rtm-modal-body">
@@ -24,7 +29,7 @@
             <div class="player-details">
               <div class="stat">
                 <label>{{ isUnsoldPlayer(player) ? 'Min Bid:' : 'RTM Price (110%):' }}</label>
-                <span class="rtm-price">${{ getRtmBasePrice(player.id) }}</span>
+                <span class="rtm-price">{{ getRtmBasePrice(player.id) }} pts</span>
               </div>
               <div class="stat">
                 <label>{{ isUnsoldPlayer(player) ? 'Status:' : 'Original Owner:' }}</label>
@@ -36,7 +41,7 @@
             <div class="bids-info" *ngIf="getBidsForPlayer(player.id).length > 0">
               <div class="highest-bid" *ngIf="getHighestBidForPlayer(player.id) as highestBid">
                 <label>Highest Bid:</label>
-                <span>${{ highestBid.amount }} by {{ getTeamName(highestBid.teamId) }}</span>
+                <span>{{ highestBid.amount }} pts by {{ getTeamName(highestBid.teamId) }}</span>
               </div>
               <div class="all-bids">
                 <small>{{ getBidsForPlayer(player.id).length }} bid(s)</small>
@@ -85,7 +90,7 @@
 
               <div class="team-info">
                 <strong>{{ team.name }}</strong>
-                <small>Budget: ${{ team.budget }}</small>
+                <small>Budget: {{ team.budget }} pts</small>
               </div>
 
               <div class="team-status">
@@ -102,7 +107,6 @@
           <div class="form-group">
             <label for="bidAmount">Bid Amount</label>
             <div class="bid-input-group">
-              <span class="currency">$</span>
               <input 
                 type="number" 
                 id="bidAmount"
@@ -112,7 +116,7 @@
                 step="1">
             </div>
             <small class="rtm-price-note">
-              Minimum: ${{ getRtmBasePrice(selectedPlayerId) }} (110% of original bid)
+              Minimum: {{ getRtmBasePrice(selectedPlayerId) }} pts (110% of original bid)
             </small>
           </div>
         </form>
@@ -133,12 +137,26 @@
         </div>
       </div>
 
-      <!-- RTM Status -->
-      <div class="rtm-status">
-        <h3>RTM Milestone Status</h3>
-        <div class="milestone-info">
-          <p>Players Sold: <strong>{{ rtmWindow?.endSoldCount }}</strong></p>
-          <p>RTM Window: Players {{ rtmWindow?.startSoldCount }} - {{ rtmWindow?.endSoldCount }}</p>
+    </div>
+
+    <!-- Inline Close RTM confirmation overlay -->
+    <div class="confirm-overlay" *ngIf="showCloseConfirm">
+      <div class="confirm-card">
+        <div class="confirm-icon-wrap">
+          <span class="confirm-icon">⚠️</span>
+        </div>
+        <h3 class="confirm-title">Close RTM Window?</h3>
+        <p class="confirm-message">
+          No RTM bids will be processed for any player in this window.
+          The auction will continue normally with the next player.
+        </p>
+        <div class="confirm-actions">
+          <button class="confirm-btn confirm-cancel" (click)="cancelCloseRtm()">
+            Cancel
+          </button>
+          <button class="confirm-btn confirm-close" (click)="confirmCloseRtm()">
+            Yes, Close RTM
+          </button>
         </div>
       </div>
     </div>

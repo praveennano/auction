@@ -111,6 +111,17 @@ export class PredictionGameService {
         return profile;
     }
 
+    async resetPassword(username: string, phone: string, newPassword: string): Promise<void> {
+        const { data, error } = await this.supabaseService.client
+            .rpc('pg_reset_password', {
+                p_username: username.trim().toLowerCase(),
+                p_phone: phone.trim(),
+                p_new_password: newPassword
+            });
+        if (error) throw new Error(error.message);
+        if (!data?.success) throw new Error(data?.message ?? 'Reset failed');
+    }
+
     async getProfileByUsername(username: string): Promise<PgUserProfile | null> {
         const { data } = await this.supabaseService.client
             .from('users')

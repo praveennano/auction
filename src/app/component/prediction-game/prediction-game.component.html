@@ -57,10 +57,72 @@
                 </button>
 
                 <p class="auth-switch">
-                    New here? <button type="button" class="link-btn" (click)="authTab = 'signup'">Create
-                        account</button>
+                    New here? <button type="button" class="link-btn" (click)="authTab = 'signup'">Create account</button>
+                </p>
+
+                <p class="auth-switch">
+                    <button type="button" class="link-btn forgot-link"
+                        (click)="showForgotPassword = !showForgotPassword; forgotForm.reset()">
+                        🔑 Forgot password?
+                    </button>
                 </p>
             </form>
+
+            <!-- ── FORGOT PASSWORD ── -->
+            <div *ngIf="authTab === 'signin' && showForgotPassword" class="forgot-card">
+                <h4 class="forgot-title">Reset Password</h4>
+                <p class="forgot-subtitle">Enter your username and registered phone number to set a new password.</p>
+
+                <form [formGroup]="forgotForm" (ngSubmit)="onForgotPassword()" class="auth-form">
+                    <div class="form-field">
+                        <label>Username</label>
+                        <input type="text" formControlName="username" placeholder="Your username"
+                            class="pg-input" autocapitalize="none">
+                        <span class="field-error"
+                            *ngIf="forgotForm.get('username')?.touched && forgotForm.get('username')?.invalid">
+                            Enter your username
+                        </span>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Phone Number</label>
+                        <input type="tel" formControlName="phone" placeholder="10-digit mobile number"
+                            class="pg-input" maxlength="10">
+                        <span class="field-error"
+                            *ngIf="forgotForm.get('phone')?.touched && forgotForm.get('phone')?.invalid">
+                            Enter your 10-digit phone number
+                        </span>
+                    </div>
+
+                    <div class="form-field">
+                        <label>New Password</label>
+                        <div class="password-wrapper">
+                            <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword"
+                                placeholder="Min 6 characters" class="pg-input pw-input">
+                            <button type="button" class="show-pw-btn" (click)="showNewPassword = !showNewPassword">
+                                {{ showNewPassword ? '🙈' : '👁️' }}
+                            </button>
+                        </div>
+                        <span class="field-error"
+                            *ngIf="forgotForm.get('newPassword')?.touched && forgotForm.get('newPassword')?.invalid">
+                            Minimum 6 characters
+                        </span>
+                    </div>
+
+                    <button type="submit" class="btn-auth" [disabled]="forgotForm.invalid || forgotLoading">
+                        <span *ngIf="!forgotLoading">🔐 Reset Password</span>
+                        <span *ngIf="forgotLoading" class="btn-loading">
+                            <span class="spinner-sm"></span> Resetting...
+                        </span>
+                    </button>
+
+                    <p class="auth-switch">
+                        <button type="button" class="link-btn" (click)="showForgotPassword = false">
+                            ← Back to Sign In
+                        </button>
+                    </p>
+                </form>
+            </div>
 
             <!-- ── SIGN UP ── -->
             <form *ngIf="authTab === 'signup'" [formGroup]="signUpForm" (ngSubmit)="onSignUp()" class="auth-form">

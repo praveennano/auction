@@ -38,6 +38,11 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
     showSignInPassword = false;
     showSignUpPassword = false;
 
+    showForgotPassword = false;
+    forgotForm!: FormGroup;
+    showNewPassword = false;
+    forgotLoading = false;
+
     isLoggedIn = false;
     userProfile: PgUserProfile | null = null;
     teams: PgTeam[] = [];
@@ -83,6 +88,12 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
             password: ['', [Validators.required, Validators.minLength(6)]],
             display_name: ['', [Validators.required, Validators.minLength(2)]],
             phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
+        });
+
+        this.forgotForm = this.fb.group({
+            username:    ['', [Validators.required, Validators.minLength(3)]],
+            phone:       ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+            newPassword: ['', [Validators.required, Validators.minLength(6)]]
         });
 
         this.subscriptions.add(
@@ -142,6 +153,26 @@ export class PredictionGameComponent implements OnInit, OnDestroy {
     }
 
     // ── Auth Actions ────────────────────────────────────────────────────
+
+    async onForgotPassword(): Promise<void> {
+        if (this.forgotForm.invalid) return;
+        this.forgotLoading = true;
+        try {
+            const { username, phone, newPassword } = this.forgotForm.value;
+            await this.pgService.resetPassword(username, phone, newPassword);
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Password Reset!',
+                detail: 'Your password has been updated. Please sign in with your new password.'
+            });
+            this.showForgotPassword = false;
+            this.forgotForm.reset();
+        } catch (err: any) {
+            this.messageService.add({ severity: 'error', summary: 'Reset Failed', detail: err.message });
+        } finally {
+            this.forgotLoading = false;
+        }
+    }
 
     async onSignIn(): Promise<void> {
         if (this.signInForm.invalid) return;

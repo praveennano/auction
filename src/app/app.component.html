@@ -356,8 +356,6 @@
             <!-- ENHANCED: Team header with capacity indicator -->
             <div class="team-header" [style.background-color]="team.color + '15'">
               <div class="team-header-info">
-                <img [src]="getTeamFlag(team.shortName)" [alt]="team.shortName + ' Flag'" class="team-flag-img"
-                  [title]="team.shortName">
                 <div class="team-names-wrap">
                   <div class="team-short-name">{{team.shortName}}</div>
                 </div>
@@ -375,6 +373,11 @@
             </div>
 
             <div class="team-players">
+              <img [src]="getCaptainImage(team.id)"
+                   class="captain-players-bg"
+                   alt=""
+                   aria-hidden="true"
+                   (error)="$any($event.target).src='assets/captains/placeholder.webp'">
               <div *ngFor="let player of team.players" class="team-player enhanced">
                 <div class="team-player-main">
                   <span class="player-name">{{player.name}}</span>
