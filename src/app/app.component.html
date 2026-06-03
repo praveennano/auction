@@ -428,6 +428,15 @@
     <!-- Main Celebration Message -->
     <div class="celebration-message" [@bounceIn]>
 
+      <!-- Captain Image -->
+      <div class="celebration-captain-img-wrap" *ngIf="celebrationData.teamId">
+        <img [src]="getCaptainImage(celebrationData.teamId)"
+             class="celebration-captain-img"
+             [style.border-color]="celebrationData.teamColor"
+             alt="captain"
+             (error)="$any($event.target).src='assets/captains/placeholder.webp'">
+      </div>
+
       <!-- SOLD Badge -->
       <div class="sold-badge">
         <i class="pi pi-check-circle"></i>
@@ -480,7 +489,6 @@
       <div class="celebration-decorations">
         <div class="decoration-left">🏏</div>
         <div class="decoration-right">🏆</div>
-        <div class="decoration-top">⭐</div>
       </div>
     </div>
 

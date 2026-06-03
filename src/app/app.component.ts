@@ -33,6 +33,7 @@ interface CelebrationData {
   playerName: string;
   teamName: string;
   teamColor: string;
+  teamId?: number;
   soldPrice: number;
   // Prediction stats
   totalPredictors?: number;
@@ -756,6 +757,7 @@ export class AppComponent implements OnInit, OnDestroy {
         playerName: playerToSell.name,
         teamName: buyingTeam.shortName,
         teamColor: buyingTeam.color,
+        teamId: buyingTeam.id,
         soldPrice: finalPrice
       });
 
