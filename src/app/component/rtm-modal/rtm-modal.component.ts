@@ -104,10 +104,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
     this.selectedPlayerId = playerId;
     const basePrice = this.auctionService.getRtmBasePrice(playerId);
     this.selectedPlayerBidForm.patchValue({ bidAmount: basePrice });
-
-    if (this.selectedTeam && this.isOriginalOwner(this.selectedTeam.id)) {
-      this.selectedTeam = null;
-    }
   }
 
   isOriginalOwner(teamId: number): boolean {

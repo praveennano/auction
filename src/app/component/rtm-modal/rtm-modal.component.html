@@ -80,8 +80,8 @@
               *ngFor="let team of teams"
               class="team-option"
               [class.selected]="selectedTeam?.id === team.id"
-              [class.disabled]="!canTeamBidRtm(team.id) || isOriginalOwner(team.id)"
-              (click)="(canTeamBidRtm(team.id) && !isOriginalOwner(team.id)) && selectTeam(team)">
+              [class.disabled]="!canTeamBidRtm(team.id)"
+              (click)="canTeamBidRtm(team.id) && selectTeam(team)">
 
               <div class="team-info">
                 <strong>{{ team.name }}</strong>
@@ -89,7 +89,8 @@
               </div>
 
               <div class="team-status">
-                <span *ngIf="isOriginalOwner(team.id)" class="badge rtm-owner">Owns Player</span>
+                <span *ngIf="isOriginalOwner(team.id) && team.rtmAvailable" class="badge rtm-defend">🛡️ Defend RTM</span>
+                <span *ngIf="isOriginalOwner(team.id) && !team.rtmAvailable" class="badge rtm-used">RTM Used</span>
                 <span *ngIf="!isOriginalOwner(team.id) && team.rtmAvailable" class="badge rtm-available">RTM Available</span>
                 <span *ngIf="!isOriginalOwner(team.id) && !team.rtmAvailable" class="badge rtm-used">RTM Used</span>
               </div>
@@ -111,18 +112,23 @@
                 step="1">
             </div>
             <small class="rtm-price-note">
-              Minimum: {{ getRtmBasePrice(selectedPlayerId) }} pts (110% of original bid)
+              <ng-container *ngIf="selectedTeam && isOriginalOwner(selectedTeam.id); else otherTeamNote">
+                🛡️ Minimum: {{ getRtmBasePrice(selectedPlayerId) }} pts — Match to KEEP your player
+              </ng-container>
+              <ng-template #otherTeamNote>
+                Minimum: {{ getRtmBasePrice(selectedPlayerId) }} pts (110% of original bid)
+              </ng-template>
             </small>
           </div>
         </form>
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-          <button 
+          <button
             class="btn btn-primary"
             [disabled]="!selectedTeam || !selectedPlayerBidForm.valid"
             (click)="placeBid()">
-            Place RTM Bid
+            {{ selectedTeam && isOriginalOwner(selectedTeam.id) ? '🛡️ Defend — Match Bid' : 'Place RTM Bid' }}
           </button>
           <button 
             class="btn btn-secondary"

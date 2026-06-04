@@ -41,99 +41,99 @@ export class AuctionService {
       id: 101, // Using higher IDs to avoid conflicts
       name: 'Pradeep',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 620, // Captain gets higher base price
+      basePrice: 350, // Captain gets higher base price
       mvpRanking: 1,
       cups: 0,
       battingStats: { runs: 750, strikeRate: 155.0 },
       bowlingStats: { wickets: 28, economy: 7.8 },
       teamId: 1, // Pre-assigned to team 1
       isSold: true,
-      soldPrice: 620
+      soldPrice: 350
     },
     {
       id: 102,
       name: 'Dg',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 150,
+      basePrice: 200,
       mvpRanking: 2,
       cups: 0,
       battingStats: { runs: 680, strikeRate: 148.5 },
       bowlingStats: { wickets: 25, economy: 8.2 },
       teamId: 2, // Pre-assigned to team 2
       isSold: true,
-      soldPrice: 150
+      soldPrice: 200
     },
     {
       id: 103,
       name: 'Karthikeyan',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 100,
+      basePrice: 280,
       mvpRanking: 3,
       cups: 0,
       battingStats: { runs: 620, strikeRate: 142.0 },
       bowlingStats: { wickets: 22, economy: 8.5 },
       teamId: 3, // Pre-assigned to team 3
       isSold: true,
-      soldPrice: 100
+      soldPrice: 280
     },
     {
       id: 104,
       name: 'Akshay',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 410,
+      basePrice: 400,
       mvpRanking: 4,
       cups: 0,
       battingStats: { runs: 590, strikeRate: 138.0 },
       bowlingStats: { wickets: 20, economy: 8.8 },
       teamId: 4, // Pre-assigned to team 4
       isSold: true,
-      soldPrice: 410
+      soldPrice: 400
     },
     {
       id: 105,
       name: 'Sowrish',
       role: PlayerRole.ALL_ROUNDER,
-      basePrice: 150,
+      basePrice: 450,
       mvpRanking: 5,
       cups: 0,
       battingStats: { runs: 560, strikeRate: 135.0 },
       bowlingStats: { wickets: 18, economy: 9.0 },
       teamId: 5, // Pre-assigned to team 5
       isSold: true,
-      soldPrice: 150
+      soldPrice: 450
     }
   ];
 
   // Regular players for auction (original player list)
   private initialPlayers: Player[] = [
     {
-      id: 1, name: 'Keshav', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 1, cups: 4,
+      id: 1, name: 'Keshav', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 4,
       battingStats: { runs: 35, battingAvg: 5.83, strikeRate: 43.8 },
       bowlingStats: { wickets: 5, economy: 16.45, catches: 17 }
     },
     {
-      id: 2, name: 'Loki', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
+      id: 2, name: 'Loki', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 5, cups: 1,
       battingStats: { runs: 128, battingAvg: 9.85, strikeRate: 112.3 },
       bowlingStats: { wickets: 18, economy: 13.52, catches: 45 }
     },
     {
-      id: 3, name: 'Gopal', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 3,
+      id: 3, name: 'Gopal', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 6, cups: 3,
       battingStats: { runs: 932, battingAvg: 25.89, strikeRate: 141 },
       bowlingStats: { wickets: 39, economy: 9.27, catches: 25 }
     },
     {
-      id: 4, name: 'Siddhartha', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 3,
+      id: 4, name: 'Siddhartha', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 7, cups: 3,
       battingStats: { runs: 321, battingAvg: 10.03, strikeRate: 127.4 },
       bowlingStats: { wickets: 26, economy: 10.19, catches: 24 }
     },
     {
-      id: 5, name: 'Vetri', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 9, cups: 3,
+      id: 5, name: 'Vetri', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 1, cups: 3,
       battingStats: { runs: 1025, battingAvg: 23.84, strikeRate: 158.2 },
       bowlingStats: { wickets: 28, economy: 12.14, catches: 33 }
     },
     {
       id: 6, name: 'Praveen', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
-      battingStats: { runs: 504, battingAvg: 31.5, strikeRate: 170.8 },
+      battingStats: { runs: 504, battingAvg: 32.5, strikeRate: 170.8 },
       bowlingStats: { wickets: 13, economy: 16.4, catches: 15 }
     },
     {
@@ -142,7 +142,7 @@ export class AuctionService {
       bowlingStats: { wickets: 3, economy: 22.25, catches: 5 }
     },
     {
-      id: 8, name: 'Sharan M', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 3, cups: 3,
+      id: 8, name: 'Sharan M', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 2, cups: 3,
       battingStats: { runs: 965, battingAvg: 34.46, strikeRate: 183.8 },
       bowlingStats: { wickets: 24, economy: 9.59, catches: 38 }
     },
@@ -177,7 +177,7 @@ export class AuctionService {
       bowlingStats: { wickets: 38, economy: 10.55, catches: 26 }
     },
     {
-      id: 15, name: 'Ravi', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 4,
+      id: 15, name: 'Ravi', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 8, cups: 4,
       battingStats: { runs: 268, battingAvg: 11.65, strikeRate: 119.1 },
       bowlingStats: { wickets: 8, economy: 22.68, catches: 44 }
     },
@@ -203,8 +203,8 @@ export class AuctionService {
     },
     {
       id: 20, name: 'Mahesh', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
-      battingStats: { runs: 155, battingAvg: 9.69, strikeRate: 98.7 },
-      bowlingStats: { wickets: 26, economy: 9.53, catches: 25 }
+      battingStats: { runs: 206, battingAvg: 8.69, strikeRate: 91.7 },
+      bowlingStats: { wickets: 27, economy: 11.53, catches: 8 }
     },
     {
       id: 21, name: 'Aravind Ganesh A R', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 2,
@@ -233,8 +233,8 @@ export class AuctionService {
     },
     {
       id: 26, name: 'Sriram', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 8, cups: 0,
-      battingStats: { runs: 1188, battingAvg: 21.21, strikeRate: 160.1 },
-      bowlingStats: { wickets: 44, economy: 10.18, catches: 46 }
+      battingStats: { runs: 188, battingAvg: 8.21, strikeRate: 102.1 },
+      bowlingStats: { wickets: 2, economy: 18.18, catches: 4 }
     },
     {
       id: 27, name: 'S N K', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
@@ -242,12 +242,12 @@ export class AuctionService {
       bowlingStats: { wickets: 56, economy: 7.61, catches: 36 }
     },
     {
-      id: 28, name: 'Arumugam', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 7, cups: 2,
+      id: 28, name: 'Arumugam', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 4, cups: 2,
       battingStats: { runs: 327, battingAvg: 9.34, strikeRate: 126.7 },
       bowlingStats: { wickets: 35, economy: 12.2, catches: 35 }
     },
     {
-      id: 29, name: 'Guna', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 5, cups: 2,
+      id: 29, name: 'Guna', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 9, cups: 2,
       battingStats: { runs: 592, battingAvg: 11.84, strikeRate: 152.6 },
       bowlingStats: { wickets: 14, economy: 15.51, catches: 33 }
     },
@@ -257,9 +257,9 @@ export class AuctionService {
       bowlingStats: { wickets: 14, economy: 12.37, catches: 43 }
     },
     {
-      id: 31, name: 'Sharan(Sarath)', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
+      id: 31, name: 'Sharan Stark', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
       battingStats: { runs: 18, battingAvg: 4.5, strikeRate: 78.3 },
-      bowlingStats: { wickets: 1, economy: 16.45, catches: 11 }
+      bowlingStats: { wickets: 2, economy: 16.45, catches: 7 }
     },
     {
       id: 32, name: 'Ashwin', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 1,
@@ -288,14 +288,13 @@ export class AuctionService {
       {
         id: 1,
         name: 'Premium Pool',
-        playerIds: [22, 11, 27, 2, 14],   // Top 5 preferred players (Vignesh S, Vetri, Arumugam, Loki, Gopal)
+        playerIds: [22, 11, 27, 2, 14],  
         isActive: true,
         isCompleted: false
       },
       {
         id: 2,
         name: 'General Pool',
-        // Remaining 30 players (merged from old Pool A + Karthikeyan Slot + Pool B)
         playerIds: [1, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35],
         isActive: false,
         isCompleted: false
@@ -1378,9 +1377,7 @@ export class AuctionService {
     }
 
     const originalOwnerId = player.ownerId;
-    if (originalOwnerId === teamId) {
-      return { valid: false, message: 'Cannot use RTM on your own player' };
-    }
+    const isOwnerDefending = originalOwnerId === teamId;
 
     const basePrice = this.getRtmBasePrice(playerId);
 
@@ -1388,7 +1385,9 @@ export class AuctionService {
       const isUnsold = !player.soldPrice;
       const msg = isUnsold
         ? `Bid must be at least ${basePrice} (base price)`
-        : `RTM bid must be at least ${basePrice} (110% of ${player.soldPrice}, rounded to nearest 10)`;
+        : isOwnerDefending
+          ? `To defend, match at least ${basePrice} (110% of ${player.soldPrice}, rounded to nearest 10)`
+          : `RTM bid must be at least ${basePrice} (110% of ${player.soldPrice}, rounded to nearest 10)`;
       return { valid: false, message: msg, basePrice };
     }
 
@@ -1509,6 +1508,7 @@ export class AuctionService {
     const originalOwnerId = player.ownerId;         // undefined for unsold players
     const isUnsoldPlayer = !originalOwnerId;
     const winnerTeamId = highestBid.teamId;
+    const isOwnerDefending = !isUnsoldPlayer && winnerTeamId === originalOwnerId;
 
     const winnerTeam = this.teams.value.find(t => t.id === winnerTeamId);
     const originalOwnerTeam = this.teams.value.find(t => t.id === originalOwnerId);
@@ -1517,7 +1517,12 @@ export class AuctionService {
       return { playerId, winnerId: winnerTeamId, finalAmount: highestBid.amount, originalOwnerId: originalOwnerId ?? 0, success: false, message: 'Team not found' };
     }
 
-    if (winnerTeam.budget < highestBid.amount) {
+    // For owner-defend: only need to afford the premium (already paid original price)
+    const budgetRequired = isOwnerDefending
+      ? highestBid.amount - (player.soldPrice ?? player.basePrice)
+      : highestBid.amount;
+
+    if (winnerTeam.budget < budgetRequired) {
       console.log(`⛔ RTM winner ${winnerTeamId} insufficient budget at close`);
       return { playerId, winnerId: 0, finalAmount: 0, originalOwnerId: originalOwnerId ?? 0, success: false, message: 'Winner budget insufficient' };
     }
@@ -1525,6 +1530,26 @@ export class AuctionService {
     try {
       const updatedTeams = this.teams.value.map(team => {
         if (team.id === winnerTeamId) {
+          if (isOwnerDefending) {
+            // Owner matched — player stays, charge the premium (RTM price − original sold price)
+            const originalPrice = player.soldPrice ?? player.basePrice;
+            const premium = highestBid.amount - originalPrice;
+            console.log(`🛡️ Defend RTM: originalPrice=${originalPrice}, rtmAmount=${highestBid.amount}, premium=${premium}`);
+            return {
+              ...team,
+              budget: team.budget - premium,
+              rtmAvailable: false,
+              rtmUsedAt: new Date().toISOString(),
+              rtmUsedForPlayerId: playerId,
+              // Update player's soldPrice to the RTM amount they matched
+              players: team.players.map(p =>
+                p.id === playerId
+                  ? { ...p, soldPrice: highestBid.amount }
+                  : p
+              )
+            };
+          }
+          // Another team wins RTM — transfer player
           return {
             ...team,
             budget: team.budget - highestBid.amount,
@@ -1536,8 +1561,8 @@ export class AuctionService {
               { ...player, ownerId: winnerTeamId, soldPrice: highestBid.amount, isUnsold: false, isSold: true }
             ]
           };
-        } else if (!isUnsoldPlayer && team.id === originalOwnerId) {
-          // Credit the original owner — only for sold players
+        } else if (!isUnsoldPlayer && !isOwnerDefending && team.id === originalOwnerId) {
+          // Original owner loses their player — credit them the RTM amount
           return {
             ...team,
             budget: team.budget + highestBid.amount,
@@ -1563,10 +1588,15 @@ export class AuctionService {
         winnerName: winnerTeam.name
       });
 
-      // Persist to Supabase (originalOwnerTeam is null for unsold players)
-      this.persistRtmCloseToSupabase(player, winnerTeam, originalOwnerTeam ?? null, highestBid.amount);
+      // Persist to Supabase — skip for owner-defend (no ownership transfer)
+      if (!isOwnerDefending) {
+        this.persistRtmCloseToSupabase(player, winnerTeam, originalOwnerTeam ?? null, highestBid.amount);
+      }
 
-      console.log(`✅ RTM completed: Player ${playerId} won by ${winnerTeam.name} for ${highestBid.amount}.`);
+      const resultMsg = isOwnerDefending
+        ? `${winnerTeam.name} defended RTM — kept ${player.name}`
+        : `RTM won by ${winnerTeam.name}`;
+      console.log(`✅ RTM completed: ${resultMsg} for ${highestBid.amount}.`);
 
       return {
         playerId,
@@ -1574,7 +1604,7 @@ export class AuctionService {
         finalAmount: highestBid.amount,
         originalOwnerId: originalOwnerId ?? 0,
         success: true,
-        message: `RTM won by ${winnerTeam.name}`
+        message: resultMsg
       };
     } catch (error) {
       console.error('❌ RTM close error:', error);

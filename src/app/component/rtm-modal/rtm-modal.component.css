@@ -324,9 +324,10 @@
   color: #721c24;
 }
 
-.badge.rtm-owner {
-  background: #fff3cd;
-  color: #856404;
+.badge.rtm-defend {
+  background: #cce5ff;
+  color: #004085;
+  border: 1px solid #b8daff;
 }
 
 /* Bid Form */
