@@ -10,7 +10,7 @@
     </div>
     <div class="header-actions">
       <button class="btn-preview" [class.active]="showPreview" (click)="togglePreview()"
-        [disabled]="selectedPlayerIds.size === 0">
+        [disabled]="selectedPlayerIds.size === 0 && !showPreview">
         <span>{{ showPreview ? '📋 Player List' : '👁️ Preview Team' }}</span>
         <span class="selected-count" *ngIf="selectedPlayerIds.size > 0">
           {{ selectedPlayerIds.size }}/{{ TEAM_SIZE }}
@@ -112,6 +112,7 @@
       <span class="empty-icon">👥</span>
       <h3>No Players Selected</h3>
       <p>Go back and pick your Dream 8 squad!</p>
+      <button class="btn-go-back" (click)="togglePreview()">← Pick Players</button>
     </div>
 
     <div class="preview-team" *ngIf="selectedPlayers.length > 0">

@@ -232,7 +232,7 @@ export class AuctionService {
       bowlingStats: { wickets: 4, economy: 16.15, catches: 3 }
     },
     {
-      id: 26, name: 'Sriram', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 8, cups: 0,
+      id: 26, name: 'Sriram', role: PlayerRole.ALL_ROUNDER, basePrice: 100, mvpRanking: 0, cups: 0,
       battingStats: { runs: 188, battingAvg: 8.21, strikeRate: 102.1 },
       bowlingStats: { wickets: 2, economy: 18.18, catches: 4 }
     },

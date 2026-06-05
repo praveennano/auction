@@ -332,8 +332,7 @@
                                             [disabled]="!canDecrement(player.id, team.id) || player.auction_status !== 'upcoming' || isLoading(player.id, team.id)"
                                             (click)="decrement(player.id, team.id)">−</button>
                                         <span class="stepper-count"
-                                            [class.has-value]="getTokens(player.id, team.id) > 0"
-                                            [style.color]="getTokens(player.id, team.id) > 0 ? team.team_color : ''">
+                                            [class.has-value]="getTokens(player.id, team.id) > 0">
                                             {{ getTokens(player.id, team.id) }}
                                         </span>
                                         <button class="stepper-btn plus"
