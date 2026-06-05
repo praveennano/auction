@@ -4,7 +4,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PredictionGameService, PgTeam, PgPoolInfo } from '../../service/prediction-game.service';
+import { AuctionService } from '../../service/auction.service';
 import { Player } from '../../models/player.model';
+import { Team } from '../../models/team.model';
 
 export interface TeamPrediction {
   team: PgTeam;
@@ -27,13 +29,17 @@ export class AuctionStatsComponent implements OnInit, OnChanges, OnDestroy {
   pgTeams: PgTeam[] = [];
   teamPredictions: TeamPrediction[] = [];
   totalTokens = 0;
+  auctionTeams: Team[] = [];
 
   private sub = new Subscription();
 
-  constructor(private pgService: PredictionGameService) { }
+  constructor(
+    private pgService: PredictionGameService,
+    private auctionService: AuctionService
+  ) { }
 
   ngOnInit(): void {
-    // Subscribe to teams list
+    // Subscribe to prediction game teams
     this.sub.add(
       this.pgService.teams$.subscribe(teams => {
         this.pgTeams = teams;
@@ -44,6 +50,20 @@ export class AuctionStatsComponent implements OnInit, OnChanges, OnDestroy {
     // Subscribe to pool info — recalculate whenever bets change
     this.sub.add(
       this.pgService.poolInfo$.subscribe(() => this.rebuild())
+    );
+
+    // Subscribe to auction teams for RTM status
+    this.sub.add(
+      this.auctionService.teams$.subscribe(teams => {
+        this.auctionTeams = teams;
+      })
+    );
+
+    // Refresh RTM status whenever an RTM window closes
+    this.sub.add(
+      this.auctionService.rtmStatusChanged$.subscribe(() => {
+        this.auctionTeams = [...this.auctionService['teams'].getValue()];
+      })
     );
   }
 
@@ -105,5 +125,19 @@ export class AuctionStatsComponent implements OnInit, OnChanges, OnDestroy {
   getMultiplier(tokens: number): string {
     if (this.totalTokens === 0 || tokens === 0) return '—';
     return (this.totalTokens / tokens).toFixed(1) + '×';
+  }
+
+  getRtmUsedPlayerName(team: Team): string {
+    if (!team.rtmUsedForPlayerId) return '';
+    const player = this.auctionService.getPlayerById(team.rtmUsedForPlayerId);
+    return player?.name ?? '';
+  }
+
+  get rtmAvailableCount(): number {
+    return this.auctionTeams.filter(t => t.rtmAvailable).length;
+  }
+
+  get rtmUsedCount(): number {
+    return this.auctionTeams.filter(t => !t.rtmAvailable).length;
   }
 }

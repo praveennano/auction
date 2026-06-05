@@ -1,10 +1,20 @@
 <div class="prediction-stats">
 
-  <!-- No current player -->
+  <!-- RTM Status Panel (shown when no player is on auction) -->
   <ng-container *ngIf="!currentPlayer">
-    <div class="no-player-state">
-      <div class="no-player-icon">🏏</div>
-      <div class="no-player-text">Waiting for next player…</div>
+    <div class="rtm-status-title">🛡️ RTM Available</div>
+
+    <div class="rtm-team-list">
+      <ng-container *ngFor="let team of auctionTeams">
+        <div *ngIf="team.rtmAvailable" class="rtm-entry">
+          <span class="rtm-dot" [style.background]="team.color"></span>
+          <span class="rtm-name">{{ team.shortName }}</span>
+        </div>
+      </ng-container>
+
+      <div *ngIf="rtmAvailableCount === 0" class="rtm-all-used">
+        All RTM cards used
+      </div>
     </div>
   </ng-container>
 
