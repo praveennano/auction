@@ -166,6 +166,11 @@
   font-weight: 600;
 }
 
+.sold-price {
+  color: #64748b;
+  font-weight: 600;
+}
+
 .rtm-price {
   color: #28a745;
   font-weight: 700;

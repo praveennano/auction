@@ -27,6 +27,10 @@
             </div>
 
             <div class="player-details">
+              <div class="stat" *ngIf="!isUnsoldPlayer(player)">
+                <label>Sold Price:</label>
+                <span class="sold-price">{{ player.soldPrice }} pts</span>
+              </div>
               <div class="stat">
                 <label>{{ isUnsoldPlayer(player) ? 'Min Bid:' : 'RTM Price (110%):' }}</label>
                 <span class="rtm-price">{{ getRtmBasePrice(player.id) }} pts</span>
