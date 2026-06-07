@@ -489,6 +489,16 @@
 .preview-card {
   position: relative;
   background: rgba(0, 0, 0, 0.5);
+
+  &.is-captain {
+    border-color: #f59e0b;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+  }
+
+  &.is-vc {
+    border-color: #6366f1;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+  }
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 14px;
@@ -543,6 +553,70 @@
     font-size: 13px;
     font-weight: 700;
     color: #ffd700;
+  }
+}
+
+// ── Captain / VC ─────────────────────────────────────────
+.cv-badge {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f59e0b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.6);
+
+  &.vc-badge {
+    background: #6366f1;
+    left: 16px;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.6);
+  }
+}
+
+.cv-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  justify-content: center;
+}
+
+.cv-btn {
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1.5px solid transparent;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+
+  &.c-btn {
+    &:hover { border-color: #f59e0b; color: #f59e0b; }
+    &.active {
+      background: #f59e0b;
+      color: #fff;
+      border-color: #f59e0b;
+      box-shadow: 0 0 8px rgba(245,158,11,0.5);
+    }
+  }
+
+  &.vc-btn {
+    &:hover { border-color: #6366f1; color: #a78bfa; }
+    &.active {
+      background: #6366f1;
+      color: #fff;
+      border-color: #6366f1;
+      box-shadow: 0 0 8px rgba(99,102,241,0.5);
+    }
   }
 }
 
@@ -659,7 +733,7 @@
     font-weight: 600;
 
     .float-count {
-      color: #ffd700;
+      color: #6366f1;
     }
 
     .float-cost {
@@ -750,114 +824,137 @@
 
 // ── Responsive — Mobile First ──
 
-// Tablet: ≤ 768px
 @media (max-width: 768px) {
+
+  // ── Header: compact single row ──
   .dream8-header {
-    flex-direction: column;
-    gap: 10px;
-    padding: 14px 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    gap: 8px;
+    border-bottom: 1px solid #e2e8f0;
 
     .header-title {
-      gap: 8px;
-
-      .header-icon { font-size: 22px; }
-
-      h1 { font-size: 20px; }
-
-      .header-subtitle {
-        font-size: 11px;
-        padding-left: 8px;
-      }
+      gap: 6px;
+      .header-icon { font-size: 18px; }
+      h1 { font-size: 17px; }
+      .header-subtitle { display: none; }
     }
 
     .header-actions .btn-preview {
-      padding: 8px 16px;
-      font-size: 13px;
-      width: 100%;
-      justify-content: center;
+      padding: 7px 14px;
+      font-size: 12px;
+      white-space: nowrap;
     }
   }
 
+  // ── Budget: sticky, compact ──
   .budget-section {
-    padding: 12px 16px;
+    padding: 8px 14px;
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+    .budget-bar-container { max-width: 100%; }
 
     .budget-labels {
-      font-size: 12px;
-      .budget-value { font-size: 14px; }
+      font-size: 11px;
+      margin-bottom: 5px;
+      .budget-value { font-size: 13px; }
+      .budget-total { display: none; }
     }
 
+    .budget-bar { height: 6px; margin-bottom: 8px; }
+
     .budget-slots {
-      gap: 6px;
+      gap: 5px;
       .slot {
-        width: 28px;
-        height: 28px;
-        font-size: 10px;
+        width: 26px;
+        height: 26px;
+        font-size: 9px;
+        border-width: 1.5px;
       }
     }
   }
 
+  // ── Search: full width ──
   .search-section {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 10px 12px;
+    padding: 10px 14px 6px;
     gap: 8px;
 
     .search-input-wrapper {
       max-width: 100%;
       .search-input {
-        padding: 10px 36px 10px 38px;
-        font-size: 14px;
+        padding: 11px 36px 11px 40px;
+        font-size: 15px; // prevents iOS zoom on focus
+        border-radius: 12px;
       }
+    }
+
+    .player-count {
+      font-size: 12px;
+      align-self: center;
     }
   }
 
+  // ── Player grid: 2 columns, proper touch targets ──
   .player-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    padding: 0 12px 90px;
+    gap: 10px;
+    padding: 8px 14px 100px;
   }
 
   .player-card {
-    padding: 12px 8px;
-    border-radius: 12px;
-    gap: 4px;
+    padding: 14px 10px 10px;
+    border-radius: 14px;
+    gap: 6px;
+    min-height: 110px;
 
     .card-select-indicator {
-      top: 6px;
-      right: 6px;
+      top: 8px;
+      right: 8px;
       .check-mark, .add-mark {
-        width: 20px;
-        height: 20px;
-        font-size: 12px;
+        width: 24px;
+        height: 24px;
+        font-size: 13px;
       }
     }
 
     .card-body {
-      .player-role-badge { font-size: 24px; }
-      .player-name { font-size: 13px; }
-      .player-role-text { font-size: 10px; }
+      .player-role-badge { font-size: 26px; margin-bottom: 4px; }
+      .player-name {
+        font-size: 13px;
+        font-weight: 700;
+        max-width: 100%;
+      }
+      .player-team-label {
+        font-size: 9px;
+        margin-top: 3px;
+        .team-dot { width: 5px; height: 5px; }
+      }
     }
 
     .card-price {
-      font-size: 14px;
+      font-size: 12px;
+      font-weight: 700;
       padding: 3px 10px;
+      border-radius: 8px;
     }
   }
 
+  // ── Preview ──
   .dream8-preview {
-    padding: 12px;
-    padding-bottom: 30px;
+    padding: 12px 14px 20px;
   }
 
   .field-container {
-    padding: 20px 10px;
+    padding: 16px 10px;
     border-radius: 16px;
-    min-height: 240px;
+    min-height: 0;
   }
 
   .preview-grid {
@@ -866,144 +963,157 @@
   }
 
   .preview-card {
-    padding: 12px 8px;
-    border-radius: 10px;
-
-    .remove-btn {
-      opacity: 1; // Always visible on mobile (no hover)
-      width: 20px;
-      height: 20px;
-      top: -4px;
-      right: -4px;
-      font-size: 10px;
-    }
-
-    .preview-role { font-size: 20px; }
-    .preview-name { font-size: 11px; }
-    .preview-price { font-size: 12px; }
-  }
-
-  .preview-summary {
-    padding: 16px 12px;
+    padding: 14px 10px 10px;
     border-radius: 12px;
 
+    .remove-btn {
+      opacity: 1;
+      width: 22px;
+      height: 22px;
+      top: -6px;
+      right: -6px;
+      font-size: 11px;
+    }
+
+    .preview-role { font-size: 22px; margin-bottom: 4px; }
+    .preview-name { font-size: 12px; font-weight: 700; }
+    .preview-price { font-size: 12px; font-weight: 700; }
+
+    // C/VC buttons — large touch targets on mobile
+    .cv-actions {
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .cv-btn {
+      padding: 5px 10px;
+      font-size: 11px;
+      min-height: 30px;
+      min-width: 32px;
+    }
+  }
+
+  // C/VC badge
+  .cv-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 9px;
+  }
+
+  // ── Summary card ──
+  .preview-summary {
+    padding: 14px;
+    border-radius: 14px;
+    margin-top: 12px;
+
     .summary-stats {
-      gap: 16px;
-      margin-bottom: 16px;
-      .summary-stat .stat-value { font-size: 18px; }
-      .summary-stat .stat-label { font-size: 10px; }
+      gap: 12px;
+      margin-bottom: 14px;
+      .summary-stat {
+        .stat-value { font-size: 17px; }
+        .stat-label { font-size: 10px; }
+      }
     }
 
     .preview-actions {
       flex-direction: row;
+      gap: 10px;
       button {
         flex: 1;
-        padding: 12px 16px;
+        padding: 13px 10px;
         font-size: 13px;
+        border-radius: 12px;
       }
     }
   }
 
+  // ── Floating bar: professional pill style ──
   .floating-bar {
-    padding: 10px 12px;
-    gap: 0;
+    padding: 10px 14px;
+    border-radius: 0;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.1);
 
     .float-info {
-      font-size: 12px;
       gap: 10px;
+      font-size: 12px;
+      .float-count { color: #6366f1; font-weight: 700; }
+      .float-cost  { color: #64748b; }
     }
 
     .float-actions {
-      gap: 6px;
-      button {
-        padding: 8px 14px;
+      gap: 8px;
+      .btn-float-preview {
+        padding: 9px 14px;
         font-size: 12px;
+        border-radius: 10px;
+      }
+      .btn-float-save {
+        padding: 9px 18px;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 10px;
       }
     }
   }
 
   .login-prompt {
-    min-height: 50vh;
-    padding: 20px;
-    .prompt-icon { font-size: 40px; }
-    h2 { font-size: 18px; }
+    min-height: 80vh;
+    padding: 24px;
+    .prompt-icon { font-size: 48px; }
+    h2 { font-size: 20px; }
     p { font-size: 14px; }
   }
 
   .empty-state {
-    padding: 40px 16px;
-    .empty-icon { font-size: 36px; }
+    padding: 40px 20px;
+    .empty-icon { font-size: 40px; }
   }
 }
 
-// Small phone: ≤ 400px
-@media (max-width: 400px) {
+// ── Small phone: ≤ 390px ──
+@media (max-width: 390px) {
+
   .dream8-header {
-    padding: 10px 12px;
-
-    .header-title {
-      .header-icon { font-size: 18px; }
-      h1 { font-size: 18px; }
-      .header-subtitle { display: none; }
-    }
-  }
-
-  .budget-section .budget-labels {
-    flex-wrap: wrap;
-    gap: 4px;
-    .budget-total { display: none; }
-  }
-
-  .budget-section .budget-slots {
-    gap: 4px;
-    .slot {
-      width: 26px;
-      height: 26px;
-      font-size: 9px;
-      border-width: 1.5px;
+    padding: 8px 12px;
+    .header-title h1 { font-size: 15px; }
+    .header-actions .btn-preview {
+      padding: 6px 12px;
+      font-size: 11px;
     }
   }
 
   .player-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-    padding: 0 8px 90px;
+    gap: 8px;
+    padding: 8px 10px 100px;
   }
 
   .player-card {
-    padding: 10px 6px;
-    gap: 3px;
-
+    padding: 12px 8px 8px;
+    min-height: 100px;
     .card-body {
-      .player-role-badge { font-size: 20px; margin-bottom: 2px; }
+      .player-role-badge { font-size: 22px; }
       .player-name { font-size: 12px; }
-      .player-role-text { font-size: 9px; letter-spacing: 0; }
-      .player-team-label { display: none; }
     }
-
-    .card-price {
-      font-size: 13px;
-      padding: 2px 8px;
-    }
+    .card-price { font-size: 11px; padding: 2px 8px; }
   }
 
-  .preview-grid {
-    gap: 8px;
-  }
+  .preview-grid { gap: 8px; }
 
   .preview-card {
-    padding: 10px 6px;
-    .preview-name { font-size: 10px; }
+    padding: 12px 8px 8px;
+    .preview-name { font-size: 11px; }
     .preview-price { font-size: 11px; }
+    .cv-btn {
+      padding: 4px 8px;
+      font-size: 10px;
+      min-height: 28px;
+    }
   }
 
-  .floating-bar {
-    padding: 8px 10px;
-    .float-info { font-size: 11px; }
-    .float-actions button {
-      padding: 7px 12px;
-      font-size: 11px;
-    }
+  .budget-section .budget-slots .slot {
+    width: 24px;
+    height: 24px;
+    font-size: 8px;
   }
 }
 

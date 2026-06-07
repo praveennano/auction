@@ -19,6 +19,8 @@ export class Dream8Component implements OnInit, OnDestroy {
   allPlayers: Dream8Player[] = [];
   filteredPlayers: Dream8Player[] = [];
   selectedPlayerIds = new Set<string>();
+  captainId: string | null = null;
+  viceCaptainId: string | null = null;
   searchQuery = '';
   isLoading = false;
   isSaving = false;
@@ -59,6 +61,8 @@ export class Dream8Component implements OnInit, OnDestroy {
         this.savedTeam = team;
         if (team) {
           this.selectedPlayerIds = new Set(team.playerIds);
+          this.captainId = team.captainId ?? null;
+          this.viceCaptainId = team.viceCaptainId ?? null;
         }
       })
     );
@@ -97,7 +101,12 @@ export class Dream8Component implements OnInit, OnDestroy {
   }
 
   get canSave(): boolean {
-    return this.isTeamComplete && this.totalCost <= this.BUDGET;
+    return this.isTeamComplete && this.totalCost <= this.BUDGET
+      && !!this.captainId && !!this.viceCaptainId;
+  }
+
+  get captainVcSelected(): boolean {
+    return !!this.captainId && !!this.viceCaptainId;
   }
 
   get hasChanges(): boolean {
@@ -152,10 +161,35 @@ export class Dream8Component implements OnInit, OnDestroy {
   removePlayer(playerId: string): void {
     this.selectedPlayerIds.delete(playerId);
     this.selectedPlayerIds = new Set(this.selectedPlayerIds);
+    if (this.captainId === playerId) this.captainId = null;
+    if (this.viceCaptainId === playerId) this.viceCaptainId = null;
   }
+
+  setCaptain(playerId: string): void {
+    if (this.captainId === playerId) {
+      this.captainId = null;
+      return;
+    }
+    if (this.viceCaptainId === playerId) this.viceCaptainId = null;
+    this.captainId = playerId;
+  }
+
+  setViceCaptain(playerId: string): void {
+    if (this.viceCaptainId === playerId) {
+      this.viceCaptainId = null;
+      return;
+    }
+    if (this.captainId === playerId) this.captainId = null;
+    this.viceCaptainId = playerId;
+  }
+
+  isCaptain(playerId: string): boolean { return this.captainId === playerId; }
+  isViceCaptain(playerId: string): boolean { return this.viceCaptainId === playerId; }
 
   clearTeam(): void {
     this.selectedPlayerIds = new Set();
+    this.captainId = null;
+    this.viceCaptainId = null;
   }
 
   async saveTeam(): Promise<void> {
@@ -163,7 +197,11 @@ export class Dream8Component implements OnInit, OnDestroy {
 
     this.isSaving = true;
     const playerIds = Array.from(this.selectedPlayerIds);
-    const success = await this.dream8Service.saveTeam(playerIds, this.totalCost);
+    const success = await this.dream8Service.saveTeam(
+      playerIds, this.totalCost,
+      this.captainId ?? undefined,
+      this.viceCaptainId ?? undefined
+    );
 
     if (success) {
       this.messageService.add({
@@ -208,12 +246,7 @@ export class Dream8Component implements OnInit, OnDestroy {
   // ── Helpers ──
 
   getRoleIcon(role: string): string {
-    switch (role.toLowerCase()) {
-      case 'batsman': return '🏏';
-      case 'bowler': return '🎯';
-      case 'wicket keeper': return '🧤';
-      default: return '⚡';
-    }
+    return '⚡';
   }
 
   getRoleClass(role: string): string {

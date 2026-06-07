@@ -61,8 +61,9 @@
     <div class="search-section">
       <div class="search-input-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" placeholder="Search players by name or role..."
-          [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()">
+        <input type="text" class="search-input" placeholder="Search players..."
+          [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
+          autocomplete="off" autocorrect="off" autocapitalize="off">
         <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()">✕</button>
       </div>
       <span class="player-count">{{ filteredPlayers.length }} players</span>
@@ -85,7 +86,6 @@
             {{ getRoleIcon(player.role) }}
           </div>
           <div class="player-name">{{ player.name }}</div>
-          <div class="player-role-text">{{ player.role }}</div>
           <div class="player-team-label" *ngIf="player.teamName">
             <span class="team-dot" [style.backgroundColor]="player.teamColor"></span>
             {{ player.teamName }}
@@ -120,13 +120,33 @@
       <div class="field-container">
         <div class="field-pitch"></div>
         <div class="preview-grid">
-          <div class="preview-card" *ngFor="let player of selectedPlayers; let i = index">
+          <div class="preview-card"
+               *ngFor="let player of selectedPlayers; let i = index"
+               [class.is-captain]="isCaptain(player.supabaseId)"
+               [class.is-vc]="isViceCaptain(player.supabaseId)">
             <button class="remove-btn" (click)="removePlayer(player.supabaseId); $event.stopPropagation()" title="Remove">✕</button>
+
+            <!-- C / VC badge -->
+            <div class="cv-badge" *ngIf="isCaptain(player.supabaseId)">C</div>
+            <div class="cv-badge vc-badge" *ngIf="isViceCaptain(player.supabaseId)">VC</div>
+
             <div class="preview-role" [ngClass]="getRoleClass(player.role)">
               {{ getRoleIcon(player.role) }}
             </div>
             <div class="preview-name">{{ player.name }}</div>
             <div class="preview-price">₹{{ player.soldPrice }}</div>
+
+            <!-- C / VC buttons -->
+            <div class="cv-actions">
+              <button class="cv-btn c-btn"
+                [class.active]="isCaptain(player.supabaseId)"
+                (click)="setCaptain(player.supabaseId); $event.stopPropagation()"
+                title="Set as Captain">C</button>
+              <button class="cv-btn vc-btn"
+                [class.active]="isViceCaptain(player.supabaseId)"
+                (click)="setViceCaptain(player.supabaseId); $event.stopPropagation()"
+                title="Set as Vice Captain">VC</button>
+            </div>
           </div>
         </div>
       </div>
@@ -160,6 +180,9 @@
 
         <div class="save-hint" *ngIf="!isTeamComplete">
           Select {{ TEAM_SIZE - selectedPlayerIds.size }} more player{{ TEAM_SIZE - selectedPlayerIds.size > 1 ? 's' : '' }} to save
+        </div>
+        <div class="save-hint" *ngIf="isTeamComplete && !captainVcSelected">
+          👆 Pick a <strong>Captain (C)</strong> and <strong>Vice Captain (VC)</strong> to save
         </div>
         <div class="save-hint saved" *ngIf="savedTeam && !hasChanges">
           ✅ Team saved

@@ -17,6 +17,8 @@ export interface Dream8Team {
   id?: string;
   playerIds: string[];  // supabase UUIDs
   totalCost: number;
+  captainId?: string;
+  viceCaptainId?: string;
 }
 
 @Injectable({
@@ -113,7 +115,7 @@ export class Dream8Service {
     try {
       const { data, error } = await this.supabaseService.client
         .from('dream8_teams')
-        .select('id, player_ids, total_cost')
+        .select('id, player_ids, total_cost, captain_id, vice_captain_id')
         .eq('user_id', userId)
         .maybeSingle();
 
@@ -123,7 +125,9 @@ export class Dream8Service {
         this.myTeamSubject.next({
           id: data.id,
           playerIds: data.player_ids,
-          totalCost: data.total_cost
+          totalCost: data.total_cost,
+          captainId: data.captain_id ?? undefined,
+          viceCaptainId: data.vice_captain_id ?? undefined
         });
         console.log(`✅ Dream8: Loaded saved team (${data.player_ids.length} players, cost: ${data.total_cost})`);
       } else {
@@ -138,7 +142,7 @@ export class Dream8Service {
   /**
    * Save or update the user's Dream 8 team.
    */
-  async saveTeam(playerIds: string[], totalCost: number): Promise<boolean> {
+  async saveTeam(playerIds: string[], totalCost: number, captainId?: string, viceCaptainId?: string): Promise<boolean> {
     if (!this.isBrowser) return false;
 
     const userId = this.currentUserId;
@@ -163,7 +167,9 @@ export class Dream8Service {
           .from('dream8_teams')
           .update({
             player_ids: playerIds,
-            total_cost: totalCost
+            total_cost: totalCost,
+            captain_id: captainId ?? null,
+            vice_captain_id: viceCaptainId ?? null
           })
           .eq('id', existing.id);
 
@@ -175,7 +181,9 @@ export class Dream8Service {
           .insert({
             user_id: userId,
             player_ids: playerIds,
-            total_cost: totalCost
+            total_cost: totalCost,
+            captain_id: captainId ?? null,
+            vice_captain_id: viceCaptainId ?? null
           });
 
         if (error) throw error;
