@@ -116,6 +116,9 @@ export class Dream8Component implements OnInit, OnDestroy {
     for (const id of this.selectedPlayerIds) {
       if (!savedSet.has(id)) return true;
     }
+    // Also detect C / VC changes
+    if (this.captainId !== (this.savedTeam.captainId ?? null)) return true;
+    if (this.viceCaptainId !== (this.savedTeam.viceCaptainId ?? null)) return true;
     return false;
   }
 

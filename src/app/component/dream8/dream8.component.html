@@ -173,7 +173,7 @@
             🗑️ Clear All
           </button>
           <button class="btn-save" [disabled]="!canSave || isSaving || !hasChanges" (click)="saveTeam()">
-            <span *ngIf="!isSaving">💾 {{ savedTeam ? 'Update Team' : 'Save Team' }}</span>
+            <span *ngIf="!isSaving">💾 Update Team</span>
             <span *ngIf="isSaving">⏳ Saving...</span>
           </button>
         </div>
@@ -191,7 +191,7 @@
     </div>
   </div>
 
-  <!-- Floating Save Bar -->
+  <!-- Floating Bar — selection count + preview only -->
   <div class="floating-bar" *ngIf="selectedPlayerIds.size > 0 && !showPreview">
     <div class="float-info">
       <span class="float-count">{{ selectedPlayerIds.size }}/{{ TEAM_SIZE }} selected</span>
@@ -199,9 +199,6 @@
     </div>
     <div class="float-actions">
       <button class="btn-float-preview" (click)="togglePreview()">Preview →</button>
-      <button class="btn-float-save" [disabled]="!canSave || isSaving" (click)="saveTeam()">
-        {{ savedTeam ? 'Update' : 'Save' }}
-      </button>
     </div>
   </div>
 </div>
