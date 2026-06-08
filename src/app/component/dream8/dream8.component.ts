@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Dream8Service, Dream8Player, Dream8Team } from '../../service/dream8.service';
+import { Dream8Service, Dream8Player, Dream8Team, Dream8TeamAdmin } from '../../service/dream8.service';
 import { PredictionGameService } from '../../service/prediction-game.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -26,7 +26,10 @@ export class Dream8Component implements OnInit, OnDestroy {
   isSaving = false;
   savedTeam: Dream8Team | null = null;
   showPreview = false;
+  showAdminView = false;
   isLoggedIn = false;
+  adminTeams: Dream8TeamAdmin[] = [];
+  isLoadingAdmin = false;
 
   readonly BUDGET = 2500;
   readonly TEAM_SIZE = 8;
@@ -76,6 +79,38 @@ export class Dream8Component implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  get isAdmin(): boolean {
+    return this.pgService.isAdmin;
+  }
+
+  async toggleAdminView(): Promise<void> {
+    if (this.showAdminView) {
+      this.showAdminView = false;
+      return;
+    }
+    this.showAdminView = true;
+    this.showPreview = false;
+    this.isLoadingAdmin = true;
+    this.adminTeams = await this.dream8Service.loadAllTeams();
+    this.isLoadingAdmin = false;
+  }
+
+  closeAdminView(): void {
+    this.showAdminView = false;
+  }
+
+  async refreshAdminView(): Promise<void> {
+    this.isLoadingAdmin = true;
+    this.adminTeams = await this.dream8Service.loadAllTeams();
+    this.isLoadingAdmin = false;
+  }
+
+  getPaddedPlayers(players: Dream8Player[]): (Dream8Player | null)[] {
+    const result: (Dream8Player | null)[] = players.slice(0, 6);
+    while (result.length < 6) result.push(null);
+    return result;
   }
 
   // ── Computed properties ──
@@ -248,7 +283,7 @@ export class Dream8Component implements OnInit, OnDestroy {
 
   // ── Helpers ──
 
-  getRoleIcon(role: string): string {
+  getRoleIcon(_role: string): string {
     return '⚡';
   }
 

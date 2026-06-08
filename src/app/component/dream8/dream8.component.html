@@ -9,8 +9,14 @@
       <span class="header-subtitle">Build your fantasy team</span>
     </div>
     <div class="header-actions">
-      <button class="btn-preview" [class.active]="showPreview" (click)="togglePreview()"
-        [disabled]="selectedPlayerIds.size === 0 && !showPreview">
+      <button class="btn-admin-tab" *ngIf="isAdmin"
+        [class.active]="showAdminView"
+        (click)="toggleAdminView()">
+        📊 All Teams
+      </button>
+      <button class="btn-preview" [class.active]="showPreview && !showAdminView"
+        [disabled]="selectedPlayerIds.size === 0 && !showPreview"
+        (click)="closeAdminView(); togglePreview()">
         <span>{{ showPreview ? '📋 Player List' : '👁️ Preview Team' }}</span>
         <span class="selected-count" *ngIf="selectedPlayerIds.size > 0">
           {{ selectedPlayerIds.size }}/{{ TEAM_SIZE }}
@@ -55,7 +61,7 @@
   </div>
 
   <!-- Main Content: Player List -->
-  <div class="dream8-content" *ngIf="!isLoading && !showPreview">
+  <div class="dream8-content" *ngIf="!isLoading && !showPreview && !showAdminView">
 
     <!-- Search Bar -->
     <div class="search-section">
@@ -106,7 +112,7 @@
   </div>
 
   <!-- Team Preview -->
-  <div class="dream8-preview" *ngIf="!isLoading && showPreview">
+  <div class="dream8-preview" *ngIf="!isLoading && showPreview && !showAdminView">
 
     <div class="preview-empty" *ngIf="selectedPlayers.length === 0">
       <span class="empty-icon">👥</span>
@@ -188,6 +194,65 @@
           ✅ Team saved
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Admin View -->
+  <div class="admin-view" *ngIf="showAdminView">
+
+    <div class="admin-header">
+      <span class="admin-title">📊 Dream 8 — All Teams ({{ adminTeams.length }})</span>
+      <button class="btn-refresh-admin" (click)="refreshAdminView()" [disabled]="isLoadingAdmin">
+        🔄 Refresh
+      </button>
+    </div>
+
+    <div class="admin-loading" *ngIf="isLoadingAdmin">
+      <div class="spinner"></div>
+      <span>Loading teams...</span>
+    </div>
+
+    <div class="admin-table-wrap" *ngIf="!isLoadingAdmin">
+      <div class="admin-empty" *ngIf="adminTeams.length === 0">
+        No teams created yet.
+      </div>
+
+      <table class="admin-table" *ngIf="adminTeams.length > 0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Pts Used</th>
+            <th class="col-cv">⭐ C</th>
+            <th class="col-cv">🔵 VC</th>
+            <th *ngFor="let n of [1,2,3,4,5,6]">P{{ n }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let team of adminTeams; let i = index">
+            <td class="col-num">{{ i + 1 }}</td>
+            <td class="col-name">
+              <div class="admin-user">
+                <span class="admin-display">{{ team.displayName }}</span>
+                <span class="admin-username">{{ team.username }}</span>
+              </div>
+            </td>
+            <td class="col-pts">{{ team.totalCost }}</td>
+            <td class="col-cv">
+              <span class="cv-cell captain" *ngIf="team.captain">{{ team.captain.name }}</span>
+              <span class="cv-cell empty" *ngIf="!team.captain">—</span>
+            </td>
+            <td class="col-cv">
+              <span class="cv-cell vc" *ngIf="team.viceCaptain">{{ team.viceCaptain.name }}</span>
+              <span class="cv-cell empty" *ngIf="!team.viceCaptain">—</span>
+            </td>
+            <td *ngFor="let p of getPaddedPlayers(team.otherPlayers)" class="col-player">
+              <span *ngIf="p">{{ p.name }}</span>
+              <span *ngIf="!p" class="empty-cell">—</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 

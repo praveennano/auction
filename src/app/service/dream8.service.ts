@@ -21,6 +21,16 @@ export interface Dream8Team {
   viceCaptainId?: string;
 }
 
+export interface Dream8TeamAdmin {
+  userId: string;
+  displayName: string;
+  username: string;
+  totalCost: number;
+  captain: Dream8Player | null;
+  viceCaptain: Dream8Player | null;
+  otherPlayers: Dream8Player[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -226,5 +236,53 @@ export class Dream8Service {
     this.currentUserId = userId;
     await this.loadAllPlayers();
     await this.loadMyTeam();
+  }
+
+  /**
+   * Admin: load all users' Dream 8 teams with player details
+   */
+  async loadAllTeams(): Promise<Dream8TeamAdmin[]> {
+    if (!this.isBrowser) return [];
+    try {
+      const { data: teams, error: teamsErr } = await this.supabaseService.client
+        .from('dream8_teams')
+        .select('id, user_id, player_ids, total_cost, captain_id, vice_captain_id');
+      if (teamsErr) throw teamsErr;
+
+      const { data: users, error: usersErr } = await this.supabaseService.client
+        .from('users')
+        .select('id, display_name, username');
+      if (usersErr) throw usersErr;
+
+      const userMap = new Map<string, any>(
+        (users || []).map((u: any) => [u.id, u])
+      );
+      const playerMap = new Map<string, Dream8Player>(
+        this.playersSubject.value.map(p => [p.supabaseId, p])
+      );
+
+      return (teams || []).map((team: any) => {
+        const user = userMap.get(team.user_id);
+        const captain     = team.captain_id      ? (playerMap.get(team.captain_id)      ?? null) : null;
+        const viceCaptain = team.vice_captain_id  ? (playerMap.get(team.vice_captain_id) ?? null) : null;
+        const otherPlayers = (team.player_ids || [])
+          .filter((id: string) => id !== team.captain_id && id !== team.vice_captain_id)
+          .map((id: string) => playerMap.get(id))
+          .filter(Boolean) as Dream8Player[];
+
+        return {
+          userId: team.user_id,
+          displayName: user?.display_name || 'Unknown',
+          username: user?.username || '',
+          totalCost: team.total_cost,
+          captain,
+          viceCaptain,
+          otherPlayers
+        };
+      }).sort((a, b) => b.totalCost - a.totalCost);
+    } catch (err) {
+      console.error('❌ Dream8: Failed to load all teams:', err);
+      return [];
+    }
   }
 }
