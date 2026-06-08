@@ -58,7 +58,7 @@ export class Dream8Service {
       // Fetch all auction players
       const { data: auctionPlayers, error: playersErr } = await this.supabaseService.client
         .from('auction_players')
-        .select('id, player_name, player_role, base_price, auction_status, final_price, final_team_id')
+        .select('id, player_name, player_role, base_price, auction_status, final_price, dream8_price, final_team_id')
         .order('player_name');
 
       if (playersErr) throw playersErr;
@@ -81,7 +81,7 @@ export class Dream8Service {
           name: p.player_name,
           role: p.player_role || 'All-Rounder',
           // Use final_price if sold, otherwise base_price
-          soldPrice: p.final_price || p.base_price || 100,
+          soldPrice: p.dream8_price || p.final_price || p.base_price || 100,
           teamName: team?.name,
           teamColor: team?.color,
           isCaptain: false
@@ -173,7 +173,10 @@ export class Dream8Service {
           })
           .eq('id', existing.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error('❌ Dream8 update error:', error.message, error.details, error.hint);
+          throw error;
+        }
       } else {
         // Insert new team
         const { error } = await this.supabaseService.client
@@ -186,7 +189,10 @@ export class Dream8Service {
             vice_captain_id: viceCaptainId ?? null
           });
 
-        if (error) throw error;
+        if (error) {
+          console.error('❌ Dream8 insert error:', error.message, error.details, error.hint);
+          throw error;
+        }
       }
 
       // Reload to get the latest data
