@@ -55,13 +55,27 @@ export class Dream8Service {
     this.loadingSubject.next(true);
 
     try {
-      // Fetch all auction players
-      const { data: auctionPlayers, error: playersErr } = await this.supabaseService.client
+      // Fetch all auction players — try with dream8_price first, fall back without it
+      let auctionPlayers: any[] | null = null;
+
+      const { data: d1, error: e1 } = await this.supabaseService.client
         .from('auction_players')
         .select('id, player_name, player_role, base_price, auction_status, final_price, dream8_price, final_team_id')
         .order('player_name');
 
-      if (playersErr) throw playersErr;
+      if (e1?.code === '42703') {
+        // dream8_price column doesn't exist yet — fall back without it
+        console.warn('⚠️ dream8_price column missing, falling back to final_price');
+        const { data: d2, error: e2 } = await this.supabaseService.client
+          .from('auction_players')
+          .select('id, player_name, player_role, base_price, auction_status, final_price, final_team_id')
+          .order('player_name');
+        if (e2) throw e2;
+        auctionPlayers = d2;
+      } else {
+        if (e1) throw e1;
+        auctionPlayers = d1;
+      }
 
       // Fetch teams for team name/color mapping
       const { data: teams, error: teamsErr } = await this.supabaseService.client
@@ -74,7 +88,7 @@ export class Dream8Service {
       teams?.forEach((t: any) => teamMap.set(t.id, { name: t.team_name, color: t.team_color }));
 
       // Map to Dream8Player format
-      const players: Dream8Player[] = (auctionPlayers || []).map((p: any) => {
+      const players: Dream8Player[] = (auctionPlayers ?? []).map((p: any) => {
         const team = p.final_team_id ? teamMap.get(p.final_team_id) : null;
         return {
           supabaseId: p.id,
