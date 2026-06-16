@@ -182,6 +182,12 @@ export class Dream8Component implements OnInit, OnDestroy {
       this.teamLeaderboard = [];
       this.statsLoaded = false;
       this.expandedTeamUserId = null;
+      // also reset stats tab
+      this.topBatsmen = [];
+      this.topBowlers = [];
+      this.topFielders = [];
+      this.playerPopularity = [];
+      this.statsViewLoaded = false;
       this.messageService.add({ severity: 'info', summary: 'Cleared', detail: 'Tournament stats removed. User teams are untouched.', life: 3000 });
     } else {
       this.messageService.add({ severity: 'error', summary: 'Failed', detail: 'Could not clear stats. Try again.', life: 3000 });
