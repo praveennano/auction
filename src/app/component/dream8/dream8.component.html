@@ -9,14 +9,19 @@
       <span class="header-subtitle">Build your fantasy team</span>
     </div>
     <div class="header-actions">
+      <button class="btn-stats-tab"
+        [class.active]="showStatsView"
+        (click)="toggleStatsView()">
+        📈 Stats
+      </button>
       <button class="btn-admin-tab" *ngIf="isAdmin"
         [class.active]="showAdminView"
         (click)="toggleAdminView()">
         📊 All Teams
       </button>
-      <button class="btn-preview" [class.active]="showPreview && !showAdminView"
+      <button class="btn-preview" [class.active]="showPreview && !showAdminView && !showStatsView"
         [disabled]="selectedPlayerIds.size === 0 && !showPreview"
-        (click)="closeAdminView(); togglePreview()">
+        (click)="closeAdminView(); showStatsView = false; togglePreview()">
         <span>{{ showPreview ? '📋 Player List' : '👁️ Preview Team' }}</span>
         <span class="selected-count" *ngIf="selectedPlayerIds.size > 0">
           {{ selectedPlayerIds.size }}/{{ TEAM_SIZE }}
@@ -122,7 +127,6 @@
     </div>
 
     <div class="preview-team" *ngIf="selectedPlayers.length > 0">
-      <!-- Cricket field background -->
       <div class="field-container">
         <div class="field-pitch"></div>
         <div class="preview-grid">
@@ -131,18 +135,13 @@
                [class.is-captain]="isCaptain(player.supabaseId)"
                [class.is-vc]="isViceCaptain(player.supabaseId)">
             <button class="remove-btn" (click)="removePlayer(player.supabaseId); $event.stopPropagation()" title="Remove">✕</button>
-
-            <!-- C / VC badge -->
             <div class="cv-badge" *ngIf="isCaptain(player.supabaseId)">C</div>
             <div class="cv-badge vc-badge" *ngIf="isViceCaptain(player.supabaseId)">VC</div>
-
             <div class="preview-role" [ngClass]="getRoleClass(player.role)">
               {{ getRoleIcon(player.role) }}
             </div>
             <div class="preview-name">{{ player.name }}</div>
             <div class="preview-price">₹{{ player.soldPrice }}</div>
-
-            <!-- C / VC buttons -->
             <div class="cv-actions">
               <button class="cv-btn c-btn"
                 [class.active]="isCaptain(player.supabaseId)"
@@ -157,7 +156,6 @@
         </div>
       </div>
 
-      <!-- Team Summary -->
       <div class="preview-summary">
         <div class="summary-stats">
           <div class="summary-stat">
@@ -197,66 +195,375 @@
     </div>
   </div>
 
+  <!-- Stats View (all users) -->
+  <div class="stats-view" *ngIf="showStatsView">
+
+    <div class="stats-loading" *ngIf="isLoadingStats">
+      <div class="spinner"></div>
+      <span>Loading stats...</span>
+    </div>
+
+    <ng-container *ngIf="!isLoadingStats">
+
+      <!-- No tournament data yet -->
+      <div class="stats-no-tournament" *ngIf="topBatsmen.length === 0 && !isLoadingStats">
+        <span>📊 Stats will appear here once the admin uploads the CSV results for {{ tournamentName }}.</span>
+      </div>
+
+      <ng-container *ngIf="topBatsmen.length > 0 || topBowlers.length > 0">
+
+      <!-- ── Team Selection Popularity ── -->
+      <div class="stats-section">
+        <div class="stats-section-title">👥 Team Selection — {{ tournamentName }}</div>
+        <div class="stats-cards-row">
+
+          <!-- Most Captained -->
+          <div class="stats-card">
+            <div class="stats-card-header">⭐ Most Captained</div>
+            <div class="stats-empty-mini" *ngIf="topCaptains.length === 0">No data</div>
+            <div class="pop-list">
+              <div class="pop-row" *ngFor="let p of topCaptains; let i = index">
+                <span class="pop-rank">{{ i + 1 }}</span>
+                <span class="pop-name">{{ p.playerName }}</span>
+                <span class="pop-count captain-count">{{ p.captainCount }} teams</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Most Vice-Captained -->
+          <div class="stats-card">
+            <div class="stats-card-header">🔵 Most Vice-Captained</div>
+            <div class="stats-empty-mini" *ngIf="topVCs.length === 0">No data</div>
+            <div class="pop-list">
+              <div class="pop-row" *ngFor="let p of topVCs; let i = index">
+                <span class="pop-rank">{{ i + 1 }}</span>
+                <span class="pop-name">{{ p.playerName }}</span>
+                <span class="pop-count vc-count">{{ p.vcCount }} teams</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Most Selected Overall -->
+          <div class="stats-card">
+            <div class="stats-card-header">🏏 Most Selected (Overall)</div>
+            <div class="stats-empty-mini" *ngIf="topSelected.length === 0">No data</div>
+            <div class="pop-list">
+              <div class="pop-row" *ngFor="let p of topSelected; let i = index">
+                <span class="pop-rank">{{ i + 1 }}</span>
+                <span class="pop-name">{{ p.playerName }}</span>
+                <div class="pop-badges">
+                  <span class="mini-badge c-mini" *ngIf="p.captainCount > 0">C×{{ p.captainCount }}</span>
+                  <span class="mini-badge vc-mini" *ngIf="p.vcCount > 0">VC×{{ p.vcCount }}</span>
+                  <span class="mini-badge p-mini" *ngIf="p.playerCount > 0">P×{{ p.playerCount }}</span>
+                </div>
+                <span class="pop-count total-count">{{ p.totalSelections }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Tournament Performers ── -->
+      <ng-container *ngIf="topBatsmen.length > 0 || topBowlers.length > 0 || topFielders.length > 0">
+        <div class="stats-section">
+          <div class="stats-section-title">🎯 Top Performers — {{ tournamentName }}</div>
+          <div class="stats-cards-row">
+
+            <!-- Top Batsmen -->
+            <div class="stats-card">
+              <div class="stats-card-header">🏏 Top Batsmen</div>
+              <div class="perf-list">
+                <div class="perf-row" *ngFor="let p of topBatsmen; let i = index">
+                  <span class="pop-rank">{{ i + 1 }}</span>
+                  <div class="perf-info">
+                    <span class="pop-name">{{ p.playerName }}</span>
+                    <span class="perf-team">{{ p.cricketTeam }}</span>
+                  </div>
+                  <div class="perf-score-col">
+                    <span class="perf-score bat-score">{{ p.battingPoints }}</span>
+                    <span class="perf-label">bat pts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Bowlers -->
+            <div class="stats-card">
+              <div class="stats-card-header">🎳 Top Bowlers</div>
+              <div class="perf-list">
+                <div class="perf-row" *ngFor="let p of topBowlers; let i = index">
+                  <span class="pop-rank">{{ i + 1 }}</span>
+                  <div class="perf-info">
+                    <span class="pop-name">{{ p.playerName }}</span>
+                    <span class="perf-team">{{ p.cricketTeam }}</span>
+                  </div>
+                  <div class="perf-score-col">
+                    <span class="perf-score bowl-score">{{ p.bowlingPoints }}</span>
+                    <span class="perf-label">bowl pts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Fielders -->
+            <div class="stats-card">
+              <div class="stats-card-header">🧤 Top Fielders</div>
+              <div class="perf-list">
+                <div class="perf-row" *ngFor="let p of topFielders; let i = index">
+                  <span class="pop-rank">{{ i + 1 }}</span>
+                  <div class="perf-info">
+                    <span class="pop-name">{{ p.playerName }}</span>
+                    <span class="perf-team">{{ p.cricketTeam }}</span>
+                  </div>
+                  <div class="perf-score-col">
+                    <span class="perf-score field-score">{{ p.fieldingPoints }}</span>
+                    <span class="perf-label">field pts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </ng-container>
+
+      </ng-container> <!-- end csv-uploaded guard -->
+
+    </ng-container>
+  </div>
+
   <!-- Admin View -->
   <div class="admin-view" *ngIf="showAdminView">
 
+    <!-- Admin Header -->
     <div class="admin-header">
-      <span class="admin-title">📊 Dream 8 — All Teams ({{ adminTeams.length }})</span>
-      <button class="btn-refresh-admin" (click)="refreshAdminView()" [disabled]="isLoadingAdmin">
+      <div class="admin-sub-tabs">
+        <button class="admin-sub-tab" [class.active]="adminSubTab === 'teams'" (click)="switchAdminTab('teams')">
+          👥 Teams ({{ adminTeams.length }})
+        </button>
+        <button class="admin-sub-tab" [class.active]="adminSubTab === 'results'" (click)="switchAdminTab('results')">
+          🏏 Results
+        </button>
+      </div>
+      <button class="btn-refresh-admin" *ngIf="adminSubTab === 'teams'"
+        (click)="refreshAdminView()" [disabled]="isLoadingAdmin">
         🔄 Refresh
       </button>
     </div>
 
-    <div class="admin-loading" *ngIf="isLoadingAdmin">
-      <div class="spinner"></div>
-      <span>Loading teams...</span>
-    </div>
-
-    <div class="admin-table-wrap" *ngIf="!isLoadingAdmin">
-      <div class="admin-empty" *ngIf="adminTeams.length === 0">
-        No teams created yet.
+    <!-- ── Teams Tab ── -->
+    <ng-container *ngIf="adminSubTab === 'teams'">
+      <div class="admin-loading" *ngIf="isLoadingAdmin">
+        <div class="spinner"></div>
+        <span>Loading teams...</span>
       </div>
 
-      <table class="admin-table" *ngIf="adminTeams.length > 0">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Pts Used</th>
-            <th class="col-cv">⭐ C</th>
-            <th class="col-cv">🔵 VC</th>
-            <th *ngFor="let n of [1,2,3,4,5,6]">P{{ n }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let team of adminTeams; let i = index">
-            <td class="col-num">{{ i + 1 }}</td>
-            <td class="col-name">
-              <div class="admin-user">
-                <span class="admin-display">{{ team.displayName }}</span>
-                <span class="admin-username">{{ team.username }}</span>
-              </div>
-            </td>
-            <td class="col-pts">{{ team.totalCost }}</td>
-            <td class="col-cv">
-              <span class="cv-cell captain" *ngIf="team.captain">{{ team.captain.name }}</span>
-              <span class="cv-cell empty" *ngIf="!team.captain">—</span>
-            </td>
-            <td class="col-cv">
-              <span class="cv-cell vc" *ngIf="team.viceCaptain">{{ team.viceCaptain.name }}</span>
-              <span class="cv-cell empty" *ngIf="!team.viceCaptain">—</span>
-            </td>
-            <td *ngFor="let p of getPaddedPlayers(team.otherPlayers)" class="col-player">
-              <span *ngIf="p">{{ p.name }}</span>
-              <span *ngIf="!p" class="empty-cell">—</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="admin-table-wrap" *ngIf="!isLoadingAdmin">
+        <div class="admin-empty" *ngIf="adminTeams.length === 0">No teams created yet.</div>
+
+        <table class="admin-table" *ngIf="adminTeams.length > 0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Pts Used</th>
+              <th class="col-cv">⭐ C</th>
+              <th class="col-cv">🔵 VC</th>
+              <th *ngFor="let n of [1,2,3,4,5,6]">P{{ n }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let team of adminTeams; let i = index">
+              <td class="col-num">{{ i + 1 }}</td>
+              <td class="col-name">
+                <div class="admin-user">
+                  <span class="admin-display">{{ team.displayName }}</span>
+                  <span class="admin-username">{{ team.username }}</span>
+                </div>
+              </td>
+              <td class="col-pts">{{ team.totalCost }}</td>
+              <td class="col-cv">
+                <span class="cv-cell captain" *ngIf="team.captain">{{ team.captain.name }}</span>
+                <span class="cv-cell empty" *ngIf="!team.captain">—</span>
+              </td>
+              <td class="col-cv">
+                <span class="cv-cell vc" *ngIf="team.viceCaptain">{{ team.viceCaptain.name }}</span>
+                <span class="cv-cell empty" *ngIf="!team.viceCaptain">—</span>
+              </td>
+              <td *ngFor="let p of getPaddedPlayers(team.otherPlayers)" class="col-player">
+                <span *ngIf="p">{{ p.name }}</span>
+                <span *ngIf="!p" class="empty-cell">—</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+    <!-- ── Results Tab ── -->
+    <ng-container *ngIf="adminSubTab === 'results'">
+
+      <!-- Upload Section -->
+      <div class="results-upload-bar">
+        <div class="upload-info">
+          <span class="upload-label">Tournament:</span>
+          <span class="upload-tournament">{{ tournamentName }}</span>
+        </div>
+        <input type="file" id="statsFileInput" accept=".csv" style="display:none"
+          (change)="onStatsFileSelected($event)">
+        <div class="upload-actions">
+          <button class="btn-upload-stats" (click)="triggerFileUpload()" [disabled]="isUploadingStats || isLoadingResults">
+            <span *ngIf="!isUploadingStats">📂 Upload Stats CSV</span>
+            <span *ngIf="isUploadingStats">⏳ Processing...</span>
+          </button>
+          <button class="btn-clear-stats" (click)="clearResults()"
+            [disabled]="isUploadingStats || isLoadingResults || tournamentPlayers.length === 0"
+            title="Clear uploaded stats only — user teams are not affected">
+            🗑️ Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading Results -->
+      <div class="admin-loading" *ngIf="isLoadingResults">
+        <div class="spinner"></div>
+        <span>Loading results...</span>
+      </div>
+
+      <div class="results-empty" *ngIf="!isLoadingResults && tournamentPlayers.length === 0">
+        <span class="results-empty-icon">📊</span>
+        <p>No stats uploaded yet. Upload the tournament CSV to see player points and team leaderboard.</p>
+      </div>
+
+      <!-- Results Content -->
+      <ng-container *ngIf="!isLoadingResults && tournamentPlayers.length > 0">
+
+        <!-- ── Team Leaderboard ── -->
+        <div class="results-section">
+          <div class="results-section-title">🏆 Team Leaderboard</div>
+          <div class="leaderboard-table-wrap">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th class="lb-rank">#</th>
+                  <th>Team Owner</th>
+                  <th class="lb-pts">Total Pts</th>
+                  <th class="lb-cap">⭐ Captain</th>
+                  <th class="lb-cap">🔵 Vice Captain</th>
+                  <th class="lb-expand"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let team of teamLeaderboard">
+                  <tr class="lb-row" [class.lb-top1]="team.rank === 1" [class.lb-top2]="team.rank === 2" [class.lb-top3]="team.rank === 3">
+                    <td class="lb-rank">
+                      <span class="rank-badge" [class.gold]="team.rank === 1" [class.silver]="team.rank === 2" [class.bronze]="team.rank === 3">
+                        {{ team.rank === 1 ? '🥇' : team.rank === 2 ? '🥈' : team.rank === 3 ? '🥉' : team.rank }}
+                      </span>
+                    </td>
+                    <td class="lb-user">
+                      <div class="admin-user">
+                        <span class="admin-display">{{ team.displayName }}</span>
+                        <span class="admin-username">{{ team.username }}</span>
+                      </div>
+                    </td>
+                    <td class="lb-pts">
+                      <span class="pts-badge">{{ team.totalPoints }}</span>
+                    </td>
+                    <td class="lb-cap">
+                      <ng-container *ngFor="let p of team.playerBreakdown">
+                        <div *ngIf="p.role === 'C'" class="lb-player-pts">
+                          <span class="lb-player-name">{{ p.name }}</span>
+                          <span class="lb-player-raw">({{ p.rawPoints }} × 2 = {{ p.finalPoints }})</span>
+                        </div>
+                      </ng-container>
+                    </td>
+                    <td class="lb-cap">
+                      <ng-container *ngFor="let p of team.playerBreakdown">
+                        <div *ngIf="p.role === 'VC'" class="lb-player-pts">
+                          <span class="lb-player-name">{{ p.name }}</span>
+                          <span class="lb-player-raw">({{ p.rawPoints }} × 1.5 = {{ p.finalPoints }})</span>
+                        </div>
+                      </ng-container>
+                    </td>
+                    <td class="lb-expand">
+                      <button class="btn-expand" (click)="toggleTeamExpand(team.userId)">
+                        {{ expandedTeamUserId === team.userId ? '▲' : '▼' }}
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Expanded breakdown row -->
+                  <tr *ngIf="expandedTeamUserId === team.userId" class="lb-breakdown-row">
+                    <td colspan="6">
+                      <div class="lb-breakdown">
+                        <div class="lb-breakdown-player" *ngFor="let p of team.playerBreakdown">
+                          <span class="bd-role-badge" [class.bd-captain]="p.role === 'C'" [class.bd-vc]="p.role === 'VC'" [class.bd-normal]="p.role === 'P'">
+                            {{ p.role === 'C' ? 'C' : p.role === 'VC' ? 'VC' : 'P' }}
+                          </span>
+                          <span class="bd-name">{{ p.name }}</span>
+                          <span class="bd-calc">{{ p.rawPoints }} × {{ p.multiplier }} = </span>
+                          <span class="bd-final">{{ p.finalPoints }} pts</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── Player Points Table ── -->
+        <div class="results-section">
+          <div class="results-section-title">🎯 Player Points — {{ tournamentName }}</div>
+          <div class="player-pts-table-wrap">
+            <table class="player-pts-table">
+              <thead>
+                <tr>
+                  <th class="pp-rank">#</th>
+                  <th>Player</th>
+                  <th>Team</th>
+                  <th class="pp-num">Bat</th>
+                  <th class="pp-num">Bowl</th>
+                  <th class="pp-num">Field</th>
+                  <th class="pp-num">SR</th>
+                  <th class="pp-num">Eco</th>
+                  <th class="pp-total">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of tournamentPlayers; let i = index"
+                  [class.pp-matched]="!!p.playerId"
+                  [class.pp-unmatched]="!p.playerId">
+                  <td class="pp-rank">{{ i + 1 }}</td>
+                  <td class="pp-name">
+                    {{ p.playerName }}
+                    <span class="unmatched-tag" *ngIf="!p.playerId" title="Player not matched to auction">⚠</span>
+                  </td>
+                  <td class="pp-team">{{ p.cricketTeam }}</td>
+                  <td class="pp-num">{{ p.battingPoints }}</td>
+                  <td class="pp-num">{{ p.bowlingPoints }}</td>
+                  <td class="pp-num">{{ p.fieldingPoints }}</td>
+                  <td class="pp-num">{{ p.srPoints }}</td>
+                  <td class="pp-num">{{ p.economyPoints }}</td>
+                  <td class="pp-total">{{ p.totalPoints }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="unmatched-note" *ngIf="tournamentPlayers.length > 0">
+            <span>⚠ = Player not matched to an auction player (won't count in team points)</span>
+          </div>
+        </div>
+
+      </ng-container>
+    </ng-container>
+
   </div>
 
-  <!-- Floating Bar — selection count + preview only -->
+  <!-- Floating Bar -->
   <div class="floating-bar" *ngIf="selectedPlayerIds.size > 0 && !showPreview">
     <div class="float-info">
       <span class="float-count">{{ selectedPlayerIds.size }}/{{ TEAM_SIZE }} selected</span>

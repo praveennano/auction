@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Dream8Service, Dream8Player, Dream8Team, Dream8TeamAdmin } from '../../service/dream8.service';
+import { Dream8Service, Dream8Player, Dream8Team, Dream8TeamAdmin, TournamentPlayerPoints, TournamentTeamResult, PlayerPopularity } from '../../service/dream8.service';
 import { PredictionGameService } from '../../service/prediction-game.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -31,6 +31,27 @@ export class Dream8Component implements OnInit, OnDestroy {
   adminTeams: Dream8TeamAdmin[] = [];
   isLoadingAdmin = false;
 
+  // Stats tab (all users)
+  showStatsView = false;
+  playerPopularity: PlayerPopularity[] = [];
+  topBatsmen: TournamentPlayerPoints[] = [];
+  topBowlers: TournamentPlayerPoints[] = [];
+  topFielders: TournamentPlayerPoints[] = [];
+  isLoadingStats = false;
+  statsViewLoaded = false;
+
+  // Admin sub-tabs
+  adminSubTab: 'teams' | 'results' = 'teams';
+
+  // Tournament results state
+  tournamentName = 'T14';
+  tournamentPlayers: TournamentPlayerPoints[] = [];
+  teamLeaderboard: TournamentTeamResult[] = [];
+  isUploadingStats = false;
+  isLoadingResults = false;
+  statsLoaded = false;
+  expandedTeamUserId: string | null = null;
+
   readonly BUDGET = 2500;
   readonly TEAM_SIZE = 8;
 
@@ -46,9 +67,7 @@ export class Dream8Component implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.pgService.userProfile$.subscribe(profile => {
         this.isLoggedIn = !!profile;
-        if (profile) {
-          this.dream8Service.initialize(profile.id);
-        }
+        if (profile) this.dream8Service.initialize(profile.id);
       })
     );
 
@@ -85,6 +104,33 @@ export class Dream8Component implements OnInit, OnDestroy {
     return this.pgService.isAdmin;
   }
 
+  async toggleStatsView(): Promise<void> {
+    if (this.showStatsView) {
+      this.showStatsView = false;
+      return;
+    }
+    this.showStatsView = true;
+    this.showPreview = false;
+    this.showAdminView = false;
+    if (!this.statsViewLoaded) await this.loadStatsData();
+  }
+
+  async loadStatsData(): Promise<void> {
+    this.isLoadingStats = true;
+    try {
+      this.playerPopularity = await this.dream8Service.loadPlayerPopularity();
+
+      const performers = await this.dream8Service.loadTournamentResults(this.tournamentName);
+      this.topBatsmen  = [...performers].sort((a, b) => b.battingPoints  - a.battingPoints).slice(0, 5);
+      this.topBowlers  = [...performers].sort((a, b) => b.bowlingPoints  - a.bowlingPoints).slice(0, 5);
+      this.topFielders = [...performers].sort((a, b) => b.fieldingPoints - a.fieldingPoints).slice(0, 5);
+
+      this.statsViewLoaded = true;
+    } finally {
+      this.isLoadingStats = false;
+    }
+  }
+
   async toggleAdminView(): Promise<void> {
     if (this.showAdminView) {
       this.showAdminView = false;
@@ -92,6 +138,8 @@ export class Dream8Component implements OnInit, OnDestroy {
     }
     this.showAdminView = true;
     this.showPreview = false;
+    this.showStatsView = false;
+    this.adminSubTab = 'teams';
     this.isLoadingAdmin = true;
     this.adminTeams = await this.dream8Service.loadAllTeams();
     this.isLoadingAdmin = false;
@@ -105,6 +153,113 @@ export class Dream8Component implements OnInit, OnDestroy {
     this.isLoadingAdmin = true;
     this.adminTeams = await this.dream8Service.loadAllTeams();
     this.isLoadingAdmin = false;
+  }
+
+  async switchAdminTab(tab: 'teams' | 'results'): Promise<void> {
+    this.adminSubTab = tab;
+    if (tab === 'results' && !this.statsLoaded) {
+      await this.loadExistingResults();
+    }
+  }
+
+  async loadExistingResults(): Promise<void> {
+    this.isLoadingResults = true;
+    this.tournamentPlayers = await this.dream8Service.loadTournamentResults(this.tournamentName);
+    if (this.tournamentPlayers.length > 0) {
+      this.teamLeaderboard = await this.dream8Service.calculateTeamLeaderboard(this.tournamentPlayers);
+      this.statsLoaded = true;
+    }
+    this.isLoadingResults = false;
+  }
+
+  async clearResults(): Promise<void> {
+    const confirmed = window.confirm(`Clear all uploaded stats for "${this.tournamentName}"? User teams will NOT be affected.`);
+    if (!confirmed) return;
+
+    const ok = await this.dream8Service.clearTournamentStats(this.tournamentName);
+    if (ok) {
+      this.tournamentPlayers = [];
+      this.teamLeaderboard = [];
+      this.statsLoaded = false;
+      this.expandedTeamUserId = null;
+      this.messageService.add({ severity: 'info', summary: 'Cleared', detail: 'Tournament stats removed. User teams are untouched.', life: 3000 });
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Failed', detail: 'Could not clear stats. Try again.', life: 3000 });
+    }
+  }
+
+  triggerFileUpload(): void {
+    const input = document.getElementById('statsFileInput') as HTMLInputElement;
+    input?.click();
+  }
+
+  async onStatsFileSelected(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    // Reset input so same file can be re-uploaded
+    (event.target as HTMLInputElement).value = '';
+
+    if (!file.name.endsWith('.csv')) {
+      this.messageService.add({ severity: 'warn', summary: 'Invalid File', detail: 'Please upload a .csv file', life: 3000 });
+      return;
+    }
+
+    this.isUploadingStats = true;
+    try {
+      const text = await file.text();
+      const players = this.dream8Service.parseCsvAndCalculate(text);
+
+      if (players.length === 0) {
+        this.messageService.add({ severity: 'warn', summary: 'No Data', detail: 'No player data found in the CSV', life: 3000 });
+        return;
+      }
+
+      const saved = await this.dream8Service.saveTournamentStats(players, this.tournamentName);
+      if (!saved) throw new Error('Save failed');
+
+      this.tournamentPlayers = players;
+      this.teamLeaderboard = await this.dream8Service.calculateTeamLeaderboard(players);
+      this.statsLoaded = true;
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Stats Uploaded',
+        detail: `${players.length} players processed. Team leaderboard updated.`,
+        life: 4000
+      });
+    } catch (err: any) {
+      console.error('❌ Stats upload failed:', err);
+      this.messageService.add({ severity: 'error', summary: 'Upload Failed', detail: err?.message || 'Could not process the CSV', life: 4000 });
+    } finally {
+      this.isUploadingStats = false;
+    }
+  }
+
+  toggleTeamExpand(userId: string): void {
+    this.expandedTeamUserId = this.expandedTeamUserId === userId ? null : userId;
+  }
+
+  get topCaptains(): PlayerPopularity[] {
+    return [...this.playerPopularity].sort((a, b) => b.captainCount - a.captainCount).filter(p => p.captainCount > 0).slice(0, 5);
+  }
+
+  get topVCs(): PlayerPopularity[] {
+    return [...this.playerPopularity].sort((a, b) => b.vcCount - a.vcCount).filter(p => p.vcCount > 0).slice(0, 5);
+  }
+
+  get topSelected(): PlayerPopularity[] {
+    return [...this.playerPopularity].sort((a, b) => b.totalSelections - a.totalSelections).slice(0, 5);
+  }
+
+  get totalTeams(): number {
+    return this.playerPopularity.length > 0
+      ? Math.max(...this.playerPopularity.map(p => p.captainCount + p.vcCount + p.playerCount))
+      : 0;
+  }
+
+  get totalTeamCount(): number {
+    return this.adminTeams.length || this.playerPopularity.reduce((max, p) => Math.max(max, p.captainCount), 0);
   }
 
   getPaddedPlayers(players: Dream8Player[]): (Dream8Player | null)[] {
@@ -136,8 +291,7 @@ export class Dream8Component implements OnInit, OnDestroy {
   }
 
   get canSave(): boolean {
-    return this.isTeamComplete && this.totalCost <= this.BUDGET
-      && !!this.captainId && !!this.viceCaptainId;
+    return this.isTeamComplete && this.totalCost <= this.BUDGET && !!this.captainId && !!this.viceCaptainId;
   }
 
   get captainVcSelected(): boolean {
@@ -151,7 +305,6 @@ export class Dream8Component implements OnInit, OnDestroy {
     for (const id of this.selectedPlayerIds) {
       if (!savedSet.has(id)) return true;
     }
-    // Also detect C / VC changes
     if (this.captainId !== (this.savedTeam.captainId ?? null)) return true;
     if (this.viceCaptainId !== (this.savedTeam.viceCaptainId ?? null)) return true;
     return false;
@@ -164,26 +317,15 @@ export class Dream8Component implements OnInit, OnDestroy {
       this.selectedPlayerIds.delete(player.supabaseId);
     } else {
       if (this.selectedPlayerIds.size >= this.TEAM_SIZE) {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Team Full',
-          detail: `You can only select ${this.TEAM_SIZE} players`,
-          life: 2000
-        });
+        this.messageService.add({ severity: 'warn', summary: 'Team Full', detail: `You can only select ${this.TEAM_SIZE} players`, life: 2000 });
         return;
       }
       if (this.totalCost + player.soldPrice > this.BUDGET) {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Over Budget!',
-          detail: `Adding ${player.name} (₹${player.soldPrice}) exceeds the ₹${this.BUDGET} budget`,
-          life: 2500
-        });
+        this.messageService.add({ severity: 'warn', summary: 'Over Budget!', detail: `Adding ${player.name} (₹${player.soldPrice}) exceeds the ₹${this.BUDGET} budget`, life: 2500 });
         return;
       }
       this.selectedPlayerIds.add(player.supabaseId);
     }
-    // Force change detection for Set
     this.selectedPlayerIds = new Set(this.selectedPlayerIds);
   }
 
@@ -204,19 +346,13 @@ export class Dream8Component implements OnInit, OnDestroy {
   }
 
   setCaptain(playerId: string): void {
-    if (this.captainId === playerId) {
-      this.captainId = null;
-      return;
-    }
+    if (this.captainId === playerId) { this.captainId = null; return; }
     if (this.viceCaptainId === playerId) this.viceCaptainId = null;
     this.captainId = playerId;
   }
 
   setViceCaptain(playerId: string): void {
-    if (this.viceCaptainId === playerId) {
-      this.viceCaptainId = null;
-      return;
-    }
+    if (this.viceCaptainId === playerId) { this.viceCaptainId = null; return; }
     if (this.captainId === playerId) this.captainId = null;
     this.viceCaptainId = playerId;
   }
@@ -232,38 +368,23 @@ export class Dream8Component implements OnInit, OnDestroy {
 
   async saveTeam(): Promise<void> {
     if (!this.canSave) return;
-
     this.isSaving = true;
-    const playerIds = Array.from(this.selectedPlayerIds);
     const success = await this.dream8Service.saveTeam(
-      playerIds, this.totalCost,
-      this.captainId ?? undefined,
-      this.viceCaptainId ?? undefined
+      Array.from(this.selectedPlayerIds), this.totalCost,
+      this.captainId ?? undefined, this.viceCaptainId ?? undefined
     );
-
     if (success) {
-      this.messageService.add({
-        severity: 'success',
-        summary: '✅ Team Saved!',
-        detail: `Your Dream 8 team has been saved (₹${this.totalCost}/${this.BUDGET})`,
-        life: 3000
-      });
+      this.messageService.add({ severity: 'success', summary: '✅ Team Saved!', detail: `Your Dream 8 team has been saved (₹${this.totalCost}/${this.BUDGET})`, life: 3000 });
     } else {
-      this.messageService.add({
-        severity: 'error',
-        summary: '❌ Save Failed',
-        detail: 'Could not save your team. Please try again.',
-        life: 3000
-      });
+      this.messageService.add({ severity: 'error', summary: '❌ Save Failed', detail: 'Could not save your team. Please try again.', life: 3000 });
     }
     this.isSaving = false;
   }
 
   togglePreview(): void {
     this.showPreview = !this.showPreview;
+    if (this.showPreview) this.showStatsView = false;
   }
-
-  // ── Filter ──
 
   applyFilter(): void {
     const q = this.searchQuery.toLowerCase().trim();
@@ -271,8 +392,7 @@ export class Dream8Component implements OnInit, OnDestroy {
       this.filteredPlayers = [...this.allPlayers];
     } else {
       this.filteredPlayers = this.allPlayers.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.role.toLowerCase().includes(q)
+        p.name.toLowerCase().includes(q) || p.role.toLowerCase().includes(q)
       );
     }
   }
@@ -280,8 +400,6 @@ export class Dream8Component implements OnInit, OnDestroy {
   onSearchChange(): void {
     this.applyFilter();
   }
-
-  // ── Helpers ──
 
   getRoleIcon(_role: string): string {
     return '⚡';
