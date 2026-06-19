@@ -1,6 +1,18 @@
 <!-- Dream 8 - Fantasy Team Builder -->
 <div class="dream8-container" *ngIf="isLoggedIn; else loginPrompt">
 
+  <!-- Locked Screen (non-admin users only) -->
+  <div class="locked-screen" *ngIf="isDream8Locked && !isAdmin">
+    <div class="locked-content">
+      <div class="locked-icon">🔒</div>
+      <h2 class="locked-title">Dream 8 is Locked</h2>
+      <p class="locked-msg">The tournament has started. Team creation and editing is temporarily closed while results are being processed.</p>
+      <p class="locked-sub">Check back soon for points and leaderboard!</p>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isDream8Locked || isAdmin">
+
   <!-- Header -->
   <div class="dream8-header">
     <div class="header-title">
@@ -28,6 +40,11 @@
         </span>
       </button>
     </div>
+  </div>
+
+  <!-- Lock Status Banner (admin only, shown when locked) -->
+  <div class="lock-banner" *ngIf="isDream8Locked && isAdmin">
+    🔒 Dream 8 is currently <strong>locked</strong> for users. Go to <strong>All Teams → unlock</strong> when done.
   </div>
 
   <!-- Budget Bar -->
@@ -346,10 +363,17 @@
           🏏 Results
         </button>
       </div>
-      <button class="btn-refresh-admin" *ngIf="adminSubTab === 'teams'"
-        (click)="refreshAdminView()" [disabled]="isLoadingAdmin">
-        🔄 Refresh
-      </button>
+      <div class="admin-header-actions">
+        <button class="btn-lock" [class.locked]="isDream8Locked"
+          (click)="toggleLock()" [disabled]="isTogglingLock">
+          <span *ngIf="!isTogglingLock">{{ isDream8Locked ? '🔓 Unlock Dream 8' : '🔒 Lock Dream 8' }}</span>
+          <span *ngIf="isTogglingLock">⏳ Updating...</span>
+        </button>
+        <button class="btn-refresh-admin" *ngIf="adminSubTab === 'teams'"
+          (click)="refreshAdminView()" [disabled]="isLoadingAdmin">
+          🔄 Refresh
+        </button>
+      </div>
     </div>
 
     <!-- ── Teams Tab ── -->
@@ -573,6 +597,9 @@
       <button class="btn-float-preview" (click)="togglePreview()">Preview →</button>
     </div>
   </div>
+
+  </ng-container> <!-- end lock guard -->
+
 </div>
 
 <!-- Login Prompt -->

@@ -492,6 +492,38 @@ export class Dream8Service {
     }
   }
 
+  // ── App Lock ─────────────────────────────────────────────────────────────────
+
+  async loadDream8Lock(): Promise<boolean> {
+    if (!this.isBrowser) return false;
+    try {
+      const { data, error } = await this.supabaseService.client
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'dream8_locked')
+        .maybeSingle();
+      if (error) throw error;
+      return data?.value === 'true';
+    } catch (err) {
+      console.error('❌ Dream8: Failed to load lock state:', err);
+      return false;
+    }
+  }
+
+  async setDream8Lock(locked: boolean): Promise<boolean> {
+    if (!this.isBrowser) return false;
+    try {
+      const { error } = await this.supabaseService.client
+        .from('app_settings')
+        .upsert({ key: 'dream8_locked', value: locked ? 'true' : 'false', updated_at: new Date().toISOString() });
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.error('❌ Dream8: Failed to set lock state:', err);
+      return false;
+    }
+  }
+
   async clearTournamentStats(tournamentName: string): Promise<boolean> {
     if (!this.isBrowser) return false;
     try {

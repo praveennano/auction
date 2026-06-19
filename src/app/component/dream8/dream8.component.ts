@@ -31,6 +31,10 @@ export class Dream8Component implements OnInit, OnDestroy {
   adminTeams: Dream8TeamAdmin[] = [];
   isLoadingAdmin = false;
 
+  // Lock state
+  isDream8Locked = false;
+  isTogglingLock = false;
+
   // Stats tab (all users)
   showStatsView = false;
   playerPopularity: PlayerPopularity[] = [];
@@ -64,6 +68,10 @@ export class Dream8Component implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.dream8Service.loadDream8Lock().then(locked => {
+      this.isDream8Locked = locked;
+    });
+
     this.subscriptions.add(
       this.pgService.userProfile$.subscribe(profile => {
         this.isLoggedIn = !!profile;
@@ -102,6 +110,26 @@ export class Dream8Component implements OnInit, OnDestroy {
 
   get isAdmin(): boolean {
     return this.pgService.isAdmin;
+  }
+
+  async toggleLock(): Promise<void> {
+    this.isTogglingLock = true;
+    const newLocked = !this.isDream8Locked;
+    const ok = await this.dream8Service.setDream8Lock(newLocked);
+    if (ok) {
+      this.isDream8Locked = newLocked;
+      this.messageService.add({
+        severity: newLocked ? 'warn' : 'success',
+        summary: newLocked ? '🔒 Dream 8 Locked' : '🔓 Dream 8 Unlocked',
+        detail: newLocked
+          ? 'Users can no longer create or edit teams.'
+          : 'Users can now create and edit teams again.',
+        life: 4000
+      });
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Failed', detail: 'Could not update lock state.', life: 3000 });
+    }
+    this.isTogglingLock = false;
   }
 
   async toggleStatsView(): Promise<void> {
