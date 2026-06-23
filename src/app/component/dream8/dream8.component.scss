@@ -1556,6 +1556,80 @@
   margin-top: 4px;
 }
 
+// ── Danger Zone ──────────────────────────────────────────────
+.danger-zone {
+  margin: 16px 0;
+  border: 1.5px solid #fecaca;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.danger-zone-title {
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #fecaca;
+}
+
+.danger-zone-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.danger-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #fff;
+  border-bottom: 1px solid #fef2f2;
+
+  &:last-child { border-bottom: none; }
+}
+
+.danger-action-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.danger-action-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.danger-action-desc {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.btn-danger {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1.5px solid #fca5a5;
+  background: #fff;
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #fef2f2;
+    border-color: #ef4444;
+  }
+
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
 // ── Admin Sub-Tabs ────────────────────────────────────────────
 .admin-sub-tabs {
   display: flex;

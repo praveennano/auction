@@ -492,6 +492,61 @@ export class Dream8Service {
     }
   }
 
+  // ── Reset ────────────────────────────────────────────────────────────────────
+
+  async resetAllDream8Teams(): Promise<boolean> {
+    if (!this.isBrowser) return false;
+    try {
+      // Delete all fantasy teams
+      const { error: e1 } = await this.supabaseService.client
+        .from('dream8_teams')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // delete all rows
+      if (e1) throw e1;
+
+      // Delete all tournament stats
+      const { error: e2 } = await this.supabaseService.client
+        .from('tournament_player_points')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+      if (e2) throw e2;
+
+      // Unlock dream8
+      await this.setDream8Lock(false);
+
+      return true;
+    } catch (err) {
+      console.error('❌ Dream8: Reset failed:', err);
+      return false;
+    }
+  }
+
+  async resetAuctionDB(): Promise<boolean> {
+    if (!this.isBrowser) return false;
+    try {
+      // Reset all auction players back to upcoming state
+      const { error: e1 } = await this.supabaseService.client
+        .from('auction_players')
+        .update({
+          auction_status: 'upcoming',
+          final_team_id: null,
+          final_price: null
+        })
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+      if (e1) throw e1;
+
+      // Clear RTM tables
+      await this.supabaseService.client.from('rtm_results').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await this.supabaseService.client.from('rtm_offers').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await this.supabaseService.client.from('rtm_windows').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
+      return true;
+    } catch (err) {
+      console.error('❌ Auction: DB Reset failed:', err);
+      return false;
+    }
+  }
+
   // ── App Lock ─────────────────────────────────────────────────────────────────
 
   async loadDream8Lock(): Promise<boolean> {

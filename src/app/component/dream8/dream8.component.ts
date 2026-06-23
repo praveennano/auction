@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Dream8Service, Dream8Player, Dream8Team, Dream8TeamAdmin, TournamentPlayerPoints, TournamentTeamResult, PlayerPopularity } from '../../service/dream8.service';
 import { PredictionGameService } from '../../service/prediction-game.service';
+import { AuctionService } from '../../service/auction.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
@@ -34,6 +35,8 @@ export class Dream8Component implements OnInit, OnDestroy {
   // Lock state
   isDream8Locked = false;
   isTogglingLock = false;
+  isResettingDream8 = false;
+  isResettingAuction = false;
 
   // Stats tab (all users)
   showStatsView = false;
@@ -64,6 +67,7 @@ export class Dream8Component implements OnInit, OnDestroy {
   constructor(
     private dream8Service: Dream8Service,
     private pgService: PredictionGameService,
+    private auctionService: AuctionService,
     private messageService: MessageService
   ) {}
 
@@ -110,6 +114,62 @@ export class Dream8Component implements OnInit, OnDestroy {
 
   get isAdmin(): boolean {
     return this.pgService.isAdmin;
+  }
+
+  async resetDream8(): Promise<void> {
+    const confirmed = window.confirm(
+      '⚠️ RESET DREAM 8?\n\nThis will permanently delete:\n• All user fantasy teams\n• All tournament stats & points\n• Unlock Dream 8\n\nThis cannot be undone. Are you sure?'
+    );
+    if (!confirmed) return;
+
+    this.isResettingDream8 = true;
+    const ok = await this.dream8Service.resetAllDream8Teams();
+    if (ok) {
+      // Clear local state
+      this.adminTeams = [];
+      this.tournamentPlayers = [];
+      this.teamLeaderboard = [];
+      this.statsLoaded = false;
+      this.topBatsmen = [];
+      this.topBowlers = [];
+      this.topFielders = [];
+      this.playerPopularity = [];
+      this.statsViewLoaded = false;
+      this.isDream8Locked = false;
+      this.expandedTeamUserId = null;
+      this.messageService.add({
+        severity: 'success',
+        summary: '✅ Dream 8 Reset',
+        detail: 'All teams and tournament stats cleared. Dream 8 is unlocked.',
+        life: 5000
+      });
+    } else {
+      this.messageService.add({ severity: 'error', summary: '❌ Reset Failed', detail: 'Could not reset Dream 8. Try again.', life: 3000 });
+    }
+    this.isResettingDream8 = false;
+  }
+
+  async resetAuction(): Promise<void> {
+    const confirmed = window.confirm(
+      '⚠️ RESET AUCTION?\n\nThis will permanently:\n• Reset all player sold prices\n• Clear all team rosters\n• Clear RTM history\n• Clear saved auction progress\n\nThis cannot be undone. Are you sure?'
+    );
+    if (!confirmed) return;
+
+    this.isResettingAuction = true;
+    const ok = await this.dream8Service.resetAuctionDB();
+    if (ok) {
+      // Clear localStorage auction state
+      this.auctionService.clearAuctionState();
+      this.messageService.add({
+        severity: 'success',
+        summary: '✅ Auction Reset',
+        detail: 'All player prices, team rosters and RTM history cleared.',
+        life: 5000
+      });
+    } else {
+      this.messageService.add({ severity: 'error', summary: '❌ Reset Failed', detail: 'Could not reset auction. Try again.', life: 3000 });
+    }
+    this.isResettingAuction = false;
   }
 
   async toggleLock(): Promise<void> {

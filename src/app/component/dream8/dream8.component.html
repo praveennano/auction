@@ -376,6 +376,33 @@
       </div>
     </div>
 
+    <!-- ── Danger Zone ── -->
+    <div class="danger-zone">
+      <div class="danger-zone-title">⚠️ Danger Zone</div>
+      <div class="danger-zone-actions">
+        <div class="danger-action">
+          <div class="danger-action-info">
+            <span class="danger-action-label">Reset Dream 8</span>
+            <span class="danger-action-desc">Deletes all user fantasy teams, tournament stats and unlocks Dream 8</span>
+          </div>
+          <button class="btn-danger" (click)="resetDream8()" [disabled]="isResettingDream8 || isResettingAuction">
+            <span *ngIf="!isResettingDream8">🗑️ Reset Dream 8</span>
+            <span *ngIf="isResettingDream8">⏳ Resetting...</span>
+          </button>
+        </div>
+        <div class="danger-action">
+          <div class="danger-action-info">
+            <span class="danger-action-label">Reset Auction</span>
+            <span class="danger-action-desc">Clears all sold prices, team rosters, RTM history and auction progress</span>
+          </div>
+          <button class="btn-danger" (click)="resetAuction()" [disabled]="isResettingAuction || isResettingDream8">
+            <span *ngIf="!isResettingAuction">🔄 Reset Auction</span>
+            <span *ngIf="isResettingAuction">⏳ Resetting...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ── Teams Tab ── -->
     <ng-container *ngIf="adminSubTab === 'teams'">
       <div class="admin-loading" *ngIf="isLoadingAdmin">
