@@ -21,6 +21,10 @@
       <span class="header-subtitle">Build your fantasy team</span>
     </div>
     <div class="header-actions">
+      <div class="header-user" *ngIf="isLoggedIn">
+        <span class="header-username">👤 {{ displayName }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
       <button class="btn-stats-tab"
         [class.active]="showStatsView"
         (click)="toggleStatsView()">

@@ -524,16 +524,9 @@ export class Dream8Service {
   async resetAuctionDB(): Promise<boolean> {
     if (!this.isBrowser) return false;
     try {
-      // Reset all auction players back to upcoming state
+      // Reset all auction players via RPC (bypasses RLS)
       const { error: e1 } = await this.supabaseService.client
-        .from('auction_players')
-        .update({
-          auction_status: 'upcoming',
-          final_team_id: null,
-          final_price: null,
-          dream8_price: null
-        })
-        .gte('base_price', 0);
+        .rpc('reset_auction_players');
       if (e1) throw e1;
 
       // Clear RTM tables

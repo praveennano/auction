@@ -79,6 +79,7 @@ export class Dream8Component implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.pgService.userProfile$.subscribe(profile => {
         this.isLoggedIn = !!profile;
+        this.displayName = profile?.display_name || profile?.username || '';
         if (profile) this.dream8Service.initialize(profile.id);
       })
     );
@@ -114,6 +115,12 @@ export class Dream8Component implements OnInit, OnDestroy {
 
   get isAdmin(): boolean {
     return this.pgService.isAdmin;
+  }
+
+  displayName = '';
+
+  logout(): void {
+    this.pgService.clearSession();
   }
 
   async resetDream8(): Promise<void> {
