@@ -530,9 +530,10 @@ export class Dream8Service {
         .update({
           auction_status: 'upcoming',
           final_team_id: null,
-          final_price: null
+          final_price: null,
+          dream8_price: null
         })
-        .neq('id', '00000000-0000-0000-0000-000000000000');
+        .gte('base_price', 0);
       if (e1) throw e1;
 
       // Clear RTM tables
