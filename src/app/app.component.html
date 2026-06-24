@@ -22,7 +22,7 @@
 
 <!-- Dream 8 -->
 <div *ngIf="activeAppTab === 'dream8'">
-  <app-dream8></app-dream8>
+  <app-dream8 (goToLogin)="activeAppTab = 'prediction'"></app-dream8>
 </div>
 <!-- Tab 2: Auction (existing content below) -->
 <div *ngIf="activeAppTab === 'auction'">

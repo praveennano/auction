@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -118,6 +118,8 @@ export class Dream8Component implements OnInit, OnDestroy {
   }
 
   displayName = '';
+
+  @Output() goToLogin = new EventEmitter<void>();
 
   logout(): void {
     this.pgService.clearSession();
