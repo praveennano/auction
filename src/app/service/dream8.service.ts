@@ -497,18 +497,18 @@ export class Dream8Service {
   async resetAllDream8Teams(): Promise<boolean> {
     if (!this.isBrowser) return false;
     try {
-      // Delete all fantasy teams
+      // Delete all fantasy teams (created_at always >= 2000 for any real record)
       const { error: e1 } = await this.supabaseService.client
         .from('dream8_teams')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // delete all rows
+        .gte('created_at', '2000-01-01');
       if (e1) throw e1;
 
       // Delete all tournament stats
       const { error: e2 } = await this.supabaseService.client
         .from('tournament_player_points')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000');
+        .gte('uploaded_at', '2000-01-01');
       if (e2) throw e2;
 
       // Unlock dream8
@@ -536,9 +536,9 @@ export class Dream8Service {
       if (e1) throw e1;
 
       // Clear RTM tables
-      await this.supabaseService.client.from('rtm_results').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await this.supabaseService.client.from('rtm_offers').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await this.supabaseService.client.from('rtm_windows').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await this.supabaseService.client.from('rtm_results').delete().gte('created_at', '2000-01-01');
+      await this.supabaseService.client.from('rtm_offers').delete().gte('created_at', '2000-01-01');
+      await this.supabaseService.client.from('rtm_windows').delete().gte('created_at', '2000-01-01');
 
       return true;
     } catch (err) {

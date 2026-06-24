@@ -98,11 +98,17 @@ interface CelebrationData {
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Cricket Player Auction';
-  activeAppTab: 'auction' | 'prediction' | 'dream8' = 'prediction';
+  activeAppTab: 'auction' | 'prediction' | 'dream8' = 'dream8';
   isAdmin = false;
 
   onAdminStatusChange(isAdmin: boolean): void {
     this.isAdmin = isAdmin;
+    if (isAdmin) {
+      this.activeAppTab = 'auction';
+    } else if (this.activeAppTab === 'auction') {
+      // user logged out while on auction tab — send back to dream8
+      this.activeAppTab = 'dream8';
+    }
   }
   // Basic auction properties (visible to UI)
   teams: Team[] = [];

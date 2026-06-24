@@ -1,9 +1,6 @@
 <!-- App Tab Switcher -->
-<div class="app-tab-bar" [class.theme-dark]="activeAppTab === 'prediction' || activeAppTab === 'dream8'"
-  [class.theme-light]="activeAppTab === 'auction'">
-  <button class="app-tab-btn" [class.active]="activeAppTab === 'prediction'" (click)="activeAppTab = 'prediction'">
-    <span>🎯 Prediction Game</span>
-  </button>
+<div class="app-tab-bar" [class.theme-dark]="activeAppTab === 'dream8'"
+  [class.theme-light]="activeAppTab === 'auction' || activeAppTab === 'prediction'">
   <button class="app-tab-btn" [class.active]="activeAppTab === 'dream8'" (click)="activeAppTab = 'dream8'">
     <span>🏆 Dream 8</span>
   </button>
@@ -11,14 +8,19 @@
     (click)="activeAppTab = 'auction'">
     <span>🏏 Auction</span>
   </button>
+  <!-- Account icon — small, always visible for login/logout -->
+  <button class="app-tab-btn app-account-btn" [class.active]="activeAppTab === 'prediction'"
+    (click)="activeAppTab = 'prediction'" title="Account / Login">
+    <span>👤</span>
+  </button>
 </div>
 
-<!-- Tab 1: Prediction Game -->
-<div *ngIf="activeAppTab === 'prediction'" class="prediction-tab-wrapper">
+<!-- Auth (always rendered in background so login works) -->
+<div [style.display]="activeAppTab === 'prediction' ? 'block' : 'none'" class="prediction-tab-wrapper">
   <app-prediction-game (adminStatusChange)="onAdminStatusChange($event)"></app-prediction-game>
 </div>
 
-<!-- Tab 2: Dream 8 -->
+<!-- Dream 8 -->
 <div *ngIf="activeAppTab === 'dream8'">
   <app-dream8></app-dream8>
 </div>
